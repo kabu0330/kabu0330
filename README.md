@@ -2,21 +2,6 @@
 <h4 align="left">Junior developer studying game client and engine development. </p> Experimented with 2D/3D rendering using Unreal Engine 5 and DirectX 11. </p> Also interested in network programming and multiplayer system implementation.</h4>
 </p></p>
 
-## 🌱 Strengths
-
-- **Object-Oriented & Memory Management**  
-  - Ensured unique ownership by deleting copy constructors  
-  - Actively utilize smart pointers (std::shared_ptr, std::unique_ptr)  
-
-- **Debugging & Optimization**  
-  - Detect memory leaks using Visual Leak Detector  
-  - Profile CPU and GPU bottlenecks with profiling tools  
-
-- **Team Collaboration Experience**  
-  - Manage code with Git and Perforce  
-  - Extensive experience in code reviews, issue tracking, and PR submissions  
-
-
 ## 📄 Projects
 - 🔭 I’m currently working on [Tetris Network Version](https://github.com/kabu0330/DX_Network)
   - Goal: Multiplayer Tetris game  
@@ -45,7 +30,6 @@ ___
       - Modularized rendering pipeline (UEngineShader, UEngineRenderTarget, UEngineBufferBase)  
       - Implemented 2D sprite animation system (USprieteRenderer, UFSMStateManager)  
       - Implemented collision detection and physics logic (pixel collision, OBB collision, collision events)  
-      - Implemented debug UI and text rendering using ImGui  
 
 
   ![Imgae](https://github.com/user-attachments/assets/df114776-bbad-48d3-8368-164ff468c500)
@@ -58,7 +42,6 @@ ___
       - Player movement and collision (Applied acceleration with linear interpolation; AABB collision using collision events)  
       - Basic monster AI (Chase player when detected; projectile attacks)  
       - Item drop and interaction (Probability-based item generation upon monster death; applied stats and unique effects upon pickup)  
-      - UI implementation (Health bar, item inventory display)
 
    ![Imgae](https://github.com/user-attachments/assets/3db1956b-8548-427d-9c69-c3942d66c3c3)
 ___
