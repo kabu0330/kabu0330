@@ -1,5 +1,5 @@
 <h1 align="left">Hi 👋, I'm Junior developer studying game client</h1>
-<h4 align="left">A passionate frontend developer from Korea. </p> Junior developer studying game client and engine development. </p> Experimented with 2D/3D rendering using Unreal Engine 5 and DirectX 11. </p> Also interested in network programming and multiplayer system implementation.</h4>
+<h4 align="left">Junior developer studying game client and engine development. </p> Experimented with 2D/3D rendering using Unreal Engine 5 and DirectX 11. </p> Also interested in network programming and multiplayer system implementation.</h4>
 </p></p>
 
 ## 🌱 Strengths
