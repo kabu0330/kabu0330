@@ -26,22 +26,12 @@ ___
  
   - **[Hollow Knight Single Player Clone](https://github.com/kabu0330/DX_HollowKnight2)**
     - Goal: Learn DirectX rendering and Unreal Engine interface  
-    - Implementation:  
-      - Modularized rendering pipeline (UEngineShader, UEngineRenderTarget, UEngineBufferBase)  
-      - Implemented 2D sprite animation system (USprieteRenderer, UFSMStateManager)  
-      - Implemented collision detection and physics logic (pixel collision, OBB collision, collision events)  
-
 
   ![Imgae](https://github.com/user-attachments/assets/df114776-bbad-48d3-8368-164ff468c500)
 ___
 
   - **[The Binding of Isaac Single Player Clone](https://github.com/kabu0330/WinAPI)**  
     - Goal: Learn WinAPI-based game engine and game logic  
-    - Implementation:  
-      - Room generation and linking system (Managed room connections with enum class and std::map; camera linear interpolation for map transitions)  
-      - Player movement and collision (Applied acceleration with linear interpolation; AABB collision using collision events)  
-      - Basic monster AI (Chase player when detected; projectile attacks)  
-      - Item drop and interaction (Probability-based item generation upon monster death; applied stats and unique effects upon pickup)  
 
    ![Imgae](https://github.com/user-attachments/assets/3db1956b-8548-427d-9c69-c3942d66c3c3)
 ___
