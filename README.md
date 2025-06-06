@@ -5,19 +5,11 @@
 ## 📄 Projects
 - 🔭 I’m currently working on [Tetris Network Version](https://github.com/kabu0330/DX_Network)
   - Goal: Multiplayer Tetris game  
-  - Implementation:  
-    - Thread-based network synchronization  
-    - Synchronized Tetromino positions for real-time competitive gameplay  
-    - Chat server implementation  
 
 
 - 📫 Completed Projects
   - **[Overcooked! 2 Multiplayer Clone](https://github.com/kabu0330/UE_Overcooked2)**
     - Role: Implemented ingredient, recipe, and cooking tool object functions and network synchronization  
-    - Implementation:  
-      - Utilized replicated variables and RPCs for client state synchronization  
-      - Managed ingredient and recipe data using DataTables  
-      - Displayed cooking icons and timers on the HUD using UMG
 
 
    ![Image](https://github.com/user-attachments/assets/4a667a58-2fba-44c0-8470-2abd8e2fe550)
