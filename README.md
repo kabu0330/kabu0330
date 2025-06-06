@@ -12,7 +12,7 @@
     - Role: Implemented ingredient, recipe, and cooking tool object functions and network synchronization  
 
 
-   ![Image](https://github.com/user-attachments/assets/4a667a58-2fba-44c0-8470-2abd8e2fe550)
+![Image](https://github.com/user-attachments/assets/4a667a58-2fba-44c0-8470-2abd8e2fe550)
 ___
 
  
