@@ -3,8 +3,7 @@
 </p></p>
 
 ## 📄 Projects
-- 🔭 I’m currently working on [Tetris Network Version](https://github.com/kabu0330/DX_Network)
-  - Goal: Multiplayer Tetris game  
+- 🔭 I’m currently working on Unreal Engine 5.6 Project
 
 
 - 📫 Completed Projects
