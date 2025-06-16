@@ -11,20 +11,20 @@
     - Role: Implemented ingredient, recipe, and cooking tool object functions and network synchronization  
 
 
-![Image](https://github.com/user-attachments/assets/4a667a58-2fba-44c0-8470-2abd8e2fe550)
+[![Image](https://github.com/user-attachments/assets/4a667a58-2fba-44c0-8470-2abd8e2fe550)](https://youtu.be/zs3aQ8tSZ3E?si=Jxe_nSbIKGgVAhf0)
 ___
 
  
   - **[Hollow Knight Single Player Clone](https://github.com/kabu0330/DX_HollowKnight2)**
     - Goal: Learn DirectX rendering and Unreal Engine interface  
 
-  ![Imgae](https://github.com/user-attachments/assets/df114776-bbad-48d3-8368-164ff468c500)
+  [![Imgae](https://github.com/user-attachments/assets/df114776-bbad-48d3-8368-164ff468c500)](https://youtu.be/vi6KnUeedrs?si=tA5BkG2CbSyuF5wK)
 ___
 
   - **[The Binding of Isaac Single Player Clone](https://github.com/kabu0330/WinAPI)**  
     - Goal: Learn WinAPI-based game engine and game logic  
 
-   ![Imgae](https://github.com/user-attachments/assets/3db1956b-8548-427d-9c69-c3942d66c3c3)
+   [![Imgae](https://github.com/user-attachments/assets/3db1956b-8548-427d-9c69-c3942d66c3c3)](https://youtu.be/Uf7M80sdum0?si=pOgx3DhCT-_hnnBh)
 ___
   
 
