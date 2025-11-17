@@ -1,7 +1,6 @@
 <h1 align="left"> 게임 클라이언트 프로그래머 류성민입니다.</h1>
 
-# 프로젝트 소개
-* 클릭 시, 해당 깃허브 페이지로 이동합니다.
+## 프로젝트 링크
 ### 🔗 1. [UE5] 액션 게임 프로젝트 [github.com/kabu0330/UE_Soul2](https://github.com/kabu0330/UE_Soul2)
 ### 🔗 2. [UE5, AWS] Dedicated Server 프로젝트 [github.com/kabu0330/FPS_with_DedicatedServer](https://github.com/kabu0330/FPS_with_DedicatedServer)
 ### 🔗 3. [UE5 팀 프로젝트] 시뮬레이션 게임 (Overcooked! 2 모작) [github.com/kabu0330/UE_Overcooked2](https://github.com/kabu0330/UE_Overcooked2)
@@ -10,9 +9,8 @@
 </p>
 
 </br>
-</br>
 
-# 📜 목차
+## 📜 목차
 ### 1. 📄 프로젝트 개요
 - 📋 프로젝트 정보
 - 💻 작업 내용
@@ -25,10 +23,10 @@
 ### 2-1. 상태 관리 시스템
 - 🔗 [[DirectX 11] ```Enum```의 한계 → ```FSM Component```](#directx-11-enum의-한계--fsm-component)
 - 🔗 [[UE5 액션] 복잡한 상태도 심플하게, ```GameplayTag Container```](#ue5-액션-복잡한-상태도-심플하게-gameplaytag-container)
-- 🔗 [UE5 액션] 공격이 캔슬된 후 캐릭터가 안 움직여요. ```FOnMontageEnded Delegate```
+- 🔗 [[UE5 액션] 공격이 캔슬된 후 캐릭터가 안 움직여요.](#ue5-액션-공격이-캔슬된-후-캐릭터가-안-움직여요-fonmontageended-delegate)
 
 ### 2-2. 컨탠츠 구현
-- 🔗 [UE5 액션] 부드러운 콤보 연계는 어떻게 구현할까? ```AnimNotify State```
+- 🔗 [[UE5 액션] 부드러운 콤보 연계는 어떻게 구현할까? ```AnimNotify State```](#ue5-액션-부드러운-콤보-연계는-어떻게-구현할까-animnotify-state)
 - 🔗 [UE5 액션] 타격감의 핵심은 타이밍이다. ```AnimNotify```
 - 🔗 [UE5 액션] 자연스러운 대시를 구현할 순 없을까?  ```Motion Warping```
 - 🔗 [UE5 액션] 아이템 및 몽타주 관리, 데이터 주도 설계 ```DataAsset```, ```DataTable```
@@ -36,15 +34,14 @@
 - 🔗 [UE5 팀 프로젝트] 다이나믹 머티리얼로 강조 효과 구현하기 
 ### 2-3. 네트워크 동기화 문제 해결 전략
 - 🔗 [UE5 팀 프로젝트] 클라에서 스폰하면 안 보여요. ```SpawnActorDeferred```
-- 🔗 [Dedicated Server] "서버에 접속할 수 없습니다" 안 보고 한 번에 접속하기
+- 🔗 [Dedicated Server] "서버에 접속할 수 없습니다" 메시지 없이 한 번에 접속하기
 - 🔗 [Dedicated Server] 시간 오차는 어떻게 해결할까?
 - 🔗 [Dedicated Server] 왜 님은 닉네임이 안 보여요? ```SeamlessTravel```
 - 🔗 [Dedicated Server] 아니 방금 이겼는데 왜 내가 2등이예요? 
 ### 2-4. AI 시스템 구현
-- 🔗 [DirectX 11] FSM 기반 몬스터 패턴
 - 🔗 [UE5 액션] Behavior Tree를 활용한 몬스터 패턴
-### 2-5. 커스텀 엔진 아키텍처 설계
-- [DirectX 11] 언리얼 상속 기반 프레임워크 따라하기
+### 2-5. 커스텀 엔진 아키텍처
+- 🔗 [DirectX 11] 언리얼 상속 기반 프레임워크 따라하기
 ### 2-6. 협업 및 버전 관리
 - 🔗 [UE5 팀 프로젝트] Pull-Request 시행착오와 교훈
 - 🔗 [UE5 팀 프로젝트] 테스트 레벨, 캐릭터 없이 UI로 기능 테스트
@@ -364,16 +361,27 @@ private:
 	std::map<int, FSMState> States;
 }
 ```
+</br>
 
 FSM을 아래와 같이 활용했습니다. 
 
 ```cpp
 void AKnight::SetFSM()
 {
-	// 이동 애니메이션
+	//            상태                Update          애니메이션
 	CreateState(EKnightState::IDLE, &AKnight::SetIdle, "Idle");
 	CreateState(EKnightState::RUN, &AKnight::SetRun, "Run");
 	CreateState(EKnightState::RUN_TO_IDLE, &AKnight::SetRunToIdle, "RunToIdle");
+}
+
+void AKnight::CreateState(EKnightState _State, StateCallback _Callback, std::string_view _AnimationName)
+{
+	FSM.CreateState(_State, std::bind(_Callback, this, std::placeholders::_1),
+		[this, _AnimationName]()
+		{
+			std::string AnimationName = _AnimationName.data();
+			BodyRenderer->ChangeAnimation(AnimationName);
+		});
 }
 ```
 
@@ -405,6 +413,7 @@ void AKnight::SetIdle(float _DeltaTime)
 **StartFunction 활용의 한계**
 
 ```StartFunction```이 단일 함수만 받아서 애니메이션 재생에만 사용하게 되었습니다. </br>
+프로젝트 종료 후 복기하며 ```StartFunction```을 vector로 만들었으면 "상태가 바뀌면 초기화 되어야 할 변수들도 ```StartFunction```에서 처리했더라면 초기화 로직과 Tick 로직을 분리하고 더 간결했을 텐데"하는 생각이 들었습니다.
 
 ```cpp
 // 실제 구현 - StartFunction 1개만
@@ -422,15 +431,11 @@ void AKnight::SetFocus(float _DeltaTime)
 }
 ```
 
-프로젝트 종료 후 복기하며 "```StartFunction```을 vector로 만들었다면 초기화 로직과 Tick 로직을 분리할 수 있었을 것"이라는 생각이 들었습니다.
-
 **이렇게 했다면:**
 - 애니메이션 재생
 - 플래그 초기화
 - 사운드 재생
 - 이펙트 스폰
-
-**상태 진입 시 한 번만 실행될 로직들을** 모두 ```StartFunction```에서 처리할 수 있었을 것입니다.
 
 ```cpp
 // 이상적인 방식 (구현 못함)
@@ -447,6 +452,8 @@ CreateState(EKnightState::FOCUS)
     })
     .SetUpdate(&AKnight::SetFocus);  // 로직만 집중
 ```
+
+
 </br>
 
 ### ✅ 결과 
@@ -490,7 +497,6 @@ UE5 프로젝트에서는 GameplayTag로 간결하게 로직을 구현하고자 
 | **무적** | X | **공격 유지** | **공격 유지** | **공격 유지** |
 
 
-
 이런 복합적인 상황을 `CurrentState` 하나로 처리하는데 한계가 있었습니다.
 
 **예를 들어**
@@ -502,7 +508,6 @@ UE5 프로젝트에서는 GameplayTag로 간결하게 로직을 구현하고자 
 - 태그를 하나만 써야 한다면
   * Charater.State.Attacking.Condition.HitIgnore
   * "캐릭터가 공격 중일 때, 피격은 무시한다." ← 덜 직관적이고 조건이 늘어날수록 태그 수도 급격히 증가
-
 
 </br>
 
@@ -598,7 +603,7 @@ void UStateComponent::TickComponent(float DeltaTime, ...)
 ```
 **효과:**
 - 플레이 중 현재 상태 실시간 확인 가능
-- "왜 공격이 안 나가지?" → 화면 보고 `Movement_Disabled` 태그 발견 → 태그 추가 로직 디버그
+- "왜 공격이 안 나가지?" → 화면 보고 `Movement_Disabled` 태그 발견 → 태그 제거 로직 검사
 - 복합 상태 디버깅이 직관적으로 변함
 
 </br>
@@ -623,14 +628,423 @@ ___
 
 ### [UE5 액션] 공격이 캔슬된 후 캐릭터가 안 움직여요. ```FOnMontageEnded Delegate```
 
+### 🎮 구현 목표 
 
+전투 중 **입력으로 스킬을 캔슬**하거나 **피격으로 몽타주가 중단**되는 등, 몽타주가 끝까지 재생되지 않는 상황에서도 캐릭터 상태가 정상적으로 복구되는 전투 시스템을 구현하고자 했습니다.
+
+</br>
+
+### 🚨 문제 상황
+**몽타주가 중단되면 Gameplay Tag가 제거되지 않는 현상 발생**
+
+기존 구조에서는 공격/피격 시작 시 상태 태그를 추가하지만, 종료 시 태그 제거는 ```AnimNotify```에 의존했습니다.
+
+```cpp
+void UAnimNotify_RemoveGameplayTag::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+                                          const FAnimNotifyEventReference& EventReference)
+{
+	// ...
+	if (UStateComponent* StateComponent = Character->GetStateComponent())
+	{
+		StateComponent->RemoveGameplayTags(GameplayTags);
+	}
+}
+```
+
+**AnimNotify의 치명적인 한계:**
+- ❌ **몽타주가 중단되면** 해당 프레임의 Notify가 **호출되지 않음**
+- ❌ **블렌드 아웃** 발생 시 몽타주 끝부분 Notify가 **누락될 위험**
+
+즉, 몽타주가 **끝까지 재생되고 블렌드 없이 종료**된다는 보장이 있어야만 AnimNotify로 상태 관리가 가능합니다. 
+
+**실제 발생한 문제:**
+- 공격 중 회피 → `TAG_Character_State_Attacking` 미제거 → 캐릭터 영구 이동 불가, 공격 입력 무시
+- 피격으로 공격 중단 → `TAG_Character_State_Attacking` 미제거 → 캐릭터 영구 이동 불가, 공격 입력 무시
+
+</br>
+
+### 💭 해결 방안 고민  
+**"태그 추가를 호출 로직에서 했으면, 제거도 호출 로직에서 하면 되지 않을까?"**
+
+핵심은 **몽타주 종료 시점에 무조건 호출되는 콜백**을 찾는 것이었습니다.
+
+이 때 알게된 것이 ```AnimInstance```에 있는 ```FOnMontageEndedDelegate```였습니다. 몽타주가 재생되고나면 어떤 이유에서든 몽타주가 종료될 때 호출을 보장해줍니다. 심지어 두 번째 매개변수로 중단 여부까지 확인할 수 있으니 정상적으로 재생이 끝났을 때와 중단되었을 때의 로직 처리를 구분하여 로직을 처리하기도 수월했습니다.
+
+**고려한 방법들:**
+1. **Timer 사용** → 몽타주 길이만큼 타이머 설정 후 태그 제거
+   - 리스크: 몽타주가 일찍 중단되어도 타이머는 계속 진행
+   - 판단: 근본적 해결 아님 ❌
+
+2. **FOnMontageEnded Delegate 활용** ✅
+   - 몽타주가 **어떤 이유로든 종료**되면 무조건 호출
+   - `bInterrupted` 파라미터로 정상 종료/중단 여부 구분 가능
+   - UE5가 제공하는 안전한 방법
+
+</br>
+
+### 🔧 시행착오 
+#### 1차 시도: AnimNotify 위치 조정
+- 몽타주 끝부분에 Notify 배치 → 여전히 캔슬 시 미호출
+- **실패 원인:** 구조적 문제 미해결
+
+#### 2차 시도: FOnMontageEnded Delegate 적용
+피격 시스템에 먼저 적용하여 검증:
+```cpp
+void ASoulCharacterBase::HitReaction(AActor* Attacker, UDamageType* DamageType, 
+            const FVector& HitDirection)
+{
+    // ...
+    FOnMontageEnded OnMontageEnded;
+	OnMontageEnded.BindUObject(this, &ThisClass::RecoveryHitReaction);
+    AnimInstance->Montage_Play(HitReactAnimation);
+	AnimInstance->Montage_SetEndDelegate(OnMontageEnded, HitReactAnimation);
+}
+```
+
+```cpp
+void ASoulCharacterBase::RecoveryHitReaction(UAnimMontage* AnimMontage, bool bInterrupted)
+{
+	check(StateComponent);
+
+	RemoveState(SoulGameplayTag::Character_State_Hit);
+	RemoveState(SoulGameplayTag::Character_State_Down);
+	RemoveState(SoulGameplayTag::Character_State_Attacking);
+	RemoveState(SoulGameplayTag::Character_State_Attacking_Recovery);
+    
+	StateComponent->ToggleMovementInput(true);
+	AttributeComponent->ToggleStaminaRegeneration(true, 0.5f);
+}
+```
+
+**검증 결과:**
+- ✅ 피격 모션 중 공격받아 중단 → 상태 정상 복구
+- ✅ 피격 모션 정상 종료 → 상태 정상 복구
+- ✅ 블렌드 아웃 발생 → Delegate 정상 호출
+
+모든 태그 제거 로직을 ```FOnMontageEndedDelegate```를 통하도록 변경했습니다.
+
+</br>
+
+### ✅ 결과 
+**안정적인 상태 관리 시스템 구축**
+
+✅ **모든 종료 케이스 대응**
+- 정상 종료, 입력 캔슬, 피격 중단, 블렌드 아웃 모두 처리
+
+✅ **상태 불일치 문제 완전 해결**
+- 공격 캔슬 후 이동 불가 버그 소멸
+- 스태미나 재생 미복구 현상 해결
+
+✅ **확장 가능한 구조**
+- `bInterrupted`로 종료 상황별 로직 분기 가능
+- 새로운 몽타주 추가 시 동일 패턴 적용
+
+AnimNotify는 **특정 타이밍의 이벤트**(이펙트 재생, 사운드 등)에 적합하지만, **상태 초기화**처럼 반드시 실행되어야 하는 로직은 **Delegate로 보장**해야 합니다. UE5가 제공하는 몽타주 콜백 시스템을 활용하면 복잡한 예외 처리 없이 안전한 상태 관리가 가능합니다.
+
+</br>
+
+___
+
+</br>
 
 ### 2-2. 컨탠츠 구현
-- [UE5 액션] 부드러운 콤보 연계는 어떻게 구현할까? ```AnimNotify State```
+### [UE5 액션] 부드러운 콤보 연계는 어떻게 구현할까? ```AnimNotify State```
+
+### 🎮 구현 목표 
+**자연스러운 콤보 시스템 구현**
+- 공격 중 입력이 들어오면 **후딜레이를 캔슬**하고 즉시 다음 콤보로 연계
+- 공격 종료 후에도 **일정 시간 내 입력** 시 다음 콤보 진행
+- 입력 타이밍에 따라 **정확한 프레임에서 콤보 전환**
+
+</br>
+
+### 🚨 문제 상황
+**Timer 기반 콤보의 한계: 뚝뚝 끊기는 연계**
+
+기존 시스템은 공격 몽타주 재생 시간을 기준으로 Timer를 설정하고, Timer 종료 시점에 입력 여부를 확인하여 다음 콤보를 재생했습니다.
+```cpp
+void ACharacter::Attack()
+{
+    // 몽타주 전체 길이로 타이머 설정
+    float MontageLength = AttackMontage->GetPlayLength();
+    GetWorldTimerManager().SetTimer(ComboCheckTimer, this, 
+        &ThisClass::CheckComboInput, MontageLength, false);
+    
+    PlayAnimMontage(AttackMontage);
+}
+
+void ACharacter::CheckComboInput()
+{
+    if (bInputPressed)
+    {
+        PlayNextCombo();  // 타이머 종료 시점에만 체크
+    }
+}
+```
+
+**발생한 문제:**
+- ❌ 콤보 전환 타이밍이 **몽타주 끝**으로 고정되어 부자연스러움
+- ❌ 공격 **모션이 끝나기 전** 입력해도 타이머가 끝날 때까지 대기
+- ❌ 후딜레이 캔슬이 불가능해 **액션감 저하**
+
+**핵심 문제:** "입력을 언제 받았는가"와 "언제 다음 콤보로 넘어갈 수 있는가"를 분리할 수 없었습니다.
+
+</br>
+
+### 💭 해결 방안 고민  
+**"입력 체크 타이밍을 애니메이션 기준으로 제어할 수 있다면?"**
+
+Timer는 시간 기반이므로 애니메이션의 특정 구간을 정밀하게 제어하기 어렵습니다. 필요한 것은:
+
+1. **입력 받을 수 있는 구간 정의** (공격 시작 ~ 후딜레이 전)
+2. **해당 구간 내에서만 입력 체크**
+3. **입력이 들어온 순간 바로 다음 콤보 전환 가능**
+
+</br>
+
+**AnimNotifyState의 발견:**
+
+AnimNotify가 **단일 시점**에서만 호출되는 반면, **AnimNotifyState**는:
+- `NotifyBegin`: 구간 시작 시점
+- `NotifyTick`: 구간 내 매 프레임
+- `NotifyEnd`: 구간 종료 시점
+
+이 세 가지 콜백을 제공하여 **시간 구간을 정밀하게 제어**할 수 있습니다.
+
+</br>
+
+### 🔧 시행착오 
+#### 1차 시도: AnimNotifyState로 입력 윈도우 구현
+
+**핵심 아이디어:** 공격 모션이 절반 이상 진행된 시점부터 입력을 받을 수 있는 "콤보 윈도우"를 정의
+```cpp
+void UAnimNotifyState_ComboWindow::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+                                          float TotalDuration, const FAnimNotifyEventReference& EventReference)
+{
+    //...
+	if (UCombatComponent* CombatComp = Character->GetCombatComponent())
+	{
+		CombatComp->EnableComboWindow();
+	}
+}
+
+void UAnimNotifyState_ComboWindow::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+	const FAnimNotifyEventReference& EventReference)
+{
+     //...
+	if (UCombatComponent* CombatComp = Character->GetCombatComponent())
+	{
+		CombatComp->DisableComboWindow();
+	}
+}
+```
+
+**좋은 점:**
+- ✅ ComboWindow 내 입력 → 후딜레이 캔슬하고 즉시 다음 콤보
+- ✅ 정확한 타이밍에 입력한 플레이어에게 빠른 전투감 제공
+
+
+```cpp
+void UCombatComponent::DisableComboWindow()
+{
+	bCanComboInput = false;
+ 
+	// 애니메이션 재생 중에 다음 공격 입력이 들어왔다면 다음 애니메이션 재생 준비
+	if (bSavedComboInput)
+	{
+		bSavedComboInput = false; 
+		++ComboCounter;
+		LOG_WARNING("Combo Window Closed : 입력 확인, 다음 콤보 실행");
+
+        // 다음 콤보 재생
+		DoAttack(LastAttackType); 
+	}
+	else
+	{
+		if (ASoulCharacterBase* CharacterBase = Cast<ASoulCharacterBase>(GetOwner()))
+		{
+			CharacterBase->SetState(SoulGameplayTag::Character_State_Attacking_Recovery);
+		}
+	}
+}
+
+```
+
+**딜레마**
+ComboWindow를 벗어나면 입력이 모두 무시되어 **콤보가 첫 번째로 초기화**됩니다.
+```
+플레이어 경험:
+1. 1타 공격 → 2타 입력 (살짝 늦음) 
+2. ComboWindow 놓침 → 후딜레이 진입
+3. 후딜 중 다시 입력 
+4. 콤보 초기화 → 1타부터 다시 시작 😡
+```
+
+**"타이밍 놓쳤으니 다시 처음부터" = 매우 불쾌한 경험**
+
+조작감을 높이겠다는 의도로 후딜레이 캔슬이라는 혜택을 제공한 것은 좋았으나, 패널티(후딜레이간 입력/이동 불가)가 너무 강력했습니다.
+
+</br>
+
+
+#### 2-1차 시도: ComboWindow 범위 확장
+**시도:** NotifyState의 범위를 후딜레이 구간까지 늘려보자
+
+✅ 장점:
+- 입력 허용 시간이 넉넉해져 콤보 성공률 ↑
+
+❌ 치명적 단점:
+```
+플레이어 경험:
+1. 1타 완료 → 후딜레이 진입
+2. 후딜 중 2타 입력 (입력은 받아짐)
+3. 그러나 NotifyEnd() 도달 전까지 대기 😤
+4. 콤보 공격 진행이 느릿하게 느껴짐
+```
+
+**후딜레이를 경험하는 건 매한가지**입니다. Timer만 사용했을 때에 비해 두드러지는 개선감이 잘 느껴지지 않습니다.
+
+**핵심 문제 인식:**
+```
+앞쪽으로 여유 주기 (공격 중) ✅ → 후딜 캔슬 = 쾌적함
+뒤쪽으로 여유 주기 (후딜레이 중) ❌ → 후딜 대기 = 불쾌감
+```
+```AnimNotifyState```는 **구간의 끝에서 일괄 처리**하는 구조이므로, 후딜레이 구간까지 포함하면 결국 후딜을 다 봐야 합니다. 
+
+</br>
+
+#### 3차 개선: 이중 입력 윈도우 시스템
+**구현 목표:**
+1. **Perfect Timing 보상**: ComboWindow 내 입력 → 후딜 캔슬, 부드러운 연계
+2. **패널티 부여**: ComboWindow 놓침 → 후딜레이 재생 (시간적 불이익)
+3. **2차 기회 제공**: 그래도 후딜 중 입력 들어오면 → 콤보는 이어짐
+
+<p align="center">
+ <img alt="이미지" src="readme\ComboWindow.png">
+</p>
+
+**핵심 아이디어:** 
+- **1차 윈도우 (ComboWindow)**: 후딜 캔슬 가능한 "Perfect 구간"
+- **2차 윈도우 (AttackFinished + Timer)**: 후딜은 보지만 콤보는 이어지는 "Mercy 구간"
+
+```cpp
+void UAnimNotify_AttackFinished::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+                                        const FAnimNotifyEventReference& EventReference)
+{
+    //...
+	if (UCombatComponent* CombatComp = Character->GetCombatComponent())
+	{
+		CombatComp->AttackFinished(ComboResetDelay);
+	}
+}
+```
+```cpp
+void UCombatComponent::AttackFinished(const float ComboResetDelay)
+{
+	// ComboResetDelay 간 추가 콤보 입력 시간을 준 뒤 콤보 시퀀스 종료
+    // 입력이 들어오면 ExecuteComboAttack에서 콤보 공격을 자동으로 처리. 타이머는 콤보 초기화만 지연
+	GetWorld()->GetTimerManager().SetTimer(ComboResetTimerHandle, this, &UCombatComponent::ResetCombo, ComboResetDelay);
+	
+	ASoulCharacterBase* CharacterBase = Cast<ASoulCharacterBase>(GetOwner());
+	if (false == IsValid(CharacterBase)) return;
+	
+	// 상태 처리를 위해 캐릭터로 내려 보낸다.
+	CharacterBase->AttackFinished();
+}
+```
+```cpp
+void UCombatComponent::ExecuteComboAttack(const FGameplayTag& AttackTypeTag)
+{
+    //...
+	if (false == CharacterBase->IsCurrentState(SoulGameplayTag::Character_State_Attacking))
+	{
+		// 애니메이션은 끝났지만, 콤보시퀀스 변수가 true인 시간에는 추가 입력 기회를 준다.
+		if (bComboSequenceRunning == true && bCanComboInput == false)
+		{
+			++ComboCounter;
+			LOG_WARNING("추가 공격 입력 기회 : Combo counter : %d", ComboCounter);
+		}
+		else // 첫 번째 공격
+		{
+			LOG(">>> 콤보 시퀀스 시작 <<<");
+			ResetCombo();
+			bComboSequenceRunning = true;
+		}
+		
+        // 진짜 공격 로직 처리 함수
+		DoAttack(AttackTypeTag);
+
+		GetWorld()->GetTimerManager().ClearTimer(ComboResetTimerHandle);
+	}
+	// 아직 공격 애니메이션이 끝나지 않았는데 콤보 입력이 추가로 들어온 경우 : 최적의 타이밍
+	else if (bCanComboInput) 
+	{
+		LOG_WARNING("Combo Hit!!!!");
+		bSavedComboInput = true;
+	}
+}
+```
+
+**플레이어 경험 개선:**
+
+| 시나리오 | 기존 (Timer만) | 개선 (이중 윈도우) |
+|---------|---------------------|-------------------|
+| Perfect 입력 |  후딜 재생 → 다음 콤보 😡  | **즉시 다음 콤보** ✅ |
+| ComboWindow 놓침 | - | 후딜 재생 😡|
+| 후딜 중 입력 | 후딜 재생 → 다음 콤보 😡 |**즉시 다음 콤보** ✅ |
+| Timer 종료 후 | 1타로 되돌아감 | 1타로 되돌아감 |
+```
+개선된 플레이어 경험:
+1. 콤보 공격 재생(1타)
+2. ComboWindow 놓침 → 후딜 재생 (패널티)
+3. 후딜 중 다시 입력
+4. 후딜레이 중단 → 즉시 2타 공격 진행! ✅
+```
+
+**왜 결국 Timer를 다시 썼는가?**
+
+AnimNotifyState는 **애니메이션 구간**만 제어할 수 있지, **시간 기반 유예 기간**은 제공할 수 없습니다.
+
+Timer의 역할 재정의:
+- ❌ (기존) 콤보 전환 타이밍 결정 → 부정확, 유연성 부족
+- ✅ (개선) 콤보 시퀀스 유지 시간 보장 → 정확한 역할 분담
+
+**NotifyState + Timer 조합의 시너지:**
+- NotifyState: **정밀한 보상 구간** (후딜 캔슬 가능)
+- Timer: **넓은 허용 구간** (콤보 유지만 보장)
+
+</br>
+
+### ✅ 결과 
+**조작감을 챙긴 3단계 입력 시스템**
+
+✅ **Perfect Timing 보상 (ComboWindow)**
+- 공격 모션 30% 이후 입력 → 후딜 캔슬
+- 숙련된 플레이어에게 빠른 전투감 제공
+
+✅ **Mercy Window (Extra Combo Input)**
+- ComboWindow 놓쳐도 0.N초 추가 기회
+- 후딜레이 패널티는 있지만 **콤보는 끊기지 않음** (핵심 개선!)
+
+✅ **입력 타이밍별 차등 보상**
+| 타이밍 | 조작감 | 전투 속도 | 콤보 유지 |
+|--------|--------|----------|----------|
+| Perfect | 후딜 없음 | 빠름 ⭐ | ✅ |
+| Late | 후딜 재생 | 보통 ✅ | ✅ |
+| Too Late | 콤보 끊김 | 느림 ❌ | ❌ |
+
+</br>
+
+___
+
+</br>
+
 - [UE5 액션] 타격감의 핵심은 타이밍이다. ```AnimNotify```
 - [UE5 액션] 자연스러운 대시를 구현할 순 없을까?  ```Motion Warping```
 - [UE5 액션] 아이템 및 몽타주 관리, 데이터 주도 설계 ```DataAsset```, ```DataTable```
 - [UE5 액션] 슬롯 기반 인벤토리 UI 동기화 전략  ```Inventory Component```, ```WidgetManager```
+- [UE5 팀 프로젝트] 다이나믹 머티리얼로 강조 효과 구현하기
+
 ### 2-3. 네트워크 동기화 문제 해결 전략
 - [UE5 팀 프로젝트] 클라에서 스폰하면 안 보여요. ```SpawnActorDeferred```
 - [Dedicated Server] "서버에 접속할 수 없습니다" 안 보고 한 번에 접속하기
@@ -638,14 +1052,13 @@ ___
 - [Dedicated Server] 왜 님은 닉네임이 안 보여요? ```SeamlessTravel```
 - [Dedicated Server] 아니 방금 이겼는데 왜 내가 2등이예요? 
 ### 2-4. AI 시스템 구현
-- [DirectX 11] FSM 기반 몬스터 패턴
 - [UE5 액션] Behavior Tree를 활용한 몬스터 패턴
 ### 2-5. 커스텀 엔진 아키텍처 설계
 - [DirectX 11] 언리얼 상속 기반 프레임워크 따라하기
 ### 2-6. 협업 및 버전 관리
 - [UE5 팀 프로젝트] Pull-Request 시행착오와 교훈
 - [UE5 팀 프로젝트] 테스트 레벨, 캐릭터 없이 UI로 기능 테스트
-- [UE5 팀 프로젝트] 다이나믹 머티리얼로 강조 효과 구현하기
+
 ### 2-7. 최적화 전략 
 - [UE5 액션] ```Tick```에 미련을 버려라. 대안은 많다.
 - [Dedicated Server] 매번 배열 전체를 네트워크 복제해야 할까? ```Fast Array Serializer```
@@ -686,7 +1099,9 @@ ___
 ___
 
 
-
+<p align="center">
+ <img alt="이미지" src="readme\ComboWindow.png">
+</p>
 
 <h3 align="left">Connect with me:</h3>
 <p align="left">
