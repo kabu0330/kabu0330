@@ -30,7 +30,7 @@
 - 🔗 [[UE5 액션] 부드러운 콤보 연계는 어떻게 구현할까? ```AnimNotify State```](#ue5-액션-부드러운-콤보-연계는-어떻게-구현할까-animnotify-state)
 - 🔗 [[UE5 액션] 자연스러운 대시를 구현할 순 없을까?  ```Motion Warping```](#ue5-액션-자연스러운-대시를-구현할-순-없을까--motion-warping)
 - 🔗 [[UE5 액션] 무기별 전투 스타일, 데이터 주도 설계](#ue5-액션-무기별-전투-스타일-데이터-주도-설계)
-- 🔗 [UE5 액션] 슬롯 기반 인벤토리 UI 동기화 전략  ```Inventory Component```, ```WidgetManager```
+- 🔗 [[UE5 액션] 슬롯 기반 인벤토리 UI 동기화 전략  ```Inventory Component```, ```WidgetManager```](#ue5-액션-슬롯-기반-인벤토리-ui-동기화-전략--inventory-component-widgetmanager)
 - 🔗 [UE5 팀 프로젝트] 다이나믹 머티리얼로 강조 효과 구현하기 
 ### 2-3. 네트워크 동기화 문제 해결 전략
 - 🔗 [UE5 팀 프로젝트] 클라에서 스폰하면 안 보여요. ```SpawnActorDeferred``` 
@@ -1083,7 +1083,7 @@ Youtube로 다른 사람들이 어떻게 대시를 구현했는지 보기 위해
 - Root Motion을 유지하면서 거리를 조정하므로 **발이 땅에서 미끄러지지 않음**
 - 이동 거리와 애니메이션이 **완벽하게 일치**
 
-즉, 제가 찾던 **"애니메이션과 이동을 하나로 묶는 방법"**이었습니다.
+즉, 제가 찾던 **애니메이션과 이동을 하나로 묶는 방법**이었습니다.
 
 </br>
 
@@ -1440,6 +1440,434 @@ ___
 
 ### 🎮 구현 목표 
 
+단순히 아이템을 줍고 장비를 착용하는 것을 넘어, **인벤토리-장비창 간 드래그 앤 드롭으로 아이템을 자유롭게 이동**하고, **상태 변화가 즉시 모든 UI에 반영**되는 시스템을 구현하고자 했습니다.
+
+</br>
+
+### 🚨 문제 상황
+
+**복잡한 의존성: UI가 모든 컴포넌트를 알아야 하는 구조**
+초기 설계에서는 각 UI 위젯이 필요한 컴포넌트를 직접 참조했습니다.
+```cpp
+// 초기 구조 - 각 위젯이 컴포넌트를 개별 참조
+void UItemSlotWidget::OnDoubleClick()
+{
+    // 인벤토리 컴포넌트 찾기
+    UInventoryComponent* InventoryComp = GetOwningPlayerPawn()->GetComponentByClass();
+    
+    // 전투 컴포넌트 찾기
+    UCombatComponent* CombatComp = GetOwningPlayerPawn()->GetComponentByClass();
+    
+    // 아이템 장착 처리
+    CombatComp->EquipWeapon(...);
+}
+```
+
+❌ **양방향 의존성 폭발**
+```
+ItemSlotWidget → InventoryComponent
+                → CombatComponent
+                → EquipmentWidget (상태 업데이트)
+EquipmentWidget → CombatComponent
+                 → InventoryComponent (장비 해제 시)
+```
+- 컴포넌트가 변경되면 관련된 모든 위젯 수정 필요
+- 새 UI 추가 시마다 기존 코드 수정
+
+❌ **데이터 흐름 파악 어려움**
+- "이 아이템이 어디서 왔는지" 추적 불가
+- 드래그 앤 드롭 시 원본/대상 슬롯 정보 관리 복잡
+
+**핵심 문제 인식:**
+
+UI가 **데이터를 직접 조작**하니까 "누가 언제 데이터를 변경했는지" 알 수 없어 동기화가 깨졌습니다.
+
+
+</br>
+
+### 💭 해결 방안 고민  
+**"데이터 변경은 Component가, UI 갱신은 Delegate로"**
+
+**설계 원칙 수립:**
+
+1. **단방향 데이터 흐름**
+```
+   UI 입력 → Component 데이터 변경 → Delegate 전파 → UI 갱신
+```
+   - UI는 데이터를 **읽기만** 하고, 쓰기는 Component에 **요청**
+   - Component는 UI를 모름 (Delegate로만 알림)
+
+2. **WidgetManager를 통한 중앙 집중**
+   - 모든 위젯이 개별적으로 Component 찾지 않고
+   - WidgetManager가 **싱글 엔트리 포인트** 역할
+
+3. **DragDropOperation으로 드래그 상태 캡슐화**
+   - 드래그 중인 아이템 정보를 **Operation 객체**에 저장
+   - 원본 슬롯 추적, 드롭 대상 검증 일원화
+
+**아키텍처 다이어그램:**
+```
+[UI Layer]
+ ItemSlotWidget ──┐
+ EquipmentSlotWidget ─┤
+                      ├─→ WidgetManager ─→ [Data Layer]
+ InventoryWidget ──┤                       InventoryComponent
+ EquipmentWidget ─┘                        CombatComponent
+                                                   ↓
+                      Delegate ←───────────────────┘
+                         ↓
+                    [UI 자동 갱신]
+```
+
+
+</br>
+
+### 🔧 시행착오 
+
+#### 1단계: 데이터 구조 설계 - "UI는 무엇을 알아야 하는가?"
+
+**핵심 질문:** 아이템 슬롯이 표시하려면 최소한 어떤 정보가 필요한가?
+
+처음엔 아이템 클래스 자체를 저장하려다가, **ID 기반 간접 참조**로 변경:
+```cpp
+// InventoryComponent.h - 슬롯은 ID만 저장
+USTRUCT(BlueprintType)
+struct FInventorySlot
+{
+    GENERATED_BODY()
+public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    FName ItemID;  // 직접 참조 대신 ID
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int32 Quantity;
+
+    bool IsEmpty() const { return ItemID == NAME_None || Quantity <= 0; }
+};
+```
+
+**이유:**
+- 세이브/로드가 쉬움 (ID만 저장)
+- 메모리 효율적 (Actor 포인터 대신 FName)
+- DataTable에서 런타임에 조회 → 데이터 변경 시 재시작 불필요
+```cpp
+// InventoryComponent.h - DataTable로 실제 데이터 관리
+USTRUCT(BlueprintType)
+struct FItemData : public FTableRowBase
+{
+    GENERATED_BODY()
+public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    FText ItemName;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TSubclassOf Item;  // 실제 아이템 클래스
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int32 MaxStackSize;
+};
+```
+#### 2단계: Delegate 기반 알림 시스템
+
+**문제:** Component가 변경되면 UI는 어떻게 알 수 있나?
+
+**해결:** Component에 Delegate 추가, UI는 구독만
+```cpp
+// InventoryComponent.h
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryUpdated);
+
+UCLASS()
+class SOUL_API UInventoryComponent : public UActorComponent
+{
+public:
+    UPROPERTY(BlueprintAssignable)
+    FOnInventoryUpdated OnInventoryUpdated;  // UI가 구독할 Delegate
+
+    bool AddItem(FName ItemID, int32 Amount)
+    {
+        // ... 데이터 변경 로직
+        
+        BroadcastInventoryUpdated();  // 변경 알림
+        return true;
+    }
+
+    void BroadcastInventoryUpdated() const
+    {
+        if (OnInventoryUpdated.IsBound())
+        {
+            OnInventoryUpdated.Broadcast();
+        }
+    }
+};
+```
+```cpp
+// InventoryWidget.cpp - UI는 듣기만
+void UInventoryWidget::SetInventoryComponent(UInventoryComponent* NewInventoryComp)
+{
+    if (InventoryComponent)
+    {
+        // 기존 구독 해제
+        InventoryComponent->OnInventoryUpdated.RemoveDynamic(this, &UInventoryWidget::RefreshInventory);
+    }
+    
+    InventoryComponent = NewInventoryComp;
+    if (InventoryComponent)
+    {
+        // 새로운 구독
+        InventoryComponent->OnInventoryUpdated.AddDynamic(this, &UInventoryWidget::RefreshInventory);
+        RefreshInventory();  // 초기 상태 반영
+    }
+}
+
+void UInventoryWidget::RefreshInventory()
+{
+    // 데이터 조회만 (변경 안 함)
+    const TArray& SlotsData = InventoryComponent->GetSlots();
+    
+    // UI 갱신
+    for (int32 i = 0; i < SlotsData.Num(); ++i)
+    {
+        ItemSlotWidget->UpdateSlot(SlotsData[i], ItemDataTable);
+    }
+}
+```
+
+**효과:** Component는 UI를 전혀 모르지만, 데이터 변경 시 **자동으로 모든 UI 갱신**
+
+#### 3단계: WidgetManager로 의존성 중앙화
+
+**문제:** 
+- 모든 위젯이 `GetComponentByClass<>()` 호출 → 비효율, 코드 중복
+- 플레이어 사망 후 부활 시 기존 델리게이트 구독이 동작하지 않는 문제
+
+**해결:** 정적 헬퍼 함수로 싱글 액세스 포인트 제공
+```cpp
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnToggleWidget, const EWidgetType, WidgetType, const bool, bOpen);
+
+class SOUL_API UWidgetManagerComponent : public UActorComponent
+{
+public:
+	FOnToggleWidget OnToggleWidget;
+	void BroadcastToggleWidget(const EWidgetType WidgetType, const bool bOpen);
+
+	FORCEINLINE static UDataTable* GetItemDataTable() {return ItemDataTable; }
+	FORCEINLINE static UInventoryComponent* GetInventoryComponent() {return InventoryComponent; }
+	FORCEINLINE static UCombatComponent* GetCombatComponent() {return CombatComponent; }
+	FORCEINLINE static ASoulPlayerCharacter* GetOwner() {return Owner; }
+
+protected:
+	inline static TObjectPtr<UDataTable> ItemDataTable;
+	inline static TObjectPtr<UInventoryComponent> InventoryComponent;
+	inline static TObjectPtr<UCombatComponent> CombatComponent;
+	inline static TObjectPtr<ASoulPlayerCharacter> Owner;
+}
+```
+
+```cpp
+// ItemSlotWidget.cpp - 이제 간결하게
+void UItemSlotWidget::OnDoubleClick()
+{
+    // 복잡한 탐색 대신 한 줄
+    UInventoryComponent* InventoryComp = UWidgetManagerComponent::GetInventoryComponent();
+    
+    if (InventoryComp)
+    {
+        InventoryComp->RemoveItem(SlotIndex);  // 데이터 변경 요청
+        // UI 갱신은 Delegate가 알아서!
+    }
+}
+```
+
+#### 4단계: DragDropOperation으로 드래그 상태 관리
+
+**문제:** 드래그 중 "어디서 왔는지", "무엇을 들고 있는지" 추적 어려움
+
+**해결:** 드래그 정보를 Operation 객체에 캡슐화
+```cpp
+// ItemDragDropOperation.h
+UCLASS()
+class UItemDragDropOperation : public UDragDropOperation
+{
+    GENERATED_BODY()
+public:
+    // 드래그 중인 아이템 정보
+    UPROPERTY()
+    FItemData ItemData;
+
+    // 드래그 시작한 원본 슬롯
+    UPROPERTY()
+    USlotWidget* SourceSlotWidget;
+
+	// swap시 바꿀 위치를 기록
+    UPROPERTY()
+    int32 SourceSlotIndex;
+};
+```
+
+**드래그 시작 (ItemSlotWidget):**
+```cpp
+void UItemSlotWidget::NativeOnDragDetected(...)
+{
+    // 1. Operation 생성
+    UItemDragDropOperation* Operation = Cast(
+        UWidgetBlueprintLibrary::CreateDragDropOperation(DragDropOperationClass)
+    );
+
+    // 2. 드래그 정보 저장
+    Operation->ItemData = ItemData;
+    Operation->SourceSlotWidget = this;
+    Operation->SourceSlotIndex = SlotIndex;
+
+    // 3. 시각적 피드백
+    IconImage->SetColorAndOpacity(FLinearColor(1, 1, 1, 0.5f));  // 반투명
+
+    // 4. 드래그 위젯 생성 (마우스 따라다님)
+    UDragVisualWidget* DragVisual = CreateWidget(...);
+    DragVisual->SetIconImage(ItemData.Item->GetDefaultObject()->GetIconTexture());
+    Operation->DefaultDragVisual = DragVisual;
+
+    OutOperation = Operation;
+}
+```
+
+**드롭 처리 (EquipmentSlotWidget):**
+```cpp
+bool UEquipmentSlotWidget::NativeOnDrop(...)
+{
+    UItemDragDropOperation* Operation = Cast(InOperation);
+    if (!Operation) return false;
+
+    // 1. 원본 슬롯 복원
+    if (USlotWidget* SourceWidget = Cast(Operation->SourceSlotWidget))
+    {
+        SourceWidget->IconImage->SetColorAndOpacity(FLinearColor(1, 1, 1, 1));
+    }
+
+    // 2. 드래그 출처 확인
+    if (UItemSlotWidget* ItemSlot = Cast(Operation->SourceSlotWidget))
+    {
+        // 인벤토리 → 장비창: 장착
+        if (ASoulItemBase* Item = Operation->ItemData.Item->GetDefaultObject())
+        {
+            FActorSpawnParameters SpawnParams;
+            SpawnParams.Owner = GetOwningPlayerPawn();
+            
+            ASoulEquipment* Equipment = GetWorld()->SpawnActor(
+                Operation->ItemData.Item, 
+                GetOwningPlayerPawn()->GetActorTransform(), 
+                SpawnParams
+            );
+            
+            if (Equipment)
+            {
+                // 인벤토리에서 제거
+                UWidgetManagerComponent::GetInventoryComponent()->RemoveItem(Operation->SourceSlotIndex);
+                
+                // 장비 장착 (내부에서 CombatComponent 업데이트)
+                Equipment->EquipItem(Operation->SourceSlotIndex);
+                
+                // UI 갱신은 Delegate가 자동 처리!
+            }
+        }
+    }
+    else if (UEquipmentSlotWidget* EquipSlot = Cast(Operation->SourceSlotWidget))
+    {
+        // 장비창 → 인벤토리: 장착 해제
+        // (별도 처리)
+    }
+
+    return true;
+}
+```
+
+#### 5단계: 장비 교체 시 인벤토리 스왑
+
+**문제:** 무기를 이미 착용한 상태에서 새 무기 착용 → 기존 무기는?
+
+**해결:** CombatComponent가 자동으로 인벤토리에 반환
+```cpp
+// CombatComponent.cpp
+void UCombatComponent::SetWeapon(ASoulWeapon* NewWeapon, int32 SlotIndex)
+{
+    // 이미 무기 착용 중이면 인벤토리로 반환
+    if (IsValid(MainWeapon))
+    {
+        SendInventory(MainWeapon, SlotIndex);  
+    }
+
+    MainWeapon = NewWeapon;
+    BroadcastChangedWeapon();  // Delegate 전파 → EquipmentWidget 자동 갱신
+}
+
+void UCombatComponent::SendInventory(ASoulItemBase* Item, int32 SlotIndex)
+{
+    if (InventoryComp->AddItem(Item->GetItemID(), 1, SlotIndex))
+    {
+        Item->Destroy();  // 월드에서 제거
+    }
+    else
+    {
+        // 인벤토리 가득 차면 바닥에 떨어뜨림
+        SpawnPickupItem(GetOwner(), Item->GetClass());
+    } 
+}
+```
+
+</br>
+
+**데이터 흐름:**
+```
+1. 플레이어가 새 무기 드래그 앤 드롭
+   ↓
+2. EquipmentSlotWidget::NativeOnDrop()
+   ↓
+3. InventoryComponent->RemoveItem(원본 슬롯)
+   → OnInventoryUpdated Delegate 발행
+   → InventoryWidget 자동 갱신
+   ↓
+4. Equipment->EquipItem()
+   ↓
+5. CombatComponent->SetWeapon(새 무기, 슬롯 인덱스)
+   → 기존 무기를 InventoryComponent->AddItem(슬롯 인덱스)
+   → OnInventoryUpdated Delegate 발행
+   → InventoryWidget 다시 갱신 (기존 무기 표시)
+   → OnChangedWeapon Delegate 발행
+   → EquipmentWidget 자동 갱신
+```
+
+**핵심:** UI는 단 한 줄(`Equipment->EquipItem()`)만 호출하지만, 나머지는 **Delegate 체인으로 자동 동기화**
+
+</br>
+
+### ✅ 결과 
+**느슨한 결합의 확장 가능한 인벤토리 시스템 완성**
+
+✅ **단방향 데이터 흐름 확립**
+```
+UI 입력 → Component 변경 → Delegate 발행 → 모든 관련 UI 자동 갱신
+```
+- UI는 데이터를 **읽기만** 하고 쓰기는 **요청**
+- Component는 UI를 몰라도 Delegate로 알림
+
+✅ **드래그 앤 드롭 완벽 지원**
+- 인벤토리 ↔ 인벤토리: 아이템 위치 교환
+- 인벤토리 → 장비창: 장비 착용
+- 장비창 → 인벤토리: 장비 해제
+- 장비 교체 시 자동 스왑
+
+✅ **확장성**
+- 새 UI 추가 시: Delegate만 구독하면 끝
+- 새 장비 타입 추가: Component 로직만 수정, UI는 무관
+
+</br>
+
+___
+
+
+### [UE5 팀 프로젝트] 다이나믹 머티리얼로 강조 효과 구현하기
+
+### 🎮 구현 목표 
+
 </br>
 
 ### 🚨 문제 상황
@@ -1460,8 +1888,6 @@ ___
 
 ___
 
-
-- [UE5 팀 프로젝트] 다이나믹 머티리얼로 강조 효과 구현하기
 
 ### 2-3. 네트워크 동기화 문제 해결 전략
 - [UE5 팀 프로젝트] 클라에서 스폰하면 안 보여요. ```SpawnActorDeferred```
