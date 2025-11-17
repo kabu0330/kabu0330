@@ -1,41 +1,30 @@
 <h1 align="left"> 게임 클라이언트 프로그래머 류성민입니다.</h1>
 
-## 프로젝트 링크
-### 🔗 1. [UE5] 액션 게임 프로젝트 [github.com/kabu0330/UE_Soul2](https://github.com/kabu0330/UE_Soul2)
-### 🔗 2. [UE5, AWS] Dedicated Server 프로젝트 [github.com/kabu0330/FPS_with_DedicatedServer](https://github.com/kabu0330/FPS_with_DedicatedServer)
-### 🔗 3. [UE5 팀 프로젝트] 시뮬레이션 게임 (Overcooked! 2 모작) [github.com/kabu0330/UE_Overcooked2](https://github.com/kabu0330/UE_Overcooked2)
-### 🔗 4. [DirectX 11] 2D 액션 게임 프로젝트 (Hollow Knight 모작) [github.com/kabu0330/DX_HollowKnight2](https://github.com/kabu0330/DX_HollowKnight2)
-### 🔗 5. [WinAPI] 슈팅 게임 프로젝트 (The Binding of Isaac 모작) [github.com/kabu0330/WinAPI](https://github.com/kabu0330/WinAPI)
-</p>
-
-</br>
-
 ## 📜 목차
 ### 1. 📄 프로젝트 개요
-- 📋 프로젝트 정보
-- 💻 작업 내용
-- 🎯 작업 목표
-- 📊 배운 점 / 회고
+- 🔗 1. [UE5] 액션 게임 프로젝트 [github.com/kabu0330/UE_Soul2](https://github.com/kabu0330/UE_Soul2)
+- 🔗 2. [UE5, AWS] Dedicated Server 프로젝트 [github.com/kabu0330/FPS_with_DedicatedServer](https://github.com/kabu0330/FPS_with_DedicatedServer)
+- 🔗 3. [UE5 팀 프로젝트] 시뮬레이션 게임 (Overcooked! 2 모작) [github.com/kabu0330/UE_Overcooked2](https://github.com/kabu0330/UE_Overcooked2)
+- 🔗 4. [DirectX 11] 2D 액션 게임 프로젝트 (Hollow Knight 모작) [github.com/kabu0330/DX_HollowKnight2](https://github.com/kabu0330/DX_HollowKnight2)
 
 </br>
 
 ### 2. 📑 주요 구현 내용 
-* 제가 가장 깊이있게 고민한 대표 문제 해결 사례 세 개를 뽑아 ✅ 표시했습니다.
+
 ### 2-1. 상태 관리 시스템
 - 🔗 [[DirectX 11] ```Enum```의 한계 → ```FSM Component```](#directx-11-enum의-한계--fsm-component)
 - 🔗 [[UE5 액션] 복잡한 상태도 심플하게, ```GameplayTag Container```](#ue5-액션-복잡한-상태도-심플하게-gameplaytag-container)
 - 🔗 [[UE5 액션] 공격이 캔슬된 후 캐릭터가 안 움직여요.](#ue5-액션-공격이-캔슬된-후-캐릭터가-안-움직여요-fonmontageended-delegate) 
-
 ### 2-2. 컨탠츠 구현
-- 🔗 [[UE5 액션] 부드러운 콤보 연계는 어떻게 구현할까? ```AnimNotify State```](#ue5-액션-부드러운-콤보-연계는-어떻게-구현할까-animnotify-state)
+- 🔗 [[UE5 액션] 부드러운 콤보 연계는 어떻게 구현할까? ```AnimNotify State```](#ue5-액션-부드러운-콤보-연계는-어떻게-구현할까-animnotify-state) 
 - 🔗 [[UE5 액션] 자연스러운 대시를 구현할 순 없을까?  ```Motion Warping```](#ue5-액션-자연스러운-대시를-구현할-순-없을까--motion-warping)
 - 🔗 [[UE5 액션] 무기별 전투 스타일, 데이터 주도 설계](#ue5-액션-무기별-전투-스타일-데이터-주도-설계)
 - 🔗 [[UE5 액션] 슬롯 기반 인벤토리 UI 동기화 전략  ```Inventory Component```, ```WidgetManager```](#ue5-액션-슬롯-기반-인벤토리-ui-동기화-전략--inventory-component-widgetmanager)
-- 🔗 [UE5 팀 프로젝트] 다이나믹 머티리얼로 강조 효과 구현하기 
+- 🔗 [[UE5 팀 프로젝트] 다이나믹 머티리얼로 강조 효과 구현하기](#ue5-팀-프로젝트-다이나믹-머티리얼로-강조-효과-구현하기) 
 ### 2-3. 네트워크 동기화 문제 해결 전략
-- 🔗 [UE5 팀 프로젝트] 클라에서 스폰하면 안 보여요. ```SpawnActorDeferred``` 
-- 🔗 [Dedicated Server] "서버에 접속할 수 없습니다" 메시지 없이 한 번에 접속하기
-- 🔗 [Dedicated Server] 시간 오차는 어떻게 해결할까?
+- 🔗 [[UE5 팀 프로젝트] 클라에서 스폰하면 안 보여요. ```SpawnActorDeferred```](#ue5-팀-프로젝트-클라에서-스폰하면-안-보여요-spawnactordeferred)
+- 🔗 [[Dedicated Server] "서버에 접속할 수 없습니다" 메시지 없이 한 번에 접속하기](#dedicated-server-서버에-접속할-수-없습니다-메시지-없이-한-번에-접속하기)
+- 🔗 [[Dedicated Server] 시간 오차는 어떻게 해결할까? ```Ping-Pong```](#dedicated-server-시간-오차는-어떻게-해결할까-ping-pong)
 - 🔗 [Dedicated Server] 왜 님은 닉네임이 안 보여요? ```SeamlessTravel``` 
 - 🔗 [Dedicated Server] 아니 방금 이겼는데 왜 내가 2등이예요? 
 ### 2-4. AI 시스템 구현
@@ -100,12 +89,8 @@
   -  ```UWeaponCollisionComponent``` 및 ```UTargetingComponent```에서 제한적 사용
 - ✅ GameplayTag Container로 복잡한 상태 관리 간소화
 - ✅ OnMontageEnded Delegate로 애니메이션 중단 시에도 안정적인 상태 처리
-- ⚠️ 인터페이스 활용 부족 → 다음: Interface/Component 분리 원칙 적용
-- ⚠️ 입력 처리 구조 한계 → 다음: Ability 시스템으로 입력-기능 분리
 
 > 💡 **배운 점**: Tick 기반에서 이벤트 기반으로 전환하면서 코드가 훨씬 명확해졌습니다. "언제 실행되는지"를 Timer와 Delegate로 명시하니 디버깅도 쉬워지고, AnimNotify로 애니메이션과 로직을 분리하니 전투 시스템 확장이 보다 쉬워졌습니다. 
-
-</p>
 
 </br>
 
@@ -153,7 +138,6 @@ ___
 - ✅ AWS SDK C++ 빌드 및 UE 프로젝트 연동 (Lambda, DynamoDB)
 - ✅ SeamlessTravel 시 PlayerState 동기화 문제 해결 (```OverrideWith```)
 - ✅ 컨텐츠/서버 전용 모듈 분리
-- ✅ 로그 기반 서버 디버깅 환경 구축 (AWS CloudWatch 연동)
 - ✅ FFastArraySerializer 적용 네트워크 복제 비용 최적화
 
 > 💡 **배운 점**: Dedicated Server를 직접 구축하며 **서버의 역할**을 보다 잘 이해하게 되었습니다. 클라이언트에서 보이는 것과 서버에서 계산하는 것을 분리하고, Replication 타이밍을 제어하는 과정에서 네트워크 게임의 기본 구조를 이해하게 되었습니다. "중단점 없이 로그만 보고 디버깅"하는 경험이 처음엔 어려웠지만, 덕분에 로그를 활용한 디버깅 능력을 기를 수 있었습니다.
@@ -161,8 +145,6 @@ ___
 </br>
 
 ___
-
-
 
 ### 🔭 [UE5 팀 프로젝트] 시뮬레이션 게임 (Overcooked! 2 모작)
 ### 📸 Gif
@@ -201,7 +183,6 @@ ___
 
 ### 📊 핵심 성과
 - ✅ SpawnActorDeferred로 Replicate 타이밍 문제 해결
-- ✅ 클라이언트 전용 처리 결정으로 네트워크 최적화
 - ✅ 테스트 레벨로 독립적 기능 검증 가능
 - ✅ DataTable 기반 요리 시스템
 - ⚠️ Fork-PR 방식의 시행착오 경험 → Stash 활용법을 나중에 알게 됨
@@ -209,8 +190,8 @@ ___
 > 💡 **배운 점**: 팀 프로젝트에서는 "**항상 내가 통제 가능한 상태에서 테스트할 수 없다**"는 현실을 체감했습니다. 테스트 레벨을 만들어 캐릭터 없이도 기능을 검증하고, Git 전략을 개선하며, 네트워크 동기화를 "필요한 것만" 하는 선택 기준을 익혔습니다
 
 </br>
-___
 
+___
 
 ### 🔭 [DirectX 11] 2D 액션 게임 프로젝트 (Hollow Knight 모작)
 ### 📸 Gif
@@ -251,7 +232,6 @@ ___
 - ✅ 상속 기반 기능 구현(AEffect, ASkill, AParticle, AKnightSkill, AMonsterSkill)
 - ✅ 컴포넌트 기반 기능 구현(UFSMStateComponent, UTimeEventComponent, UCollision, USpriteRenderer)
 - ✅ 멀티스레드 비동기 리소스 로딩 구현 (초기 실행 시간 단축)
-- ✅ 드로우 콜 최적화 (메시, 머티리얼 재사용)
 
 > 💡 **배운 점**: 엔진을 분석하며 **UE5의 설계 철학**을 이해하게 되었습니다. "왜 Actor와 Component를 분리하는가", "왜 Tick이 필요한가" 같은 질문에 답하며, UE5로 돌아왔을 때 단순히 "사용"하는 것이 아니라 "이해하고 활용"할 수 있게 되었습니다.
 
@@ -282,46 +262,6 @@ WinAPI 프로젝트에서 ```Enum``` 기반 상태 관리의 한계를 직접 �
    여러 곳에서 `BodyState = LowerState::IDLE` 직접 변경
 4. **디버깅 어려움**: 
    어디서 상태를 바꿨는지 추적 힘듦
-
-```cpp
-// Player.h - 상태가 두 곳에 분산
-enum class LowerState { IDLE, LEFT, RIGHT, UP, DOWN, DEATH };
-enum class UpperState { 
-    IDLE, LEFT, RIGHT, UP, DOWN,
-    ATTACK_LEFT, ATTACK_RIGHT, ATTACK_UP, ATTACK_DOWN, DEATH 
-};
-
-LowerState BodyState;
-UpperState HeadState;
-
-// 추가로 bool 변수들도 필요
-bool IsHit = false;
-bool Invincibility = false;
-bool IsDead = false;
-```
-
-```cpp
-// Player.cpp - 거대한 Switch 문 (1226라인~)
-void APlayer::CurStateAnimation(const float& _DeltaTime)
-{
-    switch (BodyState) {
-    case LowerState::IDLE:
-        BodyRenderer->ChangeAnimation("Body_Idle");
-        break;
-    case LowerState::LEFT:
-        BodyRenderer->ChangeAnimation("Body_Left");
-        break;
-    // ... 5개 case 반복
-    }
-    
-    switch (HeadState) {
-    case UpperState::IDLE:
-        HeadRenderer->ChangeAnimation("Head_Down");
-        break;
-    // ... 10개 case 반복
-    }
-}
-```
 
 상태를 추가하기도 어려울 뿐만 아니라 관리도 어려웠고, 애니메이션이 종료되는 시점 또는 입력이 끝나는 시점을 맞춰가며 동작 실행 중 다른 동작이 실행하거나 애니메이션이 재생되지 않도록 일일이 신경 써야 했습니다.
 
@@ -371,7 +311,6 @@ void AKnight::SetFSM()
 	//            상태                Update          애니메이션
 	CreateState(EKnightState::IDLE, &AKnight::SetIdle, "Idle");
 	CreateState(EKnightState::RUN, &AKnight::SetRun, "Run");
-	CreateState(EKnightState::RUN_TO_IDLE, &AKnight::SetRunToIdle, "RunToIdle");
 }
 
 void AKnight::CreateState(EKnightState _State, StateCallback _Callback, std::string_view _AnimationName)
@@ -464,7 +403,7 @@ CreateState(EKnightState::FOCUS)
 | **상태 관리** | Switch 문 직접 | FSM Component |
 | **상태 추가** | 어려움 | 쉬움 (`CreateState` 1줄) |
 | **디버깅** | 전체 검색 필요 | `FSM.ChangeState` 검색 |
-| **가독성** | ⭐⭐ | ⭐⭐⭐⭐ |
+| **가독성** | ⭐ | ⭐⭐⭐ |
 
 </br>
 
@@ -475,7 +414,6 @@ ___
 ### 🎮 구현 목표 
 **복합 상태를 bool 변수 없이 직관적으로 표현하고, 상태 검사를 체계적으로 관리하기**
 
-DirectX 프로젝트에서 FSM Component로 상태 전환은 개선했지만, "공격 중 + 경직 면역", "구르기 + 이동불가 + 무적" 같은 복합 상태는 여전히 bool 변수가 필요했습니다. </br>
 UE5 프로젝트에서는 GameplayTag로 간결하게 로직을 구현하고자 했습니다.
 
 </br>
@@ -503,6 +441,9 @@ UE5 프로젝트에서는 GameplayTag로 간결하게 로직을 구현하고자 
   * Character.State.SuperArmour
   * Character.State.Hit
   * "캐릭터가 공격 중이고, 슈퍼아머 상태인데 피격됐구나!"
+
+  </br>
+
 - 태그를 하나만 써야 한다면
   * Charater.State.Attacking.Condition.HitIgnore
   * "캐릭터가 공격 중일 때, 피격은 무시한다." ← 덜 직관적이고 조건이 늘어날수록 태그 수도 급격히 증가
@@ -529,7 +470,6 @@ class UStateComponent
     void AddGameplayTag(const FGameplayTag& Tag);
     bool IsActiveGameplayTag(const FGameplayTag& Tag);
     bool IsAnyActiveGameplayTags(const FGameplayTagContainer& Tags);
-    //...
 };
 ```
 
@@ -540,13 +480,6 @@ class UStateComponent
 ```cpp
 bool ASoulCharacterBase::CanPerformAttack(FGameplayTag& AttackTypeTag, const bool bHitCanceled, const bool bPairedAnimation)
 {
-	check(CombatComponent);
-	check(StateComponent);
-	check(AttributeComponent);
-
-	// 공격의 기본 조건은 무기를 들고 있는가?
-	if (IsValid(CombatComponent->GetMainWeapon()) == false) return false;
-
 	// 공격을 수행할 수 없는 상태를 정의
 	FGameplayTagContainer CheckTags;
 	CheckTags.AddTag(SoulGameplayTag::Character_State_Rolling);
@@ -557,7 +490,6 @@ bool ASoulCharacterBase::CanPerformAttack(FGameplayTag& AttackTypeTag, const boo
 	CheckTags.AddTag(SoulGameplayTag::Character_State_Down);
 	CheckTags.AddTag(SoulGameplayTag::Character_State_Interaction);
 	CheckTags.AddTag(SoulGameplayTag::Character_State_Attacking_Recovery);
-    //...
 
     return StateComponent->IsAnyActiveGameplayTags(CheckTags) == false && // 태그 검사
 		CombatComponent->IsCombatEnabled() == true &&
@@ -566,12 +498,9 @@ bool ASoulCharacterBase::CanPerformAttack(FGameplayTag& AttackTypeTag, const boo
 ```
 
 **이렇게 하면:**
-- "공격 중 + 경직 면역" = 
-  `Attacking` + `Poise` 두 태그 동시 보유
-- "피격 시 경직 면역인가?" = 
-  Container에 `Poise` 태그 있는지 검사
-- 복잡한 조합 = 
-  필요한 태그들만 추가/제거
+- "공격 중 + 경직 면역" = `Attacking` + `Poise` 두 태그 동시 보유
+- "피격 시 경직 면역인가?" = Container에 `Poise` 태그 있는지 검사
+- 복잡한 조합 = 필요한 태그들만 추가/제거
 
 </br>
 
@@ -635,18 +564,6 @@ ___
 
 기존 구조에서는 공격/피격 시작 시 상태 태그를 추가하지만, 종료 시 태그 제거는 ```AnimNotify```에 의존했습니다.
 
-```cpp
-void UAnimNotify_RemoveGameplayTag::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
-                                          const FAnimNotifyEventReference& EventReference)
-{
-	// ...
-	if (UStateComponent* StateComponent = Character->GetStateComponent())
-	{
-		StateComponent->RemoveGameplayTags(GameplayTags);
-	}
-}
-```
-
 **AnimNotify의 치명적인 한계:**
 - ❌ **몽타주가 중단되면** 해당 프레임의 Notify가 **호출되지 않음**
 - ❌ **블렌드 아웃** 발생 시 몽타주 끝부분 Notify가 **누락될 위험**
@@ -659,7 +576,7 @@ void UAnimNotify_RemoveGameplayTag::Notify(USkeletalMeshComponent* MeshComp, UAn
 
 </br>
 
-### 💭 해결 방안 고민  
+### 💭 해결 방법
 **"태그 추가를 호출 로직에서 했으면, 제거도 호출 로직에서 하면 되지 않을까?"**
 
 핵심은 **몽타주 종료 시점에 무조건 호출되는 콜백**을 찾는 것이었습니다.
@@ -678,12 +595,8 @@ void UAnimNotify_RemoveGameplayTag::Notify(USkeletalMeshComponent* MeshComp, UAn
 
 </br>
 
-### 🔧 시행착오 
-#### 1차 시도: AnimNotify 위치 조정
-- 몽타주 끝부분에 Notify 배치 → 여전히 캔슬 시 미호출
-- **실패 원인:** 구조적 문제 미해결
+### 🔧 구현
 
-#### 2차 시도: FOnMontageEnded Delegate 적용
 피격 시스템에 먼저 적용하여 검증:
 ```cpp
 void ASoulCharacterBase::HitReaction(AActor* Attacker, UDamageType* DamageType, 
@@ -815,7 +728,6 @@ AnimNotify가 **단일 시점**에서만 호출되는 반면, **AnimNotifyState*
 void UAnimNotifyState_ComboWindow::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
                                           float TotalDuration, const FAnimNotifyEventReference& EventReference)
 {
-    //...
 	if (UCombatComponent* CombatComp = Character->GetCombatComponent())
 	{
 		CombatComp->EnableComboWindow();
@@ -825,7 +737,6 @@ void UAnimNotifyState_ComboWindow::NotifyBegin(USkeletalMeshComponent* MeshComp,
 void UAnimNotifyState_ComboWindow::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
 	const FAnimNotifyEventReference& EventReference)
 {
-     //...
 	if (UCombatComponent* CombatComp = Character->GetCombatComponent())
 	{
 		CombatComp->DisableComboWindow();
@@ -853,15 +764,7 @@ void UCombatComponent::DisableComboWindow()
         // 다음 콤보 재생
 		DoAttack(LastAttackType); 
 	}
-	else
-	{
-		if (ASoulCharacterBase* CharacterBase = Cast<ASoulCharacterBase>(GetOwner()))
-		{
-			CharacterBase->SetState(SoulGameplayTag::Character_State_Attacking_Recovery);
-		}
-	}
 }
-
 ```
 
 **딜레마**
@@ -881,8 +784,7 @@ ComboWindow를 벗어나면 입력이 모두 무시되어 **콤보가 첫 번째
 
 </br>
 
-
-#### 2-1차 시도: ComboWindow 범위 확장
+#### 2차 시도: ComboWindow 범위 확장
 **시도:** NotifyState의 범위를 후딜레이 구간까지 늘려보자
 
 ✅ 장점:
@@ -926,7 +828,6 @@ ComboWindow를 벗어나면 입력이 모두 무시되어 **콤보가 첫 번째
 void UAnimNotify_AttackFinished::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
                                         const FAnimNotifyEventReference& EventReference)
 {
-    //...
 	if (UCombatComponent* CombatComp = Character->GetCombatComponent())
 	{
 		CombatComp->AttackFinished(ComboResetDelay);
@@ -939,18 +840,11 @@ void UCombatComponent::AttackFinished(const float ComboResetDelay)
 	// ComboResetDelay 간 추가 콤보 입력 시간을 준 뒤 콤보 시퀀스 종료
     // 입력이 들어오면 ExecuteComboAttack에서 콤보 공격을 자동으로 처리. 타이머는 콤보 초기화만 지연
 	GetWorld()->GetTimerManager().SetTimer(ComboResetTimerHandle, this, &UCombatComponent::ResetCombo, ComboResetDelay);
-	
-	ASoulCharacterBase* CharacterBase = Cast<ASoulCharacterBase>(GetOwner());
-	if (false == IsValid(CharacterBase)) return;
-	
-	// 상태 처리를 위해 캐릭터로 내려 보낸다.
-	CharacterBase->AttackFinished();
 }
 ```
 ```cpp
 void UCombatComponent::ExecuteComboAttack(const FGameplayTag& AttackTypeTag)
 {
-    //...
 	if (false == CharacterBase->IsCurrentState(SoulGameplayTag::Character_State_Attacking))
 	{
 		// 애니메이션은 끝났지만, 콤보시퀀스 변수가 true인 시간에는 추가 입력 기회를 준다.
@@ -995,18 +889,6 @@ void UCombatComponent::ExecuteComboAttack(const FGameplayTag& AttackTypeTag)
 3. 후딜 중 다시 입력
 4. 후딜레이 중단 → 즉시 2타 공격 진행! ✅
 ```
-
-**왜 결국 Timer를 다시 썼는가?**
-
-AnimNotifyState는 **애니메이션 구간**만 제어할 수 있지, **시간 기반 유예 기간**은 제공할 수 없습니다.
-
-Timer의 역할 재정의:
-- ❌ (기존) 콤보 전환 타이밍 결정 → 부정확, 유연성 부족
-- ✅ (개선) 콤보 시퀀스 유지 시간 보장 → 정확한 역할 분담
-
-**NotifyState + Timer 조합의 시너지:**
-- NotifyState: **정밀한 보상 구간** (후딜 캔슬 가능)
-- Timer: **넓은 허용 구간** (콤보 유지만 보장)
 
 </br>
 
@@ -1065,7 +947,7 @@ ___
 
 </br>
 
-### 💭 해결 방안 고민  
+### 💭 해결 방법
 Youtube로 다른 사람들이 어떻게 대시를 구현했는지 보기 위해 자료조사를 하다가 우연히 언리얼 서밋을 보게 되었는데, 여기서 모션 워핑의 존재를 알게되었습니다.
 <p align="center">
  <img alt="이미지" src="readme\Unreal.png">
@@ -1087,7 +969,7 @@ Youtube로 다른 사람들이 어떻게 대시를 구현했는지 보기 위해
 
 </br>
 
-### 🔧 시행착오 
+### 🔧 구현
 
 #### 1차 시도: Blueprint로 프로토타입 검증
 
@@ -1151,7 +1033,7 @@ void ASoulPlayerCharacter::MotionWarpingDashSlash()
 3. **Warp Point 이름 매칭**: 애니메이션 에디터에서 설정한 "DashSlash"와 코드의 이름 일치
 
 
-대시 애니메이션의 **특정 구간**에 Motion Warping Notify를 추가:
+대시 애니메이션의 **특정 구간**에 Motion Warping NotifyState를 추가:
 - Warp Target Name: "DashSlash"
 - Warp Translation: Forward 축 활성화
 - Warp Rotation: 목표 방향으로 캐릭터 회전
@@ -1252,8 +1134,8 @@ void ACharacter::Attack()
 
 </br>
 
-### 🔧 시행착오 
-#### 핵심 고민: 정말 필요한 데이터만 남기기
+### 🔧 구현
+#### 정말 필요한 데이터만 남기기
 
 무기를 정의하기 위해 **최소한으로 필요한 데이터**만 추려내는 데 집중했습니다.
 
@@ -1328,12 +1210,8 @@ protected:
 class SOUL_API ASoulWeapon : public ASoulEquipment
 {
 protected:
-   /** 핵심 */
 	UPROPERTY(EditDefaultsOnly, Category = "Setting|Animation")
 	TObjectPtr<UMontageActionData> MontageActionData;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Setting|Weapon")
-	TObjectPtr<UWeaponStatData> WeaponStatDataAsset;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setting")
 	ECombatType CombatType = ECombatType::SwordShield;
@@ -1349,8 +1227,6 @@ protected:
 ```cpp
 void ASoulWeapon::EquipItem(int32 SlotIndex)
 {
-	Super::EquipItem();
-    //...
 	if (UCombatComponent* CombatComp = CharacterBase->GetCombatComponent())
 	{
         // 장착한 무기의 CombatType으로 AnimInstance 업데이트
@@ -1376,20 +1252,7 @@ void ASoulCharacterBase::DoAttack(const FGameplayTag& AttackTypeTag)
 	UAnimMontage* Montage = Weapon->GetMontageForTag(NewAttackTypeTag, ComboCounter);
 
     // 2. 콤보 끝에 도달했다면 (더 이상 몽타주가 없음)
-	if (false == IsValid(Montage)) 
-	{
-       // 콤보 초기화하고 첫 번째 공격으로
-		CombatComponent->SetComboCounter(0);
-		ComboCounter = CombatComponent->GetComboCounter();
-		Montage = Weapon->GetMontageForTag(NewAttackTypeTag, ComboCounter);
-
-        // 그래도 없다면 이 무기에 해당 공격이 없는 것
-		if (false == IsValid(Montage))
-		{
-			return;
-		}
-	}
-    //...
+	if (false == IsValid(Montage)) {/*...*/}
 
     // 3. 몽타주 재생
     AnimInstance->Montage_Play(Montage);
@@ -1520,7 +1383,6 @@ ___
 InventoryComponent에 "인벤토리가 갱신되었다"는 신호(Delegate)를 만듭니다.
 
 ```cpp
-// InventoryComponent.h
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryUpdated);
 
 UCLASS()
@@ -1547,8 +1409,9 @@ public:
     }
 };
 ```
+
+위젯은 Delegate 구독만 합니다.
 ```cpp
-// InventoryWidget.cpp - UI는 듣기만
 void UInventoryWidget::SetInventoryComponent(UInventoryComponent* NewInventoryComp)
 {
     if (InventoryComponent)
@@ -1566,6 +1429,8 @@ void UInventoryWidget::SetInventoryComponent(UInventoryComponent* NewInventoryCo
     }
 }
 ```
+
+</br>
 
 **2. DragDropOperation으로 드래그 정보 관리
 
@@ -1596,15 +1461,6 @@ public:
 ```cpp
 bool UEquipmentSlotWidget::NativeOnDrop(...)
 {
-    UItemDragDropOperation* Operation = Cast(InOperation);
-    if (!Operation) return false;
-
-    // 1. 원본 슬롯 복원
-    if (USlotWidget* SourceWidget = Cast(Operation->SourceSlotWidget))
-    {
-        SourceWidget->IconImage->SetColorAndOpacity(FLinearColor(1, 1, 1, 1));
-    }
-
     // 2. 드래그 출처 확인
     if (UItemSlotWidget* ItemSlot = Cast(Operation->SourceSlotWidget))
     {
@@ -1637,8 +1493,6 @@ bool UEquipmentSlotWidget::NativeOnDrop(...)
         // 장비창 → 인벤토리: 장착 해제
         // (별도 처리)
     }
-
-    return true;
 }
 ```
 
@@ -1663,31 +1517,698 @@ ___
 
 ### 🎮 구현 목표 
 
+팀원 요청사항으로, 캐릭터가 상호작용 가능한 오브젝트(재료, 조리대 등)에 **강조 효과(밝기 증가)**를 적용하여 플레이어가 "지금 이걸 집을 수 있구나"를 직관적으로 알 수 있도록 기능을 추가합니다.
+
 </br>
 
 ### 🚨 문제 상황
 
+**머티리얼을 2개씩 준비해야 하나?**
+
+강조 효과를 구현하려면 머티리얼의 밝기를 조절해야 하는데, 리소스 작업이 이미 완료된 상태였습니다.
+
+고민한 방법:
+- 모든 오브젝트의 머티리얼을 복제 → 강조용/일반용 각각 준비
+- 문제점: **리소스 2배 증가** + 관리 복잡도 상승
+
+다행히 프로젝트 초기에 "베이스 머티리얼을 만들고 인스턴스로 작업하는 게 좋다"는 조언을 듣고 모두가 Material Instance로 작업했습니다. 이 구조 덕분에 **베이스 머티리얼에 밝기 파라미터만 추가**하면 모든 인스턴스에 자동 적용 가능했습니다.
+
 </br>
 
-### 💭 해결 방안 고민  
+### 💭 해결 방법
+
+**Dynamic Material Instance로 런타임 파라미터 제어**
+
+1. BeginPlay에서 모든 메시의 머티리얼을 Dynamic Material Instance로 변환
+2. 원본 밝기값 저장 (복원용)
+3. 강조 On → 밝기 증가 / 강조 Off → 원본 밝기 복원
+```cpp
+void AOC2Actor::BeginPlay()
+{
+    TArray MeshComponents;
+    GetComponents(MeshComponents);
+
+    for (UMeshComponent* Mesh : MeshComponents)
+    {
+        for (int i = 0; i < Mesh->GetNumMaterials(); i++)
+        {
+            UMaterialInterface* Material = Mesh->GetMaterials()[i];
+            UMaterialInstanceDynamic* DynamicMaterial = 
+                UMaterialInstanceDynamic::Create(Material, this);
+            
+            // 원본 밝기값 저장
+            float OriginalValue;
+            Material->GetScalarParameterValue(FName("DiffuseAdd"), OriginalValue);
+            DiffuseColorMapWeights.Add(OriginalValue);
+            
+            Mesh->SetMaterial(i, DynamicMaterial);
+        }
+    }
+}
+
+void AOC2Actor::ApplyMaterialHighlight()
+{
+    // 런타임에 밝기 파라미터만 증가
+    DynamicMaterial->SetScalarParameterValue(FName("DiffuseAdd"), HighlightValue);
+}
+
+void AOC2Actor::RestoreMaterial()
+{
+    // 저장해둔 원본 밝기로 복원
+    DynamicMaterial->SetScalarParameterValue(FName("DiffuseAdd"), 
+        DiffuseColorMapWeights[Index]);
+}
+```
+
+약간의 성능 저하(Dynamic Material 생성 비용)가 우려되지만, 머티리얼을 2개씩 관리하는 것보다 합리적이라고 판단했습니다.
 
 </br>
 
 ### 🔧 시행착오 
 
+**간헐적 머티리얼 소실 버그**
+
+테스트 중 **강조 해제 후 머티리얼이 날아가는 현상** 발견:
+- 증상: 강조 효과 중 또는 강조효과가 끝난 이후 오브젝트의 머티리얼이 사라짐
+- 재현: 간헐적 발생 (특정 조건 불명확)
+
+시도 1: 원본 밝기값을 BeginPlay에서 저장
+- 결과: 여전히 간헐적 발생
+
+시도 2: 네트워크 동기화 문제로 추정 → RPC로 서버-클라 동기화
+```cpp
+UFUNCTION(Server, Reliable)
+void Server_SetHighlight(bool Value);
+
+UPROPERTY(ReplicatedUsing=OnRep_Highlight)
+bool bIsHighlighted;
+```
+- 결과: **여전히 간헐적 발생**
+
+</br>
+
+**다시 생각해보면 동기화가 필요없는 작업인데**
+
+캐릭터 개발자와 함께 디버깅하다가 설계 자체의 문제를 발견:
+
+> "상호작용 강조는 **각 플레이어 화면에만 보이면 되는데**, 왜 서버에 RPC로 요청하고 모든 클라이언트에 복제하고 있지?"
+
+문제의 흐름:
+```
+1. 클라이언트 A가 오브젝트에 접근
+2. Server_SetHighlight() RPC 호출
+3. 서버에서 bIsHighlighted = true로 변경
+4. 모든 클라이언트에 OnRep_Highlight() 호출 ← 불필요!
+5. 네트워크 타이밍 꼬임 → 복원 순서 문제
+```
+
+강조 효과는:
+- 게임플레이에 영향 없는 **순수 시각 효과**
+- 각 클라이언트가 **자신의 화면에서만** 보면 됨
+- 다른 플레이어가 볼 필요 없음
+
+**해결: 클라이언트 전용 처리**
+```cpp
+// RPC 제거, 로컬 함수로 변경
+void AOC2Actor::SetHighlight(bool Value)
+{
+    if (Value)
+        ApplyMaterialHighlight();
+    else
+        RestoreMaterial();
+}
+```
+
 </br>
 
 ### ✅ 결과 
+
+✅ **팀 부담 최소화**: 리소스 작업자 추가 작업 없이 C++ 코드로 기능 추가  
+✅ **네트워크 최적화**: 불필요한 RPC/Replication 제거
+
+</br>
+
+___
+
+### 2-3. 네트워크 동기화 문제 해결 전략
+### [UE5 팀 프로젝트] 클라에서 스폰하면 안 보여요. ```SpawnActorDeferred```
+
+### 🎮 구현 목표 
+플레이어가 스폰 테이블과 상호작용하면 **재료 액터를 동적으로 생성**합니다. 재료는 타입(토마토, 양파 등)에 따라 다른 메시와 데이터를 가지며, 모든 플레이어에게 동일하게 보여야 합니다.
+
+
+### 💭 구현 방법
+**재료 시스템을 어떻게 설계할 것인가?**
+
+재료마다 고유한 메시, 아이콘, 조리 상태가 필요한데, 이를 어떻게 관리할지 두 가지 방안을 고민했습니다.
+
+**A안: BP 클래스를 여러 개 만들기**
+```
+BP_Tomato (메시, 아이콘, 상태 모두 내장)
+BP_Onion (메시, 아이콘, 상태 모두 내장)
+BP_Lettuce (메시, 아이콘, 상태 모두 내장)
+...
+```
+
+장점:
+- 구현 간단: BP에서 모든 값 설정
+- 에디터에서 바로 확인 가능
+
+단점:
+- ❌ 재료마다 BP 클래스 추가 (30종 → 30개 BP)
+- ❌ 공통 로직 수정 시 모든 BP 수정 필요
+- ❌ 스폰 테이블도 재료 수만큼 매칭 필요
+```cpp
+// 스폰 테이블마다 하드코딩
+if (TableType == ESpawnTableType::Tomato)
+    SpawnActor(BP_Tomato);
+else if (TableType == ESpawnTableType::Onion)
+    SpawnActor(BP_Onion);
+// 30개 분기문...
+```
+
+**B안: 데이터 기반 설계**
+```
+재료 클래스: 1개 (껍데기, Type과 State만 가짐)
+DataTable: 재료 정보 모두 등록 (메시, 아이콘, 조리 데이터)
+```
+
+장점:
+- ✅ 재료 추가 시 DataTable에 Row 추가만
+- ✅ 밸런싱/수정이 엑셀 작업처럼 간편
+- ✅ 코드 수정 없이 기획 변경 대응
+
+단점:
+- 초기 구현 복잡도 높음
+- 런타임에 DataTable 조회 필요
+
+**선택: B안 (데이터 기반)**
+
+</br>
+
+### 🚨 문제 상황
+
+**데이터 기반 설계의 함정**
+
+재료마다 BP 클래스를 만드는 대신, **하나의 재료 클래스 + DataTable**로 관리하기로 했습니다:
+```cpp
+// 설계: 재료는 Type만 가지고, 나머지는 DataTable에서 조회
+class AIngredient
+{
+    UPROPERTY(Replicated)
+    EIngredientType IngredientType;  // Enum만 복제
+};
+
+// BeginPlay에서 DataTable 조회
+void AIngredient::BeginPlay()
+{
+    FIngredientData* Data = DataTable->FindRow(IngredientType);
+    SetMesh(Data->Mesh);
+    SetTexture(Data->Icon);
+}
+```
+
+**스폰 흐름:**
+```
+1. 스폰 테이블 상호작용 (클라이언트)
+2. Server RPC 호출
+3. 서버가 재료 스폰 (SpawnActor)
+4. 재료의 Type 설정
+5. BeginPlay 호출 → DataTable 조회
+```
+
+**발생한 버그:**  
+스폰을 요청한 클라이언트 화면에만 재료가 보이고, **다른 플레이어들은 안 보임**.
+
+디버깅 결과, 다른 클라이언트에서는 `IngredientType == None`으로 조회되어 메시가 설정되지 않았습니다.
+
+
+</br>
+
+### 🔧 구현
+
+**네트워크 복제 타이밍 문제**
+
+원인:
+```
+서버: SpawnActor → Type 설정 → BeginPlay → DataTable 조회 ✅
+클라: SpawnActor → BeginPlay → Type 복제 (아직 안 됨!) ❌
+```
+
+클라이언트는 **BeginPlay가 먼저 호출**되고, Type은 **그 이후에 복제**되므로 DataTable 조회가 `None`으로 실패합니다.
+
+**해결: SpawnActorDeferred**
+
+"BeginPlay 전에 프로퍼티를 먼저 설정"할 수 있는 지연 스폰을 사용:
+```cpp
+AIngredient* USpawnManageComponent::SpawnIngredientActor(
+    TSubclassOf IngredientClass, 
+    EIngredientType Type)
+{
+    // 1. 메모리만 할당 (BeginPlay 호출 안 함)
+    FTransform SpawnTransform;
+    AIngredient* Ingredient = GetWorld()->SpawnActorDeferred(
+        IngredientClass, 
+        SpawnTransform
+    );
+
+    // 2. BeginPlay 전에 Type 설정 (Replicated 변수)
+    Ingredient->SetType(Type);
+
+    // 3. 이제 BeginPlay 호출 → 모든 클라에 Type이 이미 복제됨
+    Ingredient->FinishSpawning(SpawnTransform);
+
+    return Ingredient;
+}
+```
+
+**실행 흐름:**
+```
+서버: SpawnDeferred → SetType → FinishSpawning → BeginPlay ✅
+클라: (복제 대기) → Type 복제 완료 → BeginPlay ✅
+```
+
+`FinishSpawning` 호출 전에 `SetType`으로 Replicated 변수를 설정하면, BeginPlay가 호출될 때 **이미 모든 클라이언트에 Type이 복제된 상태**입니다.
+```cpp
+// Ingredient.cpp
+void AIngredient::SetType_Implementation(EIngredientType Type)
+{
+    // Replicated 변수 설정 (BeginPlay 전)
+    IngredientType = Type;
+}
+
+void AIngredient::BeginPlay()
+{
+    // 이제 모든 클라에서 IngredientType이 올바르게 설정됨
+    FIngredientData* Data = DataTable->FindRow(IngredientType);
+    SetMesh(Data->Mesh);
+    SetTexture(Data->Icon);
+}
+```
+
+</br>
+
+### ✅ 결과 
+✅ **모든 클라이언트에 재료 정상 표시**  
+✅ **데이터 기반 설계 유지**: 재료 BP 클래스 1개 + DataTable로 모든 재료 타입 관리  
+✅ **네트워크 복제 타이밍 이해**: BeginPlay 전후의 실행 순서 파악
+
+일반 `SpawnActor`는 즉시 BeginPlay를 호출하므로, Replicated 변수 설정이 복제보다 늦을 수 있습니다. **SpawnActorDeferred**를 사용하면:
+1. 메모리 할당
+2. 프로퍼티 설정 (복제 준비)
+3. `FinishSpawning` → BeginPlay 호출
+
+이 순서로 실행되어 **BeginPlay 시점에 이미 모든 데이터가 복제된 상태**를 보장할 수 있습니다. 동적 스폰이 필요한 멀티플레이어 게임에서 필수 패턴입니다.
+
+</br>
+
+___
+
+### [Dedicated Server] "서버에 접속할 수 없습니다" 메시지 없이 한 번에 접속하기
+### 🎮 구현 목표 
+플레이어가 "게임 참가" 버튼을 클릭하면 **게임 세션 상태와 무관하게 자동으로 접속**되도록 합니다. 게임 세션이 없으면 생성하고, 활성화 중이면 대기했다가 자동으로 접속하는 것이 목표입니다.
+
+</br>
+
+### 🚨 문제 상황
+**게임 세션 생성 타이밍 문제**
+
+AWS GameLift에서 게임 세션 생성 요청을 보내면 **즉시 활성화되지 않습니다**:
+```
+1. Lambda에 게임 세션 생성 요청 (CreateGameSession)
+2. GameLift가 EC2 인스턴스에 게임 세션 할당
+3. 게임 서버 프로세스 초기화
+4. 상태: ACTIVATING (약 3~10초 소요)
+5. 상태: ACTIVE (플레이어 접속 가능)
+```
+
+**기존 흐름의 문제:**
+```cpp
+// 클라이언트: 버튼 클릭
+void UGamePage::JoinGameButtonClicked()
+{
+    GameSessionsManager->JoinGameSession();  // 게임 세션 찾기/생성
+}
+
+void UGameSessionsManager::FindOrCreateGameSession_Response(...)
+{
+    // Lambda 응답: 새 게임 세션 생성됨
+    FDSGameSession GameSession;
+    
+    if (GameSession.Status == "ACTIVATING")
+    {
+        // 아직 활성화 안 됨 → 플레이어 세션 생성 실패
+        TryCreatePlayerSession(...);  // ❌ 실패!
+    }
+}
+```
+</br>
+
+**플레이어 경험:**
+```
+1. "게임 참가" 버튼 클릭
+2. 게임 세션 생성 및 활성화 시작
+3. "게임 세션을 찾을 수 없습니다" 메시지 ❌
+4. 다시 버튼 클릭
+5. 게임 세션 상태 검사 : 만약 (ACTIVATING)이면 실패
+6. "게임 세션을 찾을 수 없습니다" 메시지 ❌
+7. 게임 세션이 ACTIVE 상태가 될 때 까지 실패 반환
+```
+플레이어는 게임 세션이 어떤 상태인지 중요하지 않습니다. 입력에 따른 피드백(결과)만 중요합니다. </br>
+
+플레이어가 **수동으로 재시도**해야 하는 것은 매우 불편한 경험입니다. "왜 안 되지?" 하며 여러 번 클릭하는 것은 피로감을 줍니다.
+
+따라서 내부적으로 어떻게 동작하는지 플레이어가 몰라도 의도한 결과를 받을 수 있도록 내부에서 타이머를 이용해 일정 시간 순환하는 방법을 고려했습니다.
+
+
+</br>
+
+### 💭 해결 방법
+**Timer 기반 자동 재시도 (폴링)**
+
+로직을 두 단계로 분리했습니다.
+- ACTIVE 게임 세션이 존재하면 : 즉시 접속
+- 게임 세션이 없다면 : 세션 생성을 요청하고 타이머 예약
+
+핵심 아이디어: 게임 세션 상태를 확인하고, `ACTIVATING` 상태면 **자동으로 재시도**
+```cpp
+void UGameSessionsManager::HandleGameSessionStatus(const FString& Status, const FString& SessionId)
+{
+    // 플레이어 접속 처리
+    if (Status.Equals(TEXT("ACTIVE")))
+    {
+        // 활성화 완료 → 플레이어 세션 생성
+        BroadcastJoinGameSessionMessage.Broadcast(
+            TEXT("Found activate Game Session. Creating a Player Session..."), false);
+
+        if (UDS_LocalPlayerSubsystem* LocalPlayerSubsystem = GetDSLocalPlayerSubsystem())
+        {
+            TryCreatePlayerSession(LocalPlayerSubsystem->GetUsername(), SessionId);
+        }
+    }
+    else if (Status.Equals(TEXT("ACTIVATING")))
+    {
+        // 활성화 중 → 0.5초 후 자동 재시도
+        FTimerDelegate CreateSessionDelegate;
+        CreateSessionDelegate.BindUObject(this, &ThisClass::JoinGameSession);
+        
+        APlayerController* LocalPlayerController = GEngine->GetFirstLocalPlayerController(GetWorld());
+        if (IsValid(LocalPlayerController))
+        {
+            LocalPlayerController->GetWorldTimerManager().SetTimer(
+                CreateSessionTimer, 
+                CreateSessionDelegate, 
+                0.5f,  // 0.5초 간격
+                false  // 1회만 실행 (재귀적으로 반복)
+            );
+        }
+    }
+    else
+    {
+        // 예외 상태
+        BroadcastJoinGameSessionMessage.Broadcast(
+            TEXT("GameSessionStatus is Not ACTIVE or ACTIVATING"), true);
+    }
+}
+```
+
+**실행 흐름:**
+```
+1. 플레이어: "게임 참가" 버튼 클릭
+2. JoinGameSession() 호출 → Lambda에 게임 세션 요청
+3. Lambda 응답: Status = "ACTIVATING"
+4. HandleGameSessionStatus() → Timer 설정 (0.5초 후)
+5. 0.5초 후 JoinGameSession() 자동 재호출
+6. Lambda 응답: 여전히 "ACTIVATING" → Timer 재설정
+7. 0.5초 후 JoinGameSession() 자동 재호출
+8. Lambda 응답: Status = "ACTIVE" → 플레이어 세션 생성
+9. 서버 접속 성공 ✅
+```
+
+**개선된 플레이어 경험:**
+```
+1. "게임 참가" 버튼 클릭
+2. "게임 세션을 찾는 중..." 메시지
+3. (내부적으로 자동 재시도 중)
+4. "플레이어 세션 생성 중..." 메시지
+5. 로비 레벨로 자동 전환 ✅
+```
+
+플레이어는 **한 번만 클릭**하고, 내부적으로 알아서 처리됩니다.
+
+</br>
+
+### 🔧 고려사항 
+**무한 루프 방지는?**
+
+GameLift가 일정 시간 내에 `ACTIVE` 또는 실패 상태로 전환되므로, **타임아웃 로직은 추가하지 않았습니다**. 대신 UI에 "연결 중..." 메시지를 계속 표시하여 플레이어가 상황을 인지하도록 했습니다.
+
+**Delegate로 UI 피드백**
+
+재시도 중에도 플레이어가 "멈춘 게 아니구나"를 알 수 있도록 ```BroadcastJoinGameSessionMessage``` Delegate로 상태 메시지를 전달:
+```cpp
+// GameSessionsManager.h
+UPROPERTY(BlueprintAssignable)
+FAPIStatusMessgae BroadcastJoinGameSessionMessage;
+
+// GamePage.cpp - UI가 Delegate 구독
+void UGamePage::NativeConstruct()
+{
+    GameSessionsManager->BroadcastJoinGameSessionMessage.AddDynamic(
+        JoinGameWidget, &UJoinGame::SetStatusMessage);
+}
+
+// 상태 변화마다 메시지 업데이트
+BroadcastJoinGameSessionMessage.Broadcast(TEXT("Searching for Game Session..."), false);
+BroadcastJoinGameSessionMessage.Broadcast(TEXT("Creating Player Session..."), false);
+```
+
+</br>
+
+### ✅ 결과 
+
+✅ **원클릭 접속**: 플레이어는 버튼 한 번만 클릭  
+✅ **자동 재시도**: `ACTIVATING` 상태일 때 0.5초 간격으로 폴링  
+✅ **UX 개선**: "연결 중..." 메시지로 진행 상황 피드백
 
 </br>
 
 ___
 
 
-### 2-3. 네트워크 동기화 문제 해결 전략
-- [UE5 팀 프로젝트] 클라에서 스폰하면 안 보여요. ```SpawnActorDeferred```
-- [Dedicated Server] "서버에 접속할 수 없습니다" 메시지 없이 한 번에 접속하기
-- [Dedicated Server] 시간 오차는 어떻게 해결할까?
+### [Dedicated Server] 시간 오차는 어떻게 해결할까? ```Ping-Pong```
+### 🎮 구현 목표 
+게임 시작 전 **카운트다운 타이머를 모든 플레이어에게 동기화**합니다. 서버는 "3초 남음"을 알리지만, 네트워크 지연으로 클라이언트는 "2.8초"에 받을 수 있습니다. 이 시간 차이를 보정하여 **모든 플레이어가 같은 시간을 보도록** 합니다.
+
+### 🚨 문제 상황
+**서버 시간과 클라이언트 시간의 불일치**
+
+Dedicated Server에서는 **서버만 시간을 계산**하고, 결과를 클라이언트에 전파합니다:
+```cpp
+// GameMode (서버)
+void ADS_GameModeBase::UpdateCountdownTimer(const FCountdownTimerHandle& Handle)
+{
+    for (AController* Controller : GetWorld()->GetPlayerControllerIterator())
+    {
+        ADS_PlayerController* PC = Cast(Controller);
+        float TimeLeft = Handle.CountdownTime - GetWorldTimerManager().GetTimerElapsed(...);
+        
+        // 서버: "4초 남았어!"
+        PC->Client_TimerUpdated(TimeLeft, Handle.Type);
+    }
+}
+```
+
+**문제:**
+```
+서버: 4.0초 남음 → RPC 전송
+(네트워크 지연 0.2초)
+클라: "4.0초 남음" 메시지 수신 ← 실제로는 3.8초만 남음!
+```
+
+테스트 중 플레이어마다 **카운트다운이 다른 시점에 끝나는** 현상 발견:
+- 플레이어 A (지연 50ms): "0초!" → 게임 시작
+- 플레이어 B (지연 200ms): "0.15초..." → 아직 카운트다운 중 😕
+
+</br>
+
+### 💭 해결 방법
+
+사실 이걸 구현해야하나 고민이 많았습니다. 1초마다 서버에서 시간을 전파하고 있어서 최대 오차는 1초를 넘지 않고, 지연 시간을 감안하더라도 게임 플레이 전체를 놓고 치명적일만큼 체감되지 않아서 넘길까 하다가 게임은 실시간 동기화가 그 어느 분야보다 중요하다고 생각해 공부 목적으로 시작했습니다.
+
+**"지연 시간을 알면 보정할 수 있지 않을까?"**
+
+문제의 핵심은 **"메시지가 언제 도착했는지"**를 모른다는 것입니다. 
+
+**초기 아이디어: 클라이언트가 자체 타이머 실행**
+```
+서버: 10초 카운트다운 시작!
+클라: 알았어, 나도 10초 타이머 시작!
+```
+
+시도해보니 문제 발생:
+- 각 클라이언트의 ```GetWorld()->GetTimeSeconds()```가 다름
+- 프레임 드롭으로 타이머 오차 누적
+- 결국 서버와 클라이언트 시간이 점점 벌어짐 ❌
+
+</br>
+
+**두 번째 아이디어: 지연 시간만 측정하자**
+
+"서버와 클라이언트 시간을 맞출 필요는 없다. **메시지 전달 시간**만 알면 된다!"
+
+고민: 네트워크 지연 시간을 어떻게 측정하지?
+
+처음엔 "서버에 타임스탬프를 찍어서 보내면 되지 않을까?" 생각했습니다:
+- 서버: "지금 내 시간 10.5초야" (타임스탬프 포함)
+- 클라: "10.5초 받았는데 내 시간은 5.2초..." ❌
+
+문제는 **서버와 클라의 시작 시간 자체가 다르다**는 것. 비교 불가능.
+
+"그럼 왕복 시간을 재면?" → **Ping-Pong 패턴** 발견:
+```
+1. 클라: 시간 기록하고 Ping 전송
+2. 서버: 즉시 Pong 응답
+3. 클라: 왕복 시간 측정
+4. 왕복 시간 / 2 = 단방향 지연
+```
+
+평균 지연시간을 계산하여 이를 서버에서 보내주는 시간에서 보정하는 방식으로 처리
+
+</br>
+
+**Ping-Pong으로 지연 시간 측정**
+
+핵심 아이디어: **"서버 ↔ 클라이언트 왕복 시간 / 2 = 단방향 지연 시간"**
+```cpp
+// PlayerController.cpp (클라이언트)
+void ADS_PlayerController::ReceivedPlayer()
+{
+    Super::ReceivedPlayer();
+
+    if (IsLocalPlayerController())
+    {
+        Server_Ping(GetWorld()->GetTimeSeconds());
+    }
+}
+
+// PlayerController.cpp (서버)
+void ADS_PlayerController::Server_Ping_Implementation(float TimeOfRequest)
+{
+    // 서버: "Ping 받았으니 즉시 Pong 응답"
+    Client_Pong(TimeOfRequest);
+}
+
+// PlayerController.cpp (클라이언트)
+void ADS_PlayerController::Client_Pong_Implementation(float TimeOfRequest)
+{
+    // 클라: "왕복 시간 = 현재 시간 - 요청 시간"
+    const float RoundTripTime = GetWorld()->GetTimeSeconds() - TimeOfRequest;
+    
+    // 클라: "단방향 지연 = 왕복 / 2"
+    SingleTripTime = RoundTripTime * 0.5f;
+}
+```
+
+**실행 흐름:**
+```
+1. 클라: 시간 1.0초에 Ping 전송
+2. (네트워크 지연 0.1초)
+3. 서버: 시간 1.1초에 Ping 수신 → 즉시 Pong 전송
+4. (네트워크 지연 0.1초)
+5. 클라: 시간 1.2초에 Pong 수신
+   → 왕복 시간 = 1.2 - 1.0 = 0.2초
+   → 단방향 지연 = 0.2 / 2 = 0.1초
+```
+
+**타이머 동기화에 적용:**
+```cpp
+void ADS_PlayerController::Client_TimerUpdated_Implementation(
+    float CountdownTimeLeft, 
+    ECountdownTimerType Type) const
+{
+    // 서버: "4.0초 남았어!"
+    // 클라: "0.1초 전에 보낸 거니까 실제로는 3.9초"
+    OnTimerUpdated.Broadcast(CountdownTimeLeft - SingleTripTime, Type);
+}
+```
+
+**개선된 흐름:**
+```
+서버: 4.0초 남음 → RPC 전송 (시간 T)
+(네트워크 지연 0.1초)
+클라: "4.0초" 메시지 수신 (시간 T+0.1초)
+     → 보정: 4.0 - 0.1 = 3.9초 표시 ✅
+```
+
+
+</br>
+
+### 🔧 시행착오 
+
+**Ping 타이밍: 언제 측정할까?**
+
+처음엔 타이머 시작 직전에만 Ping을 보냈는데, **네트워크 상태가 변동**되는 문제 발견:
+- 로비 입장 시: 지연 50ms
+- 게임 중: 지연 150ms (트래픽 증가)
+
+**해결:** ```ReceivedPlayer()```와 ```PostSeamlessTravel()```에서 Ping 재측정
+```cpp
+void ADS_PlayerController::ReceivedPlayer()
+{
+    // 서버 접속 직후
+    if (IsLocalPlayerController())
+    {
+        Server_Ping(GetWorld()->GetTimeSeconds());
+    }
+}
+
+void ADS_PlayerController::PostSeamlessTravel()
+{
+    // 레벨 전환 후 (Seamless Travel)
+    if (IsLocalPlayerController())
+    {
+        Server_Ping(GetWorld()->GetTimeSeconds());
+    }
+}
+```
+
+**BindWeakLambda의 중요성**
+
+타이머 종료 전에 GameMode가 파괴되면 크래시 발생:
+```cpp
+// Before: 일반 Lambda (크래시 위험)
+CountdownTimerHandle.TimerFinishedDelegate.BindLambda([&]() {
+    OnCountdownTimerFinished(CountdownTimerHandle.Type);
+});
+
+// After: Weak Lambda (안전)
+CountdownTimerHandle.TimerFinishedDelegate.BindWeakLambda(this, [&]() {
+    OnCountdownTimerFinished(CountdownTimerHandle.Type);
+});
+```
+```BindWeakLambda```는 객체가 파괴되면 자동으로 ```nullptr```을 반환하여 Lambda 실행을 방지합니다.
+
+
+</br>
+
+### ✅ 결과 
+✅ **시간 동기화 정확도 향상**: 지연 시간만큼 자동 보정  
+✅ **일관된 게임 경험**: 모든 플레이어가 같은 시점에 "0초" 확인  
+✅ **네트워크 상태 적응**: 레벨 전환마다 지연 시간 재측정
+
+**"완벽한 동기화는 불가능하다"**
+
+처음엔 "서버와 클라이언트 시간을 완전히 동일하게 맞춰야 한다"고 생각했지만, 이는 네트워크의 본질적 한계로 불가능합니다. 
+
+대신:
+- 서버와 클라의 **절대 시간**은 달라도 됨
+- **상대적 시간 차이(지연)**만 보정하면 충분
+- Ping-Pong으로 간단하지만 효과적인 보정
+
+</br>
+
+___
 - [Dedicated Server] 왜 님은 닉네임이 안 보여요? ```SeamlessTravel```
 - [Dedicated Server] 아니 방금 이겼는데 왜 내가 2등이예요? 
 ### 2-4. AI 시스템 구현
@@ -1717,7 +2238,7 @@ ___
 
 </br>
 
-### 💭 해결 방안 고민  
+### 💭 해결 방법
 
 </br>
 
