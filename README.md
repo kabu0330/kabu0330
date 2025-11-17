@@ -20,23 +20,23 @@
 </br>
 
 ### 2. 📑 주요 구현 내용 
+* 제가 가장 깊이있게 고민한 대표 문제 해결 사례 세 개를 뽑아 ✅ 표시했습니다.
 ### 2-1. 상태 관리 시스템
 - 🔗 [[DirectX 11] ```Enum```의 한계 → ```FSM Component```](#directx-11-enum의-한계--fsm-component)
 - 🔗 [[UE5 액션] 복잡한 상태도 심플하게, ```GameplayTag Container```](#ue5-액션-복잡한-상태도-심플하게-gameplaytag-container)
-- 🔗 [[UE5 액션] 공격이 캔슬된 후 캐릭터가 안 움직여요.](#ue5-액션-공격이-캔슬된-후-캐릭터가-안-움직여요-fonmontageended-delegate)
+- 🔗 [[UE5 액션] 공격이 캔슬된 후 캐릭터가 안 움직여요.](#ue5-액션-공격이-캔슬된-후-캐릭터가-안-움직여요-fonmontageended-delegate) 
 
 ### 2-2. 컨탠츠 구현
 - 🔗 [[UE5 액션] 부드러운 콤보 연계는 어떻게 구현할까? ```AnimNotify State```](#ue5-액션-부드러운-콤보-연계는-어떻게-구현할까-animnotify-state)
-- 🔗 [UE5 액션] 타격감의 핵심은 타이밍이다. ```AnimNotify```
-- 🔗 [UE5 액션] 자연스러운 대시를 구현할 순 없을까?  ```Motion Warping```
-- 🔗 [UE5 액션] 아이템 및 몽타주 관리, 데이터 주도 설계 ```DataAsset```, ```DataTable```
+- 🔗 [[UE5 액션] 자연스러운 대시를 구현할 순 없을까?  ```Motion Warping```](#ue5-액션-자연스러운-대시를-구현할-순-없을까--motion-warping)
+- 🔗 [[UE5 액션] 무기별 전투 스타일, 데이터 주도 설계](#ue5-액션-무기별-전투-스타일-데이터-주도-설계)
 - 🔗 [UE5 액션] 슬롯 기반 인벤토리 UI 동기화 전략  ```Inventory Component```, ```WidgetManager```
 - 🔗 [UE5 팀 프로젝트] 다이나믹 머티리얼로 강조 효과 구현하기 
 ### 2-3. 네트워크 동기화 문제 해결 전략
-- 🔗 [UE5 팀 프로젝트] 클라에서 스폰하면 안 보여요. ```SpawnActorDeferred```
+- 🔗 [UE5 팀 프로젝트] 클라에서 스폰하면 안 보여요. ```SpawnActorDeferred``` 
 - 🔗 [Dedicated Server] "서버에 접속할 수 없습니다" 메시지 없이 한 번에 접속하기
 - 🔗 [Dedicated Server] 시간 오차는 어떻게 해결할까?
-- 🔗 [Dedicated Server] 왜 님은 닉네임이 안 보여요? ```SeamlessTravel```
+- 🔗 [Dedicated Server] 왜 님은 닉네임이 안 보여요? ```SeamlessTravel``` 
 - 🔗 [Dedicated Server] 아니 방금 이겼는데 왜 내가 2등이예요? 
 ### 2-4. AI 시스템 구현
 - 🔗 [UE5 액션] Behavior Tree를 활용한 몬스터 패턴
@@ -46,10 +46,10 @@
 - 🔗 [UE5 팀 프로젝트] Pull-Request 시행착오와 교훈
 - 🔗 [UE5 팀 프로젝트] 테스트 레벨, 캐릭터 없이 UI로 기능 테스트
 ### 2-7. 최적화 전략 
-- 🔗 [UE5 액션] ```Tick```에 미련을 버려라. 대안은 많다.
+- 🔗 [UE5 액션] ```Tick```에 미련을 버려라. 대안은 많다. 
 - 🔗 [Dedicated Server] 매번 배열 전체를 네트워크 복제해야 할까? ```Fast Array Serializer```
 - 🔗 [DirectX 11] 드로우 콜을 줄이기 위한 전략 ```Mesh```, ```Material```
-- 🔗 [DirectX 11] 모든 리소스를 다 로드하고 실행하나요? ```Thread```
+- 🔗 [DirectX 11] 모든 리소스를 다 로드할 때까지 기다리나요? ```Thread```
 ### 2-8. 회고
 - 🔗 이벤트 방식을 더 빨리 수용했더라면
 - 🔗 인터페이스 vs 추상 클래스
@@ -158,10 +158,10 @@ ___
 
 > 💡 **배운 점**: Dedicated Server를 직접 구축하며 **서버의 역할**을 보다 잘 이해하게 되었습니다. 클라이언트에서 보이는 것과 서버에서 계산하는 것을 분리하고, Replication 타이밍을 제어하는 과정에서 네트워크 게임의 기본 구조를 이해하게 되었습니다. "중단점 없이 로그만 보고 디버깅"하는 경험이 처음엔 어려웠지만, 덕분에 로그를 활용한 디버깅 능력을 기를 수 있었습니다.
 
+</br>
 
 ___
 
-</br>
 
 
 ### 🔭 [UE5 팀 프로젝트] 시뮬레이션 게임 (Overcooked! 2 모작)
@@ -208,9 +208,8 @@ ___
 
 > 💡 **배운 점**: 팀 프로젝트에서는 "**항상 내가 통제 가능한 상태에서 테스트할 수 없다**"는 현실을 체감했습니다. 테스트 레벨을 만들어 캐릭터 없이도 기능을 검증하고, Git 전략을 개선하며, 네트워크 동기화를 "필요한 것만" 하는 선택 기준을 익혔습니다
 
-___
-
 </br>
+___
 
 
 ### 🔭 [DirectX 11] 2D 액션 게임 프로젝트 (Hollow Knight 모작)
@@ -255,9 +254,10 @@ ___
 - ✅ 드로우 콜 최적화 (메시, 머티리얼 재사용)
 
 > 💡 **배운 점**: 엔진을 분석하며 **UE5의 설계 철학**을 이해하게 되었습니다. "왜 Actor와 Component를 분리하는가", "왜 Tick이 필요한가" 같은 질문에 답하며, UE5로 돌아왔을 때 단순히 "사용"하는 것이 아니라 "이해하고 활용"할 수 있게 되었습니다.
-___
 
 </br>
+
+___
 
 ### 2. 📑 주요 구현 내용 
 ### 2-1. 상태 관리 시스템
@@ -470,8 +470,6 @@ CreateState(EKnightState::FOCUS)
 
 ___
 
-</br>
-
 ### [UE5 액션] 복잡한 상태도 심플하게, ```GameplayTag Container```
 
 ### 🎮 구현 목표 
@@ -624,8 +622,6 @@ void UStateComponent::TickComponent(float DeltaTime, ...)
 
 ___
 
-</br>
-
 ### [UE5 액션] 공격이 캔슬된 후 캐릭터가 안 움직여요. ```FOnMontageEnded Delegate```
 
 ### 🎮 구현 목표 
@@ -744,8 +740,6 @@ AnimNotify는 **특정 타이밍의 이벤트**(이펙트 재생, 사운드 등)
 </br>
 
 ___
-
-</br>
 
 ### 2-2. 컨탠츠 구현
 ### [UE5 액션] 부드러운 콤보 연계는 어떻게 구현할까? ```AnimNotify State```
@@ -871,6 +865,7 @@ void UCombatComponent::DisableComboWindow()
 ```
 
 **딜레마**
+
 ComboWindow를 벗어나면 입력이 모두 무시되어 **콤보가 첫 번째로 초기화**됩니다.
 ```
 플레이어 경험:
@@ -925,7 +920,7 @@ ComboWindow를 벗어나면 입력이 모두 무시되어 **콤보가 첫 번째
 
 **핵심 아이디어:** 
 - **1차 윈도우 (ComboWindow)**: 후딜 캔슬 가능한 "Perfect 구간"
-- **2차 윈도우 (AttackFinished + Timer)**: 후딜은 보지만 콤보는 이어지는 "Mercy 구간"
+- **2차 윈도우 (Timer)**: 후딜은 보지만 콤보는 이어지는 "Mercy 구간"
 
 ```cpp
 void UAnimNotify_AttackFinished::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
@@ -989,7 +984,7 @@ void UCombatComponent::ExecuteComboAttack(const FGameplayTag& AttackTypeTag)
 
 | 시나리오 | 기존 (Timer만) | 개선 (이중 윈도우) |
 |---------|---------------------|-------------------|
-| Perfect 입력 |  후딜 재생 → 다음 콤보 😡  | **즉시 다음 콤보** ✅ |
+| Perfect 입력 |  후딜 재생 → 다음 콤보 😡  | 공격 끝 → **즉시 다음 콤보** ✅ |
 | ComboWindow 놓침 | - | 후딜 재생 😡|
 | 후딜 중 입력 | 후딜 재생 → 다음 콤보 😡 |**즉시 다음 콤보** ✅ |
 | Timer 종료 후 | 1타로 되돌아감 | 1타로 되돌아감 |
@@ -1037,17 +1032,440 @@ Timer의 역할 재정의:
 
 ___
 
+### [UE5 액션] 자연스러운 대시를 구현할 순 없을까?  ```Motion Warping```
+
+### 🎮 구현 목표 
+액션 게임의 핵심인 **빠르고 역동적인 이동**을 구현하되, 애니메이션과 자연스럽게 어우러지는 대시 시스템을 만들고자 했습니다. 특히 적에게 빠르게 접근하는 "돌진형 스킬"의 자연스러운 연출이 목표였습니다.
+
 </br>
 
-- [UE5 액션] 타격감의 핵심은 타이밍이다. ```AnimNotify```
-- [UE5 액션] 자연스러운 대시를 구현할 순 없을까?  ```Motion Warping```
-- [UE5 액션] 아이템 및 몽타주 관리, 데이터 주도 설계 ```DataAsset```, ```DataTable```
-- [UE5 액션] 슬롯 기반 인벤토리 UI 동기화 전략  ```Inventory Component```, ```WidgetManager```
+### 🚨 문제 상황
+대시를 구현하기 위해 세 가지 방법을 테스트했습니다.
+- ```AddMovementInput()```의 Scale을 높이는 방법
+- ```LaunchCharater()```를 사용하는 방법
+- ```Tick()```에서 ```MaxWalkSpeed```를 조작하는 방법 
+
+결국 세 가지 방법 다 제가 느끼는 결과물은 아래 이미지와 같습니다.
+
+<p align="center">
+ <img alt="이미지" src="readme\DNFDash.webp">
+</p>
+
+<p align="center">
+ <img alt="이미지" src="readme\Howl.png">
+</p>
+
+
+세 가지 방법 모두 결과적으로:
+- ❌ 캐릭터가 **순간이동하는 듯한 부자연스러운 느낌**
+- ❌ **캐릭터가 미끄러지는 현상**
+- ❌ 이동 거리와 애니메이션 거리의 **불일치로 인한 이질감**
+
+'이동'과 '애니메이션'이 완전히 분리된 것이 문제의 핵심이었습니다.
+
+</br>
+
+### 💭 해결 방안 고민  
+Youtube로 다른 사람들이 어떻게 대시를 구현했는지 보기 위해 자료조사를 하다가 우연히 언리얼 서밋을 보게 되었는데, 여기서 모션 워핑의 존재를 알게되었습니다.
+<p align="center">
+ <img alt="이미지" src="readme\Unreal.png">
+</p>
+
+[Youtube](https://youtu.be/nxzfJcwyj1Y?si=FSiQD8UPRUGWqXio)
+
+영상을 보다 대시 시연 과정이 나오는 것을 보고 "아! 이거다!"
+
+
+**Motion Warping의 핵심 개념:**
+
+애니메이션을 **런타임에 동적으로 변형**하여 목표 지점까지 도달하게 만드는 기술입니다.
+- 애니메이션이 원래 100cm 이동한다면 → 목표가 200cm 떨어져 있으면 애니메이션을 2배 늘림
+- Root Motion을 유지하면서 거리를 조정하므로 **발이 땅에서 미끄러지지 않음**
+- 이동 거리와 애니메이션이 **완벽하게 일치**
+
+즉, 제가 찾던 **"애니메이션과 이동을 하나로 묶는 방법"**이었습니다.
+
+</br>
+
+### 🔧 시행착오 
+
+#### 1차 시도: Blueprint로 프로토타입 검증
+
+본격적인 C++ 작업 전에 Motion Warping 플러그인을 활성화하고, 블루프린트로 빠르게 프로토타입을 만들어 개념을 검증했습니다.
+영상을 참고하여 저에게 필요한 부분만 자료조사를 하며 블루프린트로 로직을 먼저 완성시켜나갔습니다.
+
+<p align="center">
+ <img alt="이미지" src="readme\BlueprintTest.png">
+</p>
+
+**검증 항목:**
+- ✅ Motion Warping Component 동작 확인
+- ✅ Warp Target 설정 방식 이해
+- ✅ 애니메이션 에디터에서 Warp Point 설정 방법 습득
+
+**결과:** "실제로 작동한다!"는 확신을 얻고 C++ 구현으로 전환
+
+
+#### 2차 시도: C++ 구현 및 레이캐스트 통합
+
+```cpp
+void ASoulPlayerCharacter::MotionWarpingDashSlash()
+{
+	Super::MotionWarpingDashSlash();
+
+	check(MotionWarpingComponent);
+	LOG(">>> Motion Warping Dash Slash <<<")
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
+	FVector Start = MotionWarpArrowComponent->GetComponentLocation();
+	FVector Forward = MotionWarpArrowComponent->GetForwardVector();
+	FVector End = Start + (Forward * 2000.0f);
+
+	FHitResult OutHit;
+	TArray<AActor*> ActorToIgnore;
+	ActorToIgnore.Add(this);
+	
+	EDrawDebugTrace::Type TraceType = EDrawDebugTrace::None;
+
+	const bool bHit = UKismetSystemLibrary::LineTraceSingle(
+		GetWorld(),
+		Start,
+		End,
+		UEngineTypes::ConvertToTraceType(ECC_Visibility),
+		false,
+		ActorToIgnore,
+		TraceType,
+		OutHit,
+		true
+	);
+
+	if (bHit)
+	{
+		MotionWarpingComponent->AddOrUpdateWarpTargetFromLocation(TEXT("DashSlash"), OutHit.Location);
+	}
+}
+```
+
+**구현 핵심:**
+1. **Flying Mode**: 대시 중 지형의 영향을 받지 않도록 설정
+2. **동적 목표 설정**: 레이캐스트로 탐지한 지점을 실시간으로 Warp Target에 적용
+3. **Warp Point 이름 매칭**: 애니메이션 에디터에서 설정한 "DashSlash"와 코드의 이름 일치
+
+
+대시 애니메이션의 **특정 구간**에 Motion Warping Notify를 추가:
+- Warp Target Name: "DashSlash"
+- Warp Translation: Forward 축 활성화
+- Warp Rotation: 목표 방향으로 캐릭터 회전
+
+이렇게 하면 **애니메이션 재생 중 실시간으로** Root Motion이 목표 지점까지 늘어납니다.
+
+</br>
+
+### ✅ 결과 
+
+**애니메이션과 완벽하게 동기화된 역동적인 대시 완성**
+
+**Launch Character(Before)**
+<p align="center">
+ <img alt="이미지" src="readme\DashBefore.webp">
+</p>
+
+미끄러짐이 있음
+
+**Motion Warping(After)**
+<p align="center">
+ <img alt="이미지" src="readme\DashAfter.webp">
+</p>
+
+이동이 깔끔하게 떨어짐
+
+</br>
+
+___
+
+### [UE5 액션] 무기별 전투 스타일, 데이터 주도 설계
+
+### 🎮 구현 목표 
+
+**무기마다 다른 전투 경험**을 제공하되, **코드 수정 없이** 새로운 무기를 추가할 수 있는 확장 가능한 구조를 구축하고자 했습니다. </br>
+특히 무기마다 다른 **콤보 체계, 스킬 구성, 공격력, 요구 스태미나** 등을 데이터로 분리하여, 언리얼 에디터에서 수정할 수 있는 환경을 목표로 했습니다.
+
+</br>
+
+### 🚨 문제 상황
+**하드코딩의 한계: 무기 추가가 곧 코드 수정**
+
+초기에는 무기 데이터를 캐릭터 클래스에 직접 하드코딩했습니다.
+```cpp
+// 초기 구조 - 모든 무기 정보를 캐릭터가 보유
+void ACharacter::Attack()
+{
+    if (CurrentWeapon == EWeaponType::Sword)
+    {
+        PlayAnimMontage(SwordCombo[ComboIndex]);
+    }
+    else if (CurrentWeapon == EWeaponType::Axe)
+    {
+        PlayAnimMontage(AxeCombo[ComboIndex]);
+    }
+    // 무기가 추가될 때마다 else if 증가...
+}
+```
+
+❌ **무기 추가 시 개발 사이클 증가**
+```
+새 무기 추가 프로세스:
+1. C++ 코드에 무기 타입 Enum 추가
+2. 애니메이션 배열 선언
+3. 조건문 분기 추가
+4. C++ 컴파일
+5. 에디터 재시작
+6. 테스트 → 수정 시 1번부터 반복
+```
+
+❌ **무기 간 차별화된 로직 구현 어려움**
+- 검은 빠른 3타 콤보, 도끼는 느린 2타 강공격 같은 차이를 조건문으로만 구현
+- 코드가 무기별 특수 케이스로 가득 차서 가독성 저하
+
+❌ **기획자 의존도 증가**
+- 밸런싱, 콤보 수 조정 같은 단순 작업도 프로그래머 필요
+
+이와 관련한 작업을 C++ 코드가 아닌 **에디터에서 유연하게 처리**하고 싶었습니다.
+
+</br>
+
+### 💭 해결 방안 고민  
+**"무기를 데이터로 분리하되, 단순 수치뿐만 아니라 행동까지 정의할 수는 없을까?"**
+
+**Data Asset** ✅
+   - Blueprint에서 무기별 **고유 로직 구현** 가능
+   - 애니메이션, 수치, 조건을 **하나의 Asset에 캡슐화**
+   - Primary Data Asset 사용 시 **비동기 로딩**으로 메모리 최적화
+
+
+**고려사항:**
+```
+무기 = 데이터 집합체
+- 무슨 공격인가? (AttackTypeTag)
+- 어떤 애니메이션을 재생하는가? (Montages)
+- 언제 재생하는가? (ConditionTags)
+```
+
+</br>
+
+### 🔧 시행착오 
+#### 핵심 고민: 정말 필요한 데이터만 남기기
+
+무기를 정의하기 위해 **최소한으로 필요한 데이터**만 추려내는 데 집중했습니다.
+
+처음엔 "혹시 필요할까봐" 이것저것 넣다가, 실제 사용하지 않는 데이터가 쌓이는 걸 발견했습니다. 여러 시행착오 끝에 **정말 사용하는 다섯 가지**로 압축했습니다:
+
+1. **공격/동작 타입** (AttackTypeTag)
+2. **몽타주 배열** (Animations)
+3. **실행 조건 태그** (ConditionTags)
+4. **실행 조건 검사 범위** (ConditionCheckDistance)
+5. **루트모션 스케일** (RootMotionScales)
+
+
+```cpp
+USTRUCT(BlueprintType)
+struct FMontageGroup
+{
+	GENERATED_BODY()
+public:
+    // 이 그룹이 재생되기 위한 조건 태그
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FGameplayTagContainer> ConditionTags;
+
+    // 조건 체크 거리(예: 잡기 검사 최대 거리)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float ConditionCheckDistance = 300.f;
+
+    // 무기마다 다른 이동 거리 보정
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<float> RootMotionScales;
+	
+    // 실제 재생할 애니메이션 배열
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<TObjectPtr<UAnimMontage>> Animations;
+};
+```
+
+```cpp
+UCLASS()
+class SOUL_API UMontageActionData : public UPrimaryDataAsset
+{
+	GENERATED_BODY()
+
+public:
+    // Tag와 인덱스로 특정 몽타주 가져오기
+	UAnimMontage* GetMontageForTag(const FGameplayTag& GroupTag, const int32 Index = 0) const;
+
+    // 그룹 내 랜덤 선택 (몬스터)
+	UAnimMontage* GetRandomMontageForTag(const FGameplayTag& GroupTag) const;
+	
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (DisplayName = "Montage Groups"))
+	TMap<FGameplayTag, FMontageGroup> MontageGroups;
+};
+```
+
+</br>
+
+#### 데이터 소유권 고민: 누가 이 데이터를 가져야 하나?
+
+처음엔 "캐릭터가 데이터를 가지고, 무기 교체 시 참조만 바꾸면 되지 않을까?"라고 생각했습니다.
+
+하지만 다음 이유로 **무기가 데이터를 소유**하도록 결정했습니다:
+
+- ✅ 같은 종류의 무기는 동일한 전투 스타일 (한손검끼리, 폴암끼리 일관성)
+- ✅ 무기의 정보는 무기 자체가 가지고 있는 게 **객체지향 원칙**에 부합
+- ✅ 새 무기 추가 시 **무기 Blueprint만 만들면 끝** (캐릭터 수정 불필요)
+
+
+**무기 클래스에 Data Asset 적용:**
+```cpp
+// 무기 header
+class SOUL_API ASoulWeapon : public ASoulEquipment
+{
+protected:
+   /** 핵심 */
+	UPROPERTY(EditDefaultsOnly, Category = "Setting|Animation")
+	TObjectPtr<UMontageActionData> MontageActionData;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setting|Weapon")
+	TObjectPtr<UWeaponStatData> WeaponStatDataAsset;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setting")
+	ECombatType CombatType = ECombatType::SwordShield;
+}
+```
+
+</br>
+
+#### 무기 장착 시 전투 모드 자동 전환
+
+무기를 장착하면 AnimInstance의 **전투 자세가 자동으로 변경**됩니다.
+
+```cpp
+void ASoulWeapon::EquipItem(int32 SlotIndex)
+{
+	Super::EquipItem();
+    //...
+	if (UCombatComponent* CombatComp = CharacterBase->GetCombatComponent())
+	{
+        // 장착한 무기의 CombatType으로 AnimInstance 업데이트
+        // → Idle/Walk/Run 애니메이션이 무기 타입에 맞게 자동 전환
+		if (USoulAnimInstance* AnimInstance = Cast<USoulAnimInstance>(CharacterBase->GetMesh()->GetAnimInstance()))
+		{
+			AnimInstance->UpdateCombatMode(CombatType);
+		}
+	}
+}
+```
+
+</br>
+
+#### 공격 실행: 무기에서 데이터 조회
+
+공격 시점에 **현재 무기에서 적절한 몽타주를 가져와 재생**합니다.
+
+```cpp
+void ASoulCharacterBase::DoAttack(const FGameplayTag& AttackTypeTag)
+{
+   // 1. 현재 장착한 무기에서 Tag + ComboCounter로 몽타주 검색
+	UAnimMontage* Montage = Weapon->GetMontageForTag(NewAttackTypeTag, ComboCounter);
+
+    // 2. 콤보 끝에 도달했다면 (더 이상 몽타주가 없음)
+	if (false == IsValid(Montage)) 
+	{
+       // 콤보 초기화하고 첫 번째 공격으로
+		CombatComponent->SetComboCounter(0);
+		ComboCounter = CombatComponent->GetComboCounter();
+		Montage = Weapon->GetMontageForTag(NewAttackTypeTag, ComboCounter);
+
+        // 그래도 없다면 이 무기에 해당 공격이 없는 것
+		if (false == IsValid(Montage))
+		{
+			return;
+		}
+	}
+    //...
+
+    // 3. 몽타주 재생
+    AnimInstance->Montage_Play(Montage);
+	AnimInstance->Montage_SetEndDelegate(OnMontageEnded, Montage);
+}
+```
+
+**데이터 흐름:**
+```
+무기 장착
+  ↓
+Data Asset 로드 + CombatType 전달
+  ↓
+AnimInstance 전투 모드 변경
+  ↓
+공격 입력 (Tag: Character.Attack.Light)
+  ↓
+무기의 Data Asset에서 Tag + Index로 몽타주 검색
+  ↓
+애니메이션 재생
+```
+
+</br>
+
+### ✅ 결과 
+
+**코드 수정 없이 확장 가능한 무기 시스템 완성**
+- 새 무기 추가: Data Asset 생성 + 애니메이션 할당만으로 완료
+- 밸런싱: 에디터에서 수치 조정 → 즉시 테스트 (컴파일 불필요)
+- 각 무기가 Data Asset을 통해 **독립적으로 정의**됨
+- 무기 타입 추가 시 **코드 수정 0줄**
+
+**Before vs After:**
+
+| 항목 | 하드코딩 | Data Asset 기반 |
+|------|---------|----------------|
+| 무기 추가 시간 | C++ 수정 + 컴파일 | Data Asset 생성 |
+| 밸런스 조정 | 프로그래머 필요 | 에디터에서 즉시 가능 |
+| 콤보 체계 변경 | 조건문 수정 | Asset에서 배열 조정 |
+| 빌드 크기 | 모든 무기 포함 | 필요 시 로딩 |
+| 코드 복잡도 | 무기마다 분기문 | Tag 기반 통합 로직 |
+
+</br>
+
+___
+
+### [UE5 액션] 슬롯 기반 인벤토리 UI 동기화 전략  ```Inventory Component```, ```WidgetManager```
+
+### 🎮 구현 목표 
+
+</br>
+
+### 🚨 문제 상황
+
+</br>
+
+### 💭 해결 방안 고민  
+
+</br>
+
+### 🔧 시행착오 
+
+</br>
+
+### ✅ 결과 
+
+</br>
+
+___
+
+
 - [UE5 팀 프로젝트] 다이나믹 머티리얼로 강조 효과 구현하기
 
 ### 2-3. 네트워크 동기화 문제 해결 전략
 - [UE5 팀 프로젝트] 클라에서 스폰하면 안 보여요. ```SpawnActorDeferred```
-- [Dedicated Server] "서버에 접속할 수 없습니다" 안 보고 한 번에 접속하기
+- [Dedicated Server] "서버에 접속할 수 없습니다" 메시지 없이 한 번에 접속하기
 - [Dedicated Server] 시간 오차는 어떻게 해결할까?
 - [Dedicated Server] 왜 님은 닉네임이 안 보여요? ```SeamlessTravel```
 - [Dedicated Server] 아니 방금 이겼는데 왜 내가 2등이예요? 
@@ -1063,7 +1481,7 @@ ___
 - [UE5 액션] ```Tick```에 미련을 버려라. 대안은 많다.
 - [Dedicated Server] 매번 배열 전체를 네트워크 복제해야 할까? ```Fast Array Serializer```
 - [DirectX 11] 드로우 콜을 줄이기 위한 전략 ```Mesh```, ```Material```
-- [DirectX 11] 모든 리소스를 다 로드하고 실행하나요? ```Thread```
+- [DirectX 11] 모든 리소스를 다 로드할 때까지 기다리나요? ```Thread```
 ### 2-8. 회고
 - 이벤트 방식을 더 빨리 수용했더라면
 - 인터페이스 vs 추상 클래스
@@ -1092,7 +1510,7 @@ ___
 
 ___
 
-</br>
+
 
 
 
