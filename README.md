@@ -25,8 +25,8 @@
     * 🔗 [`[UE5 액션] 부드러운 콤보 연계는 어떻게 구현할까?`](#ue5-액션-부드러운-콤보-연계는-어떻게-구현할까-animnotify-state)
 2.  **[네트워크]** Seamless Travel 이후 데이터 유실 문제
     * 🔗 [`왜 님은 닉네임이 안 보여요?`](#dedicated-server-왜-님은-닉네임이-안-보여요-seamlesstravel)
-3.  **[최적화]** 'Tick' 의존성을 제거하고 이벤트 기반으로 프로젝트를 제작한 경험
-    * 🔗 [`[UE5 액션] Tick에 미련을 버려라. 대안은 많다.`](#ue5-액션-tick에-미련을-버려라-대안은-많다)
+3.  **[최적화]** `TArray` 전체 복제의 비효율을 해결하고 대역폭을 절약한 경험
+    * 🔗 [[Dedicated Server] 매번 배열 전체를 네트워크 복제해야 할까? ```Fast Array Serializer```](#dedicated-server-매번-배열-전체를-네트워크-복제해야-할까-fast-array-serializer)
 4.  **[아키텍처]** 불필요한 중계 함수와 결합도를 낮추기 위한 입력 시스템 고찰
     * 🔗 [`PlayerController가 입력을 처리하는게 적절한가?`](#playercontroller가-입력을-처리하는게-적절한가)
 
@@ -50,8 +50,8 @@
 ### 2-4. 협업 및 버전 관리
 - 🔗 [[UE5 팀 프로젝트] Pull-Request 시행착오와 교훈](#ue5-팀-프로젝트-pull-request-시행착오와-교훈)
 ### 2-5. 최적화 전략 
-- 🔗 [[UE5 액션] ```Tick```에 미련을 버려라. 대안은 많다.](#ue5-액션-tick에-미련을-버려라-대안은-많다) ✅
-- 🔗 [[Dedicated Server] 매번 배열 전체를 네트워크 복제해야 할까? ```Fast Array Serializer```](#dedicated-server-매번-배열-전체를-네트워크-복제해야-할까-fast-array-serializer)
+- 🔗 [[UE5 액션] ```Tick```에 미련을 버려라. 대안은 많다.](#ue5-액션-tick에-미련을-버려라-대안은-많다) 
+- 🔗 [[Dedicated Server] 매번 배열 전체를 네트워크 복제해야 할까? ```Fast Array Serializer```](#dedicated-server-매번-배열-전체를-네트워크-복제해야-할까-fast-array-serializer) ✅
 ### 2-6. 회고
 - 🔗 [```PlayerController```가 입력을 처리하는게 적절한가?](#playercontroller가-입력을-처리하는게-적절한가) ✅
 
