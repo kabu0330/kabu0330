@@ -26,11 +26,11 @@
 - 🔗 [[Dedicated Server] "서버에 접속할 수 없습니다" 메시지 없이 한 번에 접속하기](#dedicated-server-서버에-접속할-수-없습니다-메시지-없이-한-번에-접속하기)
 - 🔗 [[Dedicated Server] 시간 오차는 어떻게 해결할까? ```Ping-Pong```](#dedicated-server-시간-오차는-어떻게-해결할까-ping-pong)
 - 🔗 [[Dedicated Server] 왜 님은 닉네임이 안 보여요? ```SeamlessTravel``` ](#dedicated-server-왜-님은-닉네임이-안-보여요-seamlesstravel)
-- 🔗 [Dedicated Server] 아니 방금 이겼는데 왜 내가 2등이예요? 
+- 🔗 [[Dedicated Server] 아니 방금 이겼는데 왜 내가 2등이예요?](#dedicated-server-아니-방금-이겼는데-왜-내가-2등이예요)
 ### 2-4. 협업 및 버전 관리
-- 🔗 [UE5 팀 프로젝트] Pull-Request 시행착오와 교훈
+- 🔗 [[UE5 팀 프로젝트] Pull-Request 시행착오와 교훈](#ue5-팀-프로젝트-pull-request-시행착오와-교훈)
 ### 2-5. 최적화 전략 
-- 🔗 [UE5 액션] ```Tick```에 미련을 버려라. 대안은 많다. 
+- 🔗 [[UE5 액션] ```Tick```에 미련을 버려라. 대안은 많다.](#ue5-액션-tick에-미련을-버려라-대안은-많다)
 - 🔗 [Dedicated Server] 매번 배열 전체를 네트워크 복제해야 할까? ```Fast Array Serializer```
 - 🔗 [DirectX 11] 드로우 콜을 줄이기 위한 전략 ```Mesh```, ```Material```
 ### 2-6. 회고
@@ -2378,25 +2378,494 @@ FString DefaultUsername = "";
 
 **"SeamlessTravel은 PlayerState를 자동으로 복사하지 않는다"**
 언리얼의 ```PlayerState```는 기본 프로퍼티(PlayerName, Score 등)만 자동 복사하고, **커스텀 변수는 개발자가 직접 ```CopyProperties()```와 ```OverrideWith()```를 구현**해야 합니다.
-````CopyProperties()```: 구 레벨에서 신 레벨로 데이터 복사
-```OverrideWith()```: 신 레벨의 임시 PlayerState를 실제 PlayerState에 병합
+- ```CopyProperties()```: 구 레벨에서 신 레벨로 데이터 복사
+- ```OverrideWith()```: 신 레벨의 임시 PlayerState를 실제 PlayerState에 병합
 
 </br>
 
 ___
 
-- [Dedicated Server] 아니 방금 이겼는데 왜 내가 2등이예요? 
+### [Dedicated Server] 아니 방금 이겼는데 왜 내가 2등이예요? 
+### 🎮 구현 목표
+
+경기 종료 후 **Player Table → Leaderboard Table** 순서로 DB 업데이트가 진행되어, 랭킹이 정확하게 반영되도록 합니다. Player Table에 최신 승수가 저장된 후에야 Leaderboard가 올바르게 갱신될 수 있습니다.
+
+</br>
+
+### 🚨 문제 상황
+
+**1등이 2등으로 표시되는 버그**
+
+경기 종료 후 순위 계산 흐름:
+```
+1. Player Table에 승수 기록 (matchWins += 1)
+2. Leaderboard Table에서 상위 10명 갱신
+```
+
+그런데 실제로는:
+```
+플레이어 A: 5승 → 6승 (우승!)
+   ↓
+[동시에 발생]
+Lambda 1: Player Table에 6승 기록 중... (느림)
+Lambda 2: Leaderboard 갱신 (Player Table 조회) → 아직 5승! ❌
+   ↓
+결과: Leaderboard에 5승으로 기록됨
+```
+
+**문제의 핵심: 비동기 작업의 순서 미보장**
+
+AWS Lambda는 비동기로 실행되므로, 두 Lambda를 동시에 호출하면:
+```cpp
+// 게임 종료 시 (잘못된 구현)
+void ADS_MatchGameMode::OnMatchEnded()
+{
+    // 두 요청이 거의 동시에 발생
+    GameStatsManager->RecordMatchStats(...);     // Lambda 1
+    GameStatsManager->UpdateLeaderboard(...);    // Lambda 2
+    
+    // Lambda 2가 Lambda 1보다 먼저 끝날 수 있음!
+}
+```
+
+실제 테스트 결과:
+```
+경기 1: 우승 → 랭킹 1위 ✅
+경기 2: 우승 → 랭킹 2위 ❌ (Player Table 갱신 전 Leaderboard 조회)
+경기 3: 우승 → 랭킹 1위 ✅
+```
+
+간헐적으로 발생하는 이유는 **네트워크 지연**에 따라 Lambda 실행 순서가 바뀌기 때문입니다.
+
+</br>
+
+### 💭 해결 방법
+
+**"Player Table 저장이 끝났다는 걸 어떻게 알지?"**
+
+비동기 작업의 순서를 보장하려면 **"첫 번째 작업 완료 → 두 번째 작업 시작"** 구조가 필요했습니다.
+
+**초기 고민: Timer로 지연?**
+```cpp
+GameStatsManager->RecordMatchStats(...);
+GetWorldTimerManager().SetTimer(TimerHandle, [this]() {
+    GameStatsManager->UpdateLeaderboard(...);
+}, 2.0f, false);  // 2초 후 실행
+```
+
+문제:
+- 2초면 충분한가? 3초는? → 정답 없음
+- Lambda가 느려지면 여전히 실패
+- 불필요한 대기 시간
+
+**해결: Delegate 체인**
+
+"Player Table 저장 성공 시 Delegate 발행 → Leaderboard 갱신" 구조로 변경
+```cpp
+// GameStatsManager.h
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAPIRequestSucceeded);
+
+class UGameStatsManager : public UHTTPRequestManager
+{
+public:
+    void RecordMatchStats(const FDSRecordMatchStatsInput& Input);
+    void UpdateLeaderboard(const TArray<FString>& PlayerNames);
+    
+    UPROPERTY(BlueprintAssignable)
+    FOnAPIRequestSucceeded OnUpdatedGameStatsSucceeded;  // 핵심!
+};
+```
+
+**Lambda 응답 처리:**
+```cpp
+// GameStatsManager.cpp
+void UGameStatsManager::RecordMatchStats_Response(
+    FHttpRequestPtr Request, 
+    FHttpResponsePtr Response, 
+    bool bWasSuccessful)
+{
+    if (!bWasSuccessful) return;
+    
+    TSharedPtr<FJsonObject> JsonObject;
+    TSharedRef<TJsonReader<>> JsonReader = 
+        TJsonReaderFactory<>::Create(Response->GetContentAsString());
+    
+    if (FJsonSerializer::Deserialize(JsonReader, JsonObject))
+    {
+        if (ContainsErrors(JsonObject, true)) return;
+        
+        // Player Table 저장 성공!
+        UE_LOG(LogDedicatedServers, Warning, 
+            TEXT("RecordMatchStats_Response Succeeded!"));
+        
+        OnUpdatedGameStatsSucceeded.Broadcast();  // Delegate 전파
+    }
+}
+```
+
+**GameMode에서 Delegate 구독:**
+```cpp
+// DS_MatchGameMode.cpp
+void ADS_MatchGameMode::CreateGameStatsManager()
+{
+    GameStatsManager = NewObject<UGameStatsManager>(this, GameStatsManagerClass);
+    
+    // Delegate 구독 (핵심!)
+    GameStatsManager->OnUpdatedGameStatsSucceeded.AddDynamic(
+        this, 
+        &ADS_MatchGameMode::OnGameStatsUpdated
+    );
+}
+
+void ADS_MatchGameMode::OnMatchEnded()
+{
+    // 1. Player Table에 승수 기록만 요청
+    EndMatchForPlayerStats();  // RecordMatchStats 호출
+    
+    // 2. Leaderboard는 여기서 호출 안 함!
+    // (Delegate 콜백에서 호출됨)
+}
+
+// Delegate 콜백
+void ADS_MatchGameMode::OnGameStatsUpdated()
+{
+    // Player Table 저장 완료 후 자동 호출됨!
+    UE_LOG(LogTemp, Warning, TEXT("OnGameStatsUpdated"));
+    
+    // 2. 이제 Leaderboard 갱신
+    TArray<FString> LeaderIds;
+    if (AMatchGameState* GS = GetGameState<AMatchGameState>())
+    {
+        TArray<AMatchPlayerState*> Leaders = GS->GetLeaders();
+        for (AMatchPlayerState* Leader : Leaders)
+        {
+            LeaderIds.Add(Leader->GetUsername());
+        }
+    }
+    
+    UpdateLeaderboard(LeaderIds);  // 최신 데이터로 갱신 ✅
+}
+```
+
+**개선된 흐름:**
+```
+1. 경기 종료
+   ↓
+2. RecordMatchStats() 호출 (Player Table 갱신)
+   ↓
+3. Lambda 실행... (비동기)
+   ↓
+4. Lambda 성공 응답
+   ↓
+5. OnUpdatedGameStatsSucceeded.Broadcast()
+   ↓
+6. OnGameStatsUpdated() 자동 호출
+   ↓
+7. UpdateLeaderboard() 호출 (최신 데이터 조회) ✅
+```
+
+</br>
+
+### 🔧 고려사항
+**왜 서버에서 순위를 계산하지 않았나?**
+
+고민: "서버가 직접 순위 계산하면 Lambda 2개 필요 없지 않나?"
+```cpp
+// 고려했던 방법
+void ADS_MatchGameMode::OnMatchEnded()
+{
+    // 서버가 직접 PlayerState 순회하며 순위 계산
+    TArray<AMatchPlayerState*> AllPlayers;
+    // ... 정렬 로직
+    
+    // DB에 한 번에 저장
+    GameStatsManager->RecordMatchStatsWithRanking(AllPlayers);
+}
+```
+
+그러나 **DB는 Single Source of Truth**여야 한다고 판단:
+- 서버 크래시 시 데이터 소실 위험
+- 여러 게임 세션 간 랭킹 통합 불가
+- Lambda 분리 = 관심사 분리 (Player 기록 vs Leaderboard 갱신)
+
+</br>
+
+### ✅ 결과
+
+✅ **순위 정확도 100%**: Player Table 저장 후 Leaderboard 갱신 보장  
+✅ **간헐적 버그 해결**: 네트워크 지연과 무관하게 순서 보장  
+✅ **확장성**: 새로운 통계 추가 시 Delegate 체인 확장 가능
+
+**핵심 교훈:**
+
+**"비동기 작업의 순서는 코드 순서가 아니라 Delegate로 보장한다"**
+
+HTTP 요청, Lambda 호출 같은 비동기 작업은 **응답 시점을 예측할 수 없습니다**. 
+
+Delegate 패턴:
+```
+작업 1 호출 → 응답 대기 → Delegate 전파 → 작업 2 자동 시작
+```
+
+이 방식은:
+- 네트워크 지연과 무관하게 순서 보장
+- Lambda 실행 시간이 늘어나도 안전
+- 여러 단계의 비동기 작업 체인 가능
+
+AWS Lambda, REST API, GameLift 같은 **외부 서비스와 통신**할 때 필수 패턴입니다.
+
+</br>
+
+___
+
 ### 2-4. 협업 및 버전 관리
-- [UE5 팀 프로젝트] Pull-Request 시행착오와 교훈
+### [UE5 팀 프로젝트] Pull-Request 시행착오와 교훈
+### 🎮 선택 의도
+
+6인 팀 프로젝트의 코드 충돌을 예방하기 위해 '안전한' Fork-PR(Pull-Request) 전략을 채택했습니다.
+
+**선택한 워크플로우: Fork-PR**
+```
+1. 각자 메인 저장소를 Fork
+2. 개인 저장소에서 작업
+3. 완료 후 Pull Request 생성
+4. 리뷰어(관리자)가 코드 검토 후 Merge
+```
+
+### 🚨 문제 상황
+
+1. 관리자 병목 현상 초기 개발 단계에선 빠른 기능 추가가 필요한데, 관리자의 코드 리뷰가 '병목'이 되었습니다.
+
+- Fork-PR: PR 생성 → 리뷰 대기 → Merge → 팀원 Pull
+
+- 문제: 단순 Getter 함수 하나를 Merge하는 데 10분 이상 소요되어, 의존성이 있는 다른 팀원의 작업이 그대로 멈췄습니다.
+
+2. 진짜 문제는 .uasset 충돌 정작 .cpp/.h 코드 충돌은 클래스 단위 작업 분리로 인해 거의 없었습니다. 진짜 문제는 바이너리 파일인 .uasset(블루프린트, 레벨) 충돌이었습니다.
+
+- 치명적 한계: uasset은 텍스트가 아니라 리뷰(Review)가 불가능했습니다.
+
+- 사고 발생: 충돌 시 Git은 자동 병합을 못하고 "내 것" 아니면 "상대 것"을 선택해야만 했습니다. 이 과정에서 **한쪽의 작업물이 그대로 유실(lost)**되는 사고가 발생했습니다.
+
+- 결국, Fork-PR은 잡지도 못할 uasset 충돌을 예방하지도 못하면서, 코드 리뷰로 인한 속도 저하만 유발했습니다.
+
+</br>
+
+### 🔧 해결 및 교훈
+1. 긴급 소통 채널 운영
+- Discord에 "긴급 PR" 채널 생성
+- 급한 PR은 여기 알림
+- 관리자가 우선 처리
+
+1. uasset 충돌은 Git 기능이 아닌, 사람 간의 '소통'으로 해결했습니다.
+- 사전 공지: BP_Ingredient처럼 공용 블루프린트 수정 전, Discord에 미리 공지.
+- 수동 병합: 충돌 시, 양쪽 작업자가 구두로 변경 사항을 확인한 뒤, 한 명이 수동으로 두 변경 사항을 모두 재적용했습니다.
+
+2. 'git stash'의 발견 프로젝트 후반에 git stash라는 더 효율적인 방법을 알게 되었습니다.
+
+```bash
+# 현재 작업 임시 저장
+git stash
+
+# 최신 코드 가져오기
+git pull origin main
+
+# 작업 다시 꺼내기
+git stash pop
+
+# 충돌 나면 수동 해결
+```
+
+**"이걸 일찍 알았더라면..."**
+
+Stash를 알았다면:
+```
+A: "기능 완료" → Push
+B: 작업 중 → git stash → git pull → git stash pop
+   → 충돌 있으면 해결 → 작업 계속
+```
+
+</br>
+
+### ✅ 결과
+워크플로우는 팀의 규모와 단계에 맞춰야 합니다.
+
+Fork-PR은 코드 품질이 중요하고 리뷰 인력이 충분한 대규모/안정화 프로젝트에 적합합니다.
+
+우리처럼 '빠른 프로토타이핑'이 중요한 소규모/초기 팀은, git stash 활용법을 익히고 '작업 전 소통'을 강화하는 Direct Push 방식이 훨씬 효율적이었을 것이라는 교훈을 얻었습니다.
+
+</br>
+
+___
+
 ### 2-5. 최적화 전략 
-- [UE5 액션] ```Tick```에 미련을 버려라. 대안은 많다.
+### [UE5 액션] ```Tick```에 미련을 버려라. 대안은 많다.
+### 🎮 목표
+
+Tick 사용을 최소화하고 **이벤트 기반**으로 게임 로직 구성하기
+
+
+### 💭 고민
+
+**"Tick에 익숙해진 습관"**
+
+기존 프로젝트에서 Tick 의존도:
+- WinAPI: 거의 모든 로직
+- DirectX: FSM의 ```ComponentTick```
+- UE5 초기: 여전히 Tick 남용
+
+이면에는 Tick은 직관적이고 **"이벤트 기반은 낯설다"**는 생각이 있었습니다.
+
+**성능 문제 경험:**
+```cpp
+// WinAPI 시절 실수
+void Player::Tick()
+{
+    UpdateUI();  // 매 프레임 UI 리소스 갱신
+    // 결과: 800fps → 150fps ❌
+}
+```
+
+이번 프로젝트는 철저히 **Timer, Delegate, AnimNotify** 활용을 목표로 했습니다.
+
+</br>
+
+**AnimNotify의 함정**
+
+초기엔 ```AnimNotify```가 너무 편해서 남용:
+```cpp
+// 공격 종료 시 상태 초기화
+AnimNotify_RemoveGameplayTag → RemoveState(Attacking)
+```
+
+**문제 발생:**
+- 공격 중 회피 → 몽타주 중단 → ```AnimNotify_emoveGameplayTag``` 미호출 ❌
+- 블렌드 아웃 중 끝부분 Notify 누락
+- ```Character_State_Attacking``` 영구 유지 → 캐릭터 이동 불가
+
+**깨달음: "AnimNotify는 호출을 보장하지 않는다"**
+
+</br>
+
+### 🔧 해결 방법
+
+**1. 중요 로직은 Delegate로 보장**
+```cpp
+// Before: AnimNotify (불안정)
+AnimNotify_AttackEnd → 상태 초기화
+
+// After: FOnMontageEnded (안전)
+void ASoulCharacterBase::DoAttack(...)
+{
+    FOnMontageEnded OnMontageEnded;
+    OnMontageEnded.BindUObject(this, &ThisClass::RecoveryAttack);
+    
+    AnimInstance->Montage_Play(AttackMontage);
+    AnimInstance->Montage_SetEndDelegate(OnMontageEnded, AttackMontage);
+}
+
+void ASoulCharacterBase::RecoveryAttack(UAnimMontage* Montage, bool bInterrupted)
+{
+    // 중단되든 정상 종료든 무조건 호출 ✅
+    RemoveState(SoulGameplayTag::Character_State_Attacking);
+}
+```
+
+**2. UI는 Delegate로 분리**
+```cpp
+// Before: UI가 Component 직접 참조
+void UHealthBarWidget::Tick()
+{
+    AttributeComp = GetOwner()->GetComponent();
+    UpdateHealth(AttributeComp->GetHealth());  // 매 프레임 ❌
+}
+```
+```cpp
+// After: Delegate 구독
+void UAttributeComponent::TakeDamageAmount(float Damage)
+{
+    BaseHealth -= Damage;
+    OnAttributeChanged.Broadcast(EAttributeType::Health, BaseHealth, MaxHealth);
+}
+
+void UStatBarWidget::BindDelegate()
+{
+    AttributeComponent->OnAttributeChanged.AddDynamic(
+        this, &UStatBarWidget::SetPercent);
+}
+```
+
+</br>
+
+**3. 역할별 이벤트 활용**
+
+| 상황 | Tick (Before) | 이벤트 (After) |
+|------|---------------|----------------|
+| 스태미나 회복 | 매 프레임 체크 | ```Timer``` (회복 주기) |
+| 상태 해제 | bool 변수 체크 | ```Delegate``` |
+| UI 갱신 | 매 프레임 조회 | ```Delegate``` (변경 시만) |
+| 충돌 검사 | 매 프레임 | ```AnimNotifyState``` (구간 지정) |
+| 무적 부여 | bool + Tick | ```AnimNotifyState``` (Begin/End) |
+
+</br>
+
+**최종 Tick 사용처:**
+```cpp
+// WeaponCollisionComponent.cpp - 충돌 검사만
+void UWeaponCollisionComponent::TickComponent(float DeltaTime, ...)
+{
+    if (bIsCollisionEnabled)  // 공격 중에만 활성화
+    {
+        CollisionTrace();  // 무기 궤적 추적
+    }
+}
+
+// TargetingComponent.cpp - 락온 유지
+void UTargetingComponent::TickComponent(float DeltaTime, ...)
+{
+    if (bIsLockOn && IsValid(LockedTargetActor))
+    {
+        FaceLockOnActor();  // 시선 고정
+    }
+}
+```
+
+**온/오프 제어로 최적화:**
+```cpp
+void ActivateCollision()
+{
+    WeaponCollisionComponent->SetComponentTickEnabled(true);
+}
+
+void DeactivateCollision()
+{
+    WeaponCollisionComponent->SetComponentTickEnabled(false);
+}
+```
+
+</br>
+
+### ✅ 결과
+
+✅ **Tick 사용 최소화**: AI 외 거의 미사용  
+✅ **명확한 실행 타이밍**: "언제" 호출되는지 코드로 명시  
+✅ **디버깅 용이**: Delegate/Timer는 호출 시점 추적 쉬움  
+✅ **성능 향상**: 불필요한 매 프레임 체크 제거
+
+Tick의 함정:
+- 매 프레임 실행 = 성능 낭비
+- "언제" 실행되는지 불명확
+- bool 변수 남발
+
+이벤트 기반의 장점:
+- **Timer**: "3초 후 실행" 명확
+- **Delegate**: "HP 변경 시 UI 갱신" 명확
+- **AnimNotify**: "공격 30프레임에 충돌 활성화" 명확
+
+AnimNotify는 **"타이밍 이벤트"**로만 사용하고, **"상태 관리"**는 Delegate로 보장하는 것이 안전합니다. 언리얼의 이벤트 시스템을 적극 활용하면 코드가 더 명확하고 유지보수가 쉬워집니다.
+
+___
+
 - [Dedicated Server] 매번 배열 전체를 네트워크 복제해야 할까? ```Fast Array Serializer```
-- [DirectX 11] 드로우 콜을 줄이기 위한 전략 ```Mesh```, ```Material```
-### 2-6. 회고
-- 이벤트 방식을 더 빨리 수용했더라면
-- PlayerController가 입력을 처리하는게 적절한가?
-
-
 ### 🎮 구현 목표 
 
 </br>
@@ -2419,8 +2888,32 @@ ___
 
 ___
 
+- [DirectX 11] 드로우 콜을 줄이기 위한 전략 ```Mesh```, ```Material```
+### 🎮 구현 목표 
 
+</br>
 
+### 🚨 문제 상황
+
+</br>
+
+### 💭 해결 방법
+
+</br>
+
+### 🔧 시행착오 
+
+</br>
+
+### ✅ 결과 
+
+</br>
+
+___
+
+### 2-6. 회고
+- 이벤트 방식을 더 빨리 수용했더라면
+- PlayerController가 입력을 처리하는게 적절한가?
 
 
 ___
