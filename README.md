@@ -28,14 +28,14 @@
 3.  **[최적화]** 'Tick' 의존성을 제거하고 이벤트 기반으로 프로젝트를 제작한 경험
     * 🔗 [`[UE5 액션] Tick에 미련을 버려라. 대안은 많다.`](#ue5-액션-tick에-미련을-버려라-대안은-많다)
 4.  **[아키텍처]** 불필요한 중계 함수와 결합도를 낮추기 위한 입력 시스템 고찰
-    * 🔗 [`PlayerController가 입력을 처리하는게 적절한가?`](#playercontroller가-입력을-처리하는게-적절한가)
+    * 🔗 [`[UE5 액션]PlayerController가 입력을 처리하는게 적절한가?`](#playercontroller가-입력을-처리하는게-적절한가)
 
       
 ### 2-1. 상태 관리 시스템
 - 🔗 [[DirectX 11] ```Enum```의 한계 → ```FSM Component```](#directx-11-enum의-한계--fsm-component)
 - 🔗 [[UE5 액션] 복잡한 상태도 심플하게, ```GameplayTag Container```](#ue5-액션-복잡한-상태도-심플하게-gameplaytag-container)
 - 🔗 [[UE5 액션] 공격이 캔슬된 후 캐릭터가 안 움직여요.](#ue5-액션-공격이-캔슬된-후-캐릭터가-안-움직여요-fonmontageended-delegate)
-### 2-2. 컨탠츠 구현
+### 2-2. 컨텐츠 구현
 - 🔗 [[UE5 액션] 부드러운 콤보 연계는 어떻게 구현할까? ```AnimNotify State```](#ue5-액션-부드러운-콤보-연계는-어떻게-구현할까-animnotify-state) ✅
 - 🔗 [[UE5 액션] 자연스러운 대시를 구현할 순 없을까?  ```Motion Warping```](#ue5-액션-자연스러운-대시를-구현할-순-없을까--motion-warping)
 - 🔗 [[UE5 액션] 무기별 전투 스타일, 데이터 주도 설계](#ue5-액션-무기별-전투-스타일-데이터-주도-설계)
@@ -53,7 +53,7 @@
 - 🔗 [[UE5 액션] ```Tick```에 미련을 버려라. 대안은 많다.](#ue5-액션-tick에-미련을-버려라-대안은-많다) ✅
 - 🔗 [[Dedicated Server] 매번 배열 전체를 네트워크 복제해야 할까? ```Fast Array Serializer```](#dedicated-server-매번-배열-전체를-네트워크-복제해야-할까-fast-array-serializer)
 ### 2-6. 회고
-- 🔗 [```PlayerController```가 입력을 처리하는게 적절한가?](#playercontroller가-입력을-처리하는게-적절한가) ✅
+- 🔗 [[UE5 액션]```PlayerController```가 입력을 처리하는게 적절한가?](#playercontroller가-입력을-처리하는게-적절한가) ✅
 
 </br>
 
