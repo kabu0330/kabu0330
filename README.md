@@ -1,5 +1,14 @@
 <h1 align="left"> 게임 클라이언트 프로그래머 류성민입니다.</h1>
 
+# 💻 게임 클라이언트 프로그래머 포트폴리오
+
+> **"왜 안 될까?"에서 시작해 "이렇게 하면 되겠다"로 끝내는 개발자**
+
+안녕하세요! 게임 클라이언트 프로그래머 지망생 류성민입니다.  
+**문제 해결 과정**을 기록하고, **대안을 고민하는** 개발자입니다.
+
+</br>
+
 ## 📜 목차
 ### 1. 📄 프로젝트 개요
 - 🔗 1. [UE5] 액션 게임 프로젝트 [github.com/kabu0330/UE_Soul2](https://github.com/kabu0330/UE_Soul2)
@@ -10,7 +19,20 @@
 </br>
 
 ### 2. 📑 주요 구현 내용 
-* 프로젝트를 진행하며 가장 치열하게 고민했던 내용에 ✅ 표시를 했습니다.
+### 🚀 대표 주제
+
+제가 프로젝트들을 진행하며 치열하게 고민한 4가지 핵심 주제입니다. ✅
+
+1.  **[조작감]** '후딜 캔슬'과 '콤보 유지'를 모두 잡은 콤보 시스템
+    * 🔗 [`[UE5 액션] 부드러운 콤보 연계는 어떻게 구현할까?`](#ue5-액션-부드러운-콤보-연계는-어떻게-구현할까-animnotify-state)
+2.  **[네트워크]** 비동기 작업 순서 문제로 랭킹이 정상적으로 갱신되지 않는 문제
+    * 🔗 [`[Dedicated Server] 아니 방금 이겼는데 왜 내가 2등이예요?`](#dedicated-server-아니-방금-이겼는데-왜-내가-2등이예요)
+3.  **[최적화]** 'Tick' 의존성을 제거하고 이벤트 기반으로 프로젝트를 제작한 경험
+    * 🔗 [`[UE5 액션] Tick에 미련을 버려라. 대안은 많다.`](#ue5-액션-tick에-미련을-버려라-대안은-많다)
+4.  **[아키텍처]** 불필요한 중계 함수와 결합도를 낮추기 위한 입력 시스템 고찰
+    * 🔗 [`PlayerController가 입력을 처리하는게 적절한가?`](#playercontroller가-입력을-처리하는게-적절한가)
+
+      
 ### 2-1. 상태 관리 시스템
 - 🔗 [[DirectX 11] ```Enum```의 한계 → ```FSM Component```](#directx-11-enum의-한계--fsm-component)
 - 🔗 [[UE5 액션] 복잡한 상태도 심플하게, ```GameplayTag Container```](#ue5-액션-복잡한-상태도-심플하게-gameplaytag-container)
@@ -50,6 +72,9 @@
 
 ### 📋 프로젝트 정보
 
+<details>
+<summary><b>📖 상세 정보 펼치기</b></summary>
+
 | 항목 | 내용 | 항목 | 내용 |
 |:------|:-----|:-----|:-----|
 | 🖥️ **플랫폼** | PC (Windows) | 🎮 **장르** | 액션 |
@@ -67,6 +92,7 @@
 | **AI** | Behavior Tree, Patrol, Perception|
 | **기타** | 메타 휴먼, 포스트 프로세싱 |
 
+</details>
 
 ### 🎯 작업 목표
 **이벤트 기반 설계 및 타격감 있는 전투 시스템 구현**
@@ -87,7 +113,6 @@
 
 ___
 
-
 ### 🔭 [UE5, AWS] Dedicated Server 프로젝트
 ### 📸 Gif
 
@@ -99,6 +124,8 @@ ___
 ### 🔗 Github : [github.com/kabu0330/FPS_with_DedicatedServer](https://github.com/kabu0330/FPS_with_DedicatedServer)
 
 ### 📋 프로젝트 정보
+<details>
+<summary><b>📖 상세 정보 펼치기</b></summary>
 
 | 항목 | 내용 | 항목 | 내용 |
 |:------|:-----|:-----|:-----|
@@ -118,6 +145,7 @@ ___
 | **DB** | 플레이 개인 기록 및 랭킹 시스템 |
 | **UMG** | UI제작 |
 
+</details>
 
 ### 🎯 작업 목표
 **서버-클라이언트 아키텍처 및 AWS 클라우드 인프라 실전 경험**
@@ -148,6 +176,8 @@ ___
 ### 🔗 Github : [github.com/kabu0330/UE_Overcooked2](https://github.com/kabu0330/UE_Overcooked2)
 
 ### 📋 프로젝트 정보
+<details>
+<summary><b>📖 상세 정보 펼치기</b></summary>
 
 | 항목 | 내용 | 항목 | 내용 |
 |:------|:-----|:-----|:-----|
@@ -164,7 +194,8 @@ ___
 | **네트워크** | RPC, Replication |
 | **레벨 디자인** | 타이틀/스테이지 레벨 디자인 |
 | **기타** | Dynamic Material Instance |
-
+	
+</details>
 
 ### 🎯 작업 목표
 **멀티플레이어 협업 게임 개발 및 팀 협업 경험**
@@ -195,6 +226,8 @@ ___
 ### 🔗 Github : [github.com/kabu0330/DX_HollowKnight2](https://github.com/kabu0330/DX_HollowKnight2)
 
 ### 📋 프로젝트 정보
+<details>
+<summary><b>📖 상세 정보 펼치기</b></summary>
 
 | 항목 | 내용 | 항목 | 내용 |
 |:------|:-----|:-----|:-----|
@@ -210,6 +243,7 @@ ___
 | **컨텐츠** | 캐릭터, 몬스터, 맵, 이펙트 및 스킬, UI |
 | **기타** | FSM, 멀티 스레드 로딩 |
 
+</details>
 
 ### 🎯 작업 목표
 **상용 엔진 프레임워크 이해 및 그래픽 프로그래밍 기초 습득**
@@ -771,7 +805,7 @@ ComboWindow를 벗어나면 입력이 모두 무시되어 **콤보가 첫 번째
 
 **"타이밍 놓쳤으니 다시 처음부터" = 매우 불쾌한 경험**
 
-조작감을 높이겠다는 의도로 후딜레이 캔슬이라는 혜택을 제공한 것은 좋았으나, 패널티(후딜레이간 입력/이동 불가)가 너무 강력했습니다.
+조작감을 높이겠다는 의도로 후딜레이 캔슬이라는 혜택을 제공한 것은 좋았으나, 패널티(후딜레이 간 입력 불가/ 이동 불가)가 너무 강력했습니다.
 
 </br>
 
@@ -2191,7 +2225,7 @@ CountdownTimerHandle.TimerFinishedDelegate.BindWeakLambda(this, [&]() {
 
 대신:
 - 서버와 클라의 **절대 시간**은 달라도 됨
-- **상대적 시간 차이(지연)**만 보정하면 충분
+- 상대적 시간 차이(지연)만 보정하면 충분
 - Ping-Pong으로 간단하지만 효과적인 보정
 
 </br>
@@ -2326,7 +2360,7 @@ class ADS_PlayerController
 
 **그런데 왜 PlayerState로 옮겼나?**
 
-설계 원칙상 **"플레이어 게임 데이터는 PlayerState"**가 맞다고 판단:
+설계 원칙상 "**플레이어 게임 데이터는 PlayerState가 소유**"하는 것이 맞다고 판단:
 - PlayerController: 입력 처리, 카메라 제어 (제어 관련)
 - PlayerState: 점수, 닉네임, 팀 정보 (게임 데이터)
 
@@ -2711,7 +2745,7 @@ Tick 사용을 최소화하고 **이벤트 기반**으로 게임 로직 구성�
 - DirectX: FSM의 ```ComponentTick```
 - UE5 초기: 여전히 Tick 남용
 
-이면에는 Tick은 직관적이고 **"이벤트 기반은 낯설다"**는 생각이 있었습니다.
+이면에는 Tick은 직관적이고 "**이벤트 기반은 낯설다**"는 생각이 있었습니다.
 
 **성능 문제 경험:**
 ```cpp
@@ -2736,7 +2770,7 @@ AnimNotify_RemoveGameplayTag → RemoveState(Attacking)
 ```
 
 **문제 발생:**
-- 공격 중 회피 → 몽타주 중단 → ```AnimNotify_emoveGameplayTag``` 미호출 ❌
+- 공격 중 회피 → 몽타주 중단 → ```AnimNotify_RemoveGameplayTag``` 미호출 ❌
 - 블렌드 아웃 중 끝부분 Notify 누락
 - ```Character_State_Attacking``` 영구 유지 → 캐릭터 이동 불가
 
@@ -2771,7 +2805,7 @@ void ASoulCharacterBase::RecoveryAttack(UAnimMontage* Montage, bool bInterrupted
 **2. UI는 Delegate로 분리**
 ```cpp
 // Before: UI가 Component 직접 참조
-void UHealthBarWidget::Tick()
+void UHealthBarWidget::NativeTick()
 {
     AttributeComp = GetOwner()->GetComponent();
     UpdateHealth(AttributeComp->GetHealth());  // 매 프레임 ❌
@@ -2859,7 +2893,7 @@ Tick의 함정:
 - **Delegate**: "HP 변경 시 UI 갱신" 명확
 - **AnimNotify**: "공격 30프레임에 충돌 활성화" 명확
 
-AnimNotify는 **"타이밍 이벤트"**로만 사용하고, **"상태 관리"**는 Delegate로 보장하는 것이 안전합니다. 언리얼의 이벤트 시스템을 적극 활용하면 코드가 더 명확하고 유지보수가 쉬워집니다.
+AnimNotify는 "**타이밍 이벤트**"로만 사용하고, "**상태 관리**"는 Delegate로 보장하는 것이 안전합니다. 언리얼의 이벤트 시스템을 적극 활용하면 코드가 더 명확하고 유지보수가 쉬워집니다.
 
 ___
 
@@ -3092,7 +3126,7 @@ void FLobbyPlayerInfo::PreReplicatedRemove(const FLobbyPlayerInfoArray& InArrayS
 ### 🔧 시행착오
 
 **Owner 설정 누락**
-````PostReplicatedAdd()``` 콜백에서 GameState에 접근하려 했지만 ```nullptr``` 크래시:
+```PostReplicatedAdd()``` 콜백에서 GameState에 접근하려 했지만 ```nullptr``` 크래시:
 ```cpp
 void FLobbyPlayerInfo::PostReplicatedAdd(...)
 {
@@ -3348,9 +3382,9 @@ void ASoulWeapon::EquipItem()
 
 </br>
 
-### 🔧 올바른 접근법
+### 🔧 접근 방법
 
-**1. Enhanced Input + IMC (가장 추천)**
+**1. Enhanced Input + IMC**
 
 **무기가 IMC를 소유하는 방식:**
 ```cpp
@@ -3493,9 +3527,7 @@ void ASoulPlayerController::SetupInputComponent()
 - **Character**: 무엇을 할 수 있는가 (Move/Attack/Roll), 입력 직접 처리
 - **Component**: 어떻게 하는가 (로직 구현)
 
-**핵심 교훈:**
-
-**"입력을 '처리'하는 것과 '관리'하는 것은 다르다"**
+"**입력을 '처리'하는 것과 '관리'하는 것은 다르다**"
 
 Controller가 모든 입력을 처리하는 것은:
 - ❌ 교과서적이지만 확장성 낮음
@@ -3511,7 +3543,9 @@ Enhanced Input의 IMC나 GameplayTag를 활용하면:
 1. Character에서 직접 입력 처리 (기본)
 2. 무기별 IMC로 동적 매핑 (확장)
 3. Controller는 UI/시스템만 담당
-```ACharacter::SetupPlayerInputComponent()```가 존재하는 이유는 **"행동의 주체가 직접 입력을 받는 게 자연스럽다"**는 언리얼의 철학입니다. 이제야 그 의미를 이해하게 되었습니다.
+```ACharacter::SetupPlayerInputComponent()```가 존재하는 이유는 "**행동의 주체가 직접 입력을 받는 게 자연스럽다**"
+
+이제야 그 의미를 이해하게 되었습니다.
 
 </br>
 
