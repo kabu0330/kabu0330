@@ -25,23 +25,16 @@
 - 🔗 [[UE5 팀 프로젝트] 클라에서 스폰하면 안 보여요. ```SpawnActorDeferred```](#ue5-팀-프로젝트-클라에서-스폰하면-안-보여요-spawnactordeferred)
 - 🔗 [[Dedicated Server] "서버에 접속할 수 없습니다" 메시지 없이 한 번에 접속하기](#dedicated-server-서버에-접속할-수-없습니다-메시지-없이-한-번에-접속하기)
 - 🔗 [[Dedicated Server] 시간 오차는 어떻게 해결할까? ```Ping-Pong```](#dedicated-server-시간-오차는-어떻게-해결할까-ping-pong)
-- 🔗 [Dedicated Server] 왜 님은 닉네임이 안 보여요? ```SeamlessTravel``` 
+- 🔗 [[Dedicated Server] 왜 님은 닉네임이 안 보여요? ```SeamlessTravel``` ](#dedicated-server-왜-님은-닉네임이-안-보여요-seamlesstravel)
 - 🔗 [Dedicated Server] 아니 방금 이겼는데 왜 내가 2등이예요? 
-### 2-4. AI 시스템 구현
-- 🔗 [UE5 액션] Behavior Tree를 활용한 몬스터 패턴
-### 2-5. 커스텀 엔진 아키텍처
-- 🔗 [DirectX 11] 언리얼 상속 기반 프레임워크 따라하기
-### 2-6. 협업 및 버전 관리
+### 2-4. 협업 및 버전 관리
 - 🔗 [UE5 팀 프로젝트] Pull-Request 시행착오와 교훈
-- 🔗 [UE5 팀 프로젝트] 테스트 레벨, 캐릭터 없이 UI로 기능 테스트
-### 2-7. 최적화 전략 
+### 2-5. 최적화 전략 
 - 🔗 [UE5 액션] ```Tick```에 미련을 버려라. 대안은 많다. 
 - 🔗 [Dedicated Server] 매번 배열 전체를 네트워크 복제해야 할까? ```Fast Array Serializer```
 - 🔗 [DirectX 11] 드로우 콜을 줄이기 위한 전략 ```Mesh```, ```Material```
-- 🔗 [DirectX 11] 모든 리소스를 다 로드할 때까지 기다리나요? ```Thread```
-### 2-8. 회고
+### 2-6. 회고
 - 🔗 이벤트 방식을 더 빨리 수용했더라면
-- 🔗 인터페이스 vs 추상 클래스
 - 🔗 PlayerController가 입력을 처리하는게 적절한가?
 
 </br>
@@ -1710,7 +1703,6 @@ DataTable: 재료 정보 모두 등록 (메시, 아이콘, 조리 데이터)
 
 **데이터 기반 설계의 함정**
 
-재료마다 BP 클래스를 만드는 대신, **하나의 재료 클래스 + DataTable**로 관리하기로 했습니다:
 ```cpp
 // 설계: 재료는 Type만 가지고, 나머지는 DataTable에서 조회
 class AIngredient
@@ -1827,8 +1819,6 @@ ___
 ### [Dedicated Server] "서버에 접속할 수 없습니다" 메시지 없이 한 번에 접속하기
 ### 🎮 구현 목표 
 플레이어가 "게임 참가" 버튼을 클릭하면 **게임 세션 상태와 무관하게 자동으로 접속**되도록 합니다. 게임 세션이 없으면 생성하고, 활성화 중이면 대기했다가 자동으로 접속하는 것이 목표입니다.
-
-</br>
 
 ### 🚨 문제 상황
 **게임 세션 생성 타이밍 문제**
@@ -2209,24 +2199,201 @@ CountdownTimerHandle.TimerFinishedDelegate.BindWeakLambda(this, [&]() {
 </br>
 
 ___
-- [Dedicated Server] 왜 님은 닉네임이 안 보여요? ```SeamlessTravel```
-- [Dedicated Server] 아니 방금 이겼는데 왜 내가 2등이예요? 
-### 2-4. AI 시스템 구현
-- [UE5 액션] Behavior Tree를 활용한 몬스터 패턴
-### 2-5. 커스텀 엔진 아키텍처 설계
-- [DirectX 11] 언리얼 상속 기반 프레임워크 따라하기
-### 2-6. 협업 및 버전 관리
-- [UE5 팀 프로젝트] Pull-Request 시행착오와 교훈
-- [UE5 팀 프로젝트] 테스트 레벨, 캐릭터 없이 UI로 기능 테스트
+### [Dedicated Server] 왜 님은 닉네임이 안 보여요? ```SeamlessTravel```
+### 🎮 구현 목표 
+서버에 접속한 플레이어들은 로비 레벨에서 모인 뒤, 게임 시작 시 **SeamlessTravel**로 플레이 레벨로 이동합니다. 이 과정에서 플레이어의 `Username`이 유지되어야 DB에 플레이 기록을 정상적으로 저장할 수 있습니다.
 
-### 2-7. 최적화 전략 
+</br>
+
+### 🚨 문제 상황
+**SeamlessTravel 후 닉네임이 공백으로 표시**
+
+플레이어 정보 저장 전략:
+- ```PlayerState```: 닉네임(Username), PlayerSessionId (게임 내 공유 데이터)
+- ```LocalPlayerSubsystem```: AccessToken, Email (로컬 전용 데이터)
+````cpp
+// 로비 입장 시 (GameSessionsManager.cpp)
+const FString Options = "PlayerSessionId=" + PlayerSession.PlayerSessionId 
+                      + "?Username=" + PlayerSession.PlayerId;
+UGameplayStatics::OpenLevel(this, Address, true, Options);
+````
+
+로비 레벨에서는 정상적으로 닉네임이 표시되지만, **SeamlessTravel로 플레이 레벨 전환 후 닉네임이 초기화**되는 문제 발생:
+````
+로비 레벨: 닉네임 "Kabu" ✅
+   ↓ (SeamlessTravel)
+플레이 레벨: 닉네임 "" (공백) ❌
+````
+
+연쇄 문제:
+- 킬 로그에 닉네임 공백 표기 ❌
+- DB에 플레이어 기록 저장 실패 (Username이 공백) ❌
+
+</br>
+
+### 💭 해결 방법
+**"왜 SeamlessTravel 후 데이터가 날아가지?"**
+
+처음엔 "레벨 전환은 자동으로 데이터를 유지해주는 거 아닌가?" 생각했지만, 테스트 결과 **PlayerState의 커스텀 변수는 자동으로 복사되지 않음**을 확인.
+
+**첫 번째 시도: PlayerState 클래스 통일**
+
+의심: "로비 레벨과 플레이 레벨의 PlayerState 클래스가 달라서 그런가?"
+````cpp
+// Before
+로비 레벨: DS_DefaultPlayerState (서버 모듈)
+플레이 레벨: BP_MatchPlayerState (컨텐츠 모듈, DS_DefaultPlayerState 상속)
+
+// After: 통일 시도
+로비 레벨: BP_MatchPlayerState
+플레이 레벨: BP_MatchPlayerState
+````
+
+결과: **여전히 초기화됨** ❌
+
+상속받았어도 문제가 해결되지 않는 이유를 찾아야 했습니다.
+
+</br>
+
+**두 번째 시도: SeamlessTravel 동작 원리 조사**
+
+UE5 공식 문서와 코드를 찾아보니, SeamlessTravel 시 PlayerState는:
+````
+1. 구 레벨에서 PlayerState 복사본 생성 (CopyProperties 호출)
+2. 신 레벨로 PlayerState 이동
+3. 신 레벨의 기존 PlayerState와 병합 (OverrideWith 호출)
+````
+
+핵심 발견: **```CopyProperties()```와 ```OverrideWith()```를 오버라이드하지 않으면 커스텀 변수는 복사 안 됨!**
+
+**해결: 수동 복사 구현**
+````cpp
+// DS_DefaultPlayerState.cpp
+void ADS_DefaultPlayerState::CopyProperties(APlayerState* PlayerState)
+{
+    Super::CopyProperties(PlayerState);
+
+    // 구 PlayerState → 신 PlayerState로 복사
+    if (ADS_DefaultPlayerState* NewPlayerState = Cast(PlayerState))
+    {
+        NewPlayerState->DefaultUsername = DefaultUsername;
+        NewPlayerState->DefaultPlayerSessionId = DefaultPlayerSessionId;
+    }
+}
+
+void ADS_DefaultPlayerState::OverrideWith(APlayerState* PlayerState)
+{
+    Super::OverrideWith(PlayerState);
+
+    // 신 레벨의 임시 PlayerState → 실제 PlayerState로 덮어쓰기
+    if (ADS_DefaultPlayerState* OldPlayerState = Cast(PlayerState))
+    {
+        DefaultUsername = OldPlayerState->DefaultUsername;
+        DefaultPlayerSessionId = OldPlayerState->DefaultPlayerSessionId;
+    }
+}
+````
+
+**동작 흐름:**
+````
+[로비 레벨]
+PlayerState A (닉네임: "Kabu")
+   ↓
+1. CopyProperties() 호출
+   → 임시 PlayerState B 생성 (닉네임: "Kabu" 복사)
+   ↓
+2. SeamlessTravel 시작
+   ↓
+[플레이 레벨]
+PlayerState C (새로 생성, 닉네임: "")
+   ↓
+3. OverrideWith() 호출
+   → PlayerState B의 데이터를 C에 덮어쓰기
+   → 최종: PlayerState C (닉네임: "Kabu") ✅
+````
+</br>
+
+### 🔧 시행착오 
+**왜 PlayerState에 저장했는가?**
+
+처음엔 ```PlayerController```에 닉네임을 저장했습니다. `PlayerController`는 `SeamlessTravel` 시 자동으로 데이터가 유지되므로 편했습니다.
+````cpp
+// 초기 구조 (잘 작동함)
+class ADS_PlayerController
+{
+    UPROPERTY(Replicated)
+    FString Username;  // SeamlessTravel 후에도 유지됨 ✅
+};
+````
+
+**그런데 왜 PlayerState로 옮겼나?**
+
+설계 원칙상 **"플레이어 게임 데이터는 PlayerState"**가 맞다고 판단:
+- PlayerController: 입력 처리, 카메라 제어 (제어 관련)
+- PlayerState: 점수, 닉네임, 팀 정보 (게임 데이터)
+
+실제 사용 케이스:
+````cpp
+void UEliminationComponent::ProcessElimination(bool bHeadShot, AMatchPlayerState* AttackerPS, AMatchPlayerState* VictimPS)
+{
+    AMatchGameState* GameState = Cast<AMatchGameState>(UGameplayStatics::GetGameState(AttackerPS));
+    if (IsValid(GameState))
+    {
+        HandleFirstBlood(GameState, SpecialElimType, AttackerPS);
+        UpdateLeaderStatus(GameState, SpecialElimType, AttackerPS, VictimPS);
+        
+        // GameState->Multicast Deleaget Broadcast -> Widget Kill Feed Update
+        FKillInfo KillInfo;
+        KillInfo.KillerName = AttackerPS->GetUsername();
+        KillInfo.VictimName = VictimPS->GetUsername();
+        
+        GameState->AnnounceKill(KillInfo);
+    }
+}
+````
+
+</br>
+
+**Replicated 변수인데 왜 복사가 필요한가?**
+
+처음엔 "```UPROPERTY(Replicated)```로 선언했으니 자동 동기화 아닌가?" 생각했지만:
+````cpp
+UPROPERTY(ReplicatedUsing = OnRep_Username)
+FString DefaultUsername = "";
+````
+
+**Replication ≠ SeamlessTravel 데이터 유지**
+- Replication: 서버 → 클라이언트 동기화
+- SeamlessTravel: 구 레벨 → 신 레벨 데이터 이동 (별도 메커니즘!)
+
+따라서 Replicated 변수여도 ```CopyProperties()```/```OverrideWith()``` 구현 필수.
+
+
+
+</br>
+
+### ✅ 결과 
+✅ **닉네임 정상 표시**: SeamlessTravel 후에도 "Kabu" 유지  
+✅ **DB 저장 성공**: PlayerId가 공백이 아닌 실제 닉네임으로 저장  
+
+**"SeamlessTravel은 PlayerState를 자동으로 복사하지 않는다"**
+언리얼의 ```PlayerState```는 기본 프로퍼티(PlayerName, Score 등)만 자동 복사하고, **커스텀 변수는 개발자가 직접 ```CopyProperties()```와 ```OverrideWith()```를 구현**해야 합니다.
+````CopyProperties()```: 구 레벨에서 신 레벨로 데이터 복사
+```OverrideWith()```: 신 레벨의 임시 PlayerState를 실제 PlayerState에 병합
+
+</br>
+
+___
+
+- [Dedicated Server] 아니 방금 이겼는데 왜 내가 2등이예요? 
+### 2-4. 협업 및 버전 관리
+- [UE5 팀 프로젝트] Pull-Request 시행착오와 교훈
+### 2-5. 최적화 전략 
 - [UE5 액션] ```Tick```에 미련을 버려라. 대안은 많다.
 - [Dedicated Server] 매번 배열 전체를 네트워크 복제해야 할까? ```Fast Array Serializer```
 - [DirectX 11] 드로우 콜을 줄이기 위한 전략 ```Mesh```, ```Material```
-- [DirectX 11] 모든 리소스를 다 로드할 때까지 기다리나요? ```Thread```
-### 2-8. 회고
+### 2-6. 회고
 - 이벤트 방식을 더 빨리 수용했더라면
-- 인터페이스 vs 추상 클래스
 - PlayerController가 입력을 처리하는게 적절한가?
 
 
