@@ -3518,10 +3518,6 @@ Enhanced Input의 IMC나 GameplayTag를 활용하면:
 ___
 
 
-<p align="center">
- <img alt="이미지" src="readme\ComboWindow.png">
-</p>
-
 <h3 align="left">Connect with me:</h3>
 <p align="left">
 - Email: rjacjs0331@google.com  </p>
