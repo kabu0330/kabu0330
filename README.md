@@ -10,32 +10,30 @@
 </br>
 
 ### 2. 📑 주요 구현 내용 
-
+* 프로젝트를 진행하며 가장 치열하게 고민했던 내용에 ✅ 표시를 했습니다.
 ### 2-1. 상태 관리 시스템
 - 🔗 [[DirectX 11] ```Enum```의 한계 → ```FSM Component```](#directx-11-enum의-한계--fsm-component)
 - 🔗 [[UE5 액션] 복잡한 상태도 심플하게, ```GameplayTag Container```](#ue5-액션-복잡한-상태도-심플하게-gameplaytag-container)
-- 🔗 [[UE5 액션] 공격이 캔슬된 후 캐릭터가 안 움직여요.](#ue5-액션-공격이-캔슬된-후-캐릭터가-안-움직여요-fonmontageended-delegate) 
+- 🔗 [[UE5 액션] 공격이 캔슬된 후 캐릭터가 안 움직여요.](#ue5-액션-공격이-캔슬된-후-캐릭터가-안-움직여요-fonmontageended-delegate)
 ### 2-2. 컨탠츠 구현
-- 🔗 [[UE5 액션] 부드러운 콤보 연계는 어떻게 구현할까? ```AnimNotify State```](#ue5-액션-부드러운-콤보-연계는-어떻게-구현할까-animnotify-state) 
+- 🔗 [[UE5 액션] 부드러운 콤보 연계는 어떻게 구현할까? ```AnimNotify State```](#ue5-액션-부드러운-콤보-연계는-어떻게-구현할까-animnotify-state) ✅
 - 🔗 [[UE5 액션] 자연스러운 대시를 구현할 순 없을까?  ```Motion Warping```](#ue5-액션-자연스러운-대시를-구현할-순-없을까--motion-warping)
 - 🔗 [[UE5 액션] 무기별 전투 스타일, 데이터 주도 설계](#ue5-액션-무기별-전투-스타일-데이터-주도-설계)
 - 🔗 [[UE5 액션] 슬롯 기반 인벤토리 UI 동기화 전략  ```Inventory Component```, ```WidgetManager```](#ue5-액션-슬롯-기반-인벤토리-ui-동기화-전략--inventory-component-widgetmanager)
 - 🔗 [[UE5 팀 프로젝트] 다이나믹 머티리얼로 강조 효과 구현하기](#ue5-팀-프로젝트-다이나믹-머티리얼로-강조-효과-구현하기) 
 ### 2-3. 네트워크 동기화 문제 해결 전략
-- 🔗 [[UE5 팀 프로젝트] 클라에서 스폰하면 안 보여요. ```SpawnActorDeferred```](#ue5-팀-프로젝트-클라에서-스폰하면-안-보여요-spawnactordeferred)
+- 🔗 [[UE5 팀 프로젝트] 클라에서 스폰하면 안 보여요. ```SpawnActorDeferred```](#ue5-팀-프로젝트-클라에서-스폰하면-안-보여요-spawnactordeferred) 
 - 🔗 [[Dedicated Server] "서버에 접속할 수 없습니다" 메시지 없이 한 번에 접속하기](#dedicated-server-서버에-접속할-수-없습니다-메시지-없이-한-번에-접속하기)
 - 🔗 [[Dedicated Server] 시간 오차는 어떻게 해결할까? ```Ping-Pong```](#dedicated-server-시간-오차는-어떻게-해결할까-ping-pong)
 - 🔗 [[Dedicated Server] 왜 님은 닉네임이 안 보여요? ```SeamlessTravel``` ](#dedicated-server-왜-님은-닉네임이-안-보여요-seamlesstravel)
-- 🔗 [[Dedicated Server] 아니 방금 이겼는데 왜 내가 2등이예요?](#dedicated-server-아니-방금-이겼는데-왜-내가-2등이예요)
+- 🔗 [[Dedicated Server] 아니 방금 이겼는데 왜 내가 2등이예요?](#dedicated-server-아니-방금-이겼는데-왜-내가-2등이예요) ✅
 ### 2-4. 협업 및 버전 관리
 - 🔗 [[UE5 팀 프로젝트] Pull-Request 시행착오와 교훈](#ue5-팀-프로젝트-pull-request-시행착오와-교훈)
 ### 2-5. 최적화 전략 
-- 🔗 [[UE5 액션] ```Tick```에 미련을 버려라. 대안은 많다.](#ue5-액션-tick에-미련을-버려라-대안은-많다)
-- 🔗 [Dedicated Server] 매번 배열 전체를 네트워크 복제해야 할까? ```Fast Array Serializer```
-- 🔗 [DirectX 11] 드로우 콜을 줄이기 위한 전략 ```Mesh```, ```Material```
+- 🔗 [[UE5 액션] ```Tick```에 미련을 버려라. 대안은 많다.](#ue5-액션-tick에-미련을-버려라-대안은-많다) ✅
+- 🔗 [[Dedicated Server] 매번 배열 전체를 네트워크 복제해야 할까? ```Fast Array Serializer```](#dedicated-server-매번-배열-전체를-네트워크-복제해야-할까-fast-array-serializer)
 ### 2-6. 회고
-- 🔗 이벤트 방식을 더 빨리 수용했더라면
-- 🔗 PlayerController가 입력을 처리하는게 적절한가?
+- 🔗 [```PlayerController```가 입력을 처리하는게 적절한가?](#playercontroller가-입력을-처리하는게-적절한가)
 
 </br>
 
@@ -128,8 +126,8 @@ ___
 - 네트워크 동기화 문제 해결 (RPC/Replication, SeamlessTravel)
 
 ### 📊 핵심 성과
-- ✅ AWS SDK C++ 빌드 및 UE 프로젝트 연동 (Lambda, DynamoDB)
-- ✅ SeamlessTravel 시 PlayerState 동기화 문제 해결 (```OverrideWith```)
+- ✅ AWS SDK C++ 빌드 및 UE 프로젝트 연동
+- ✅ SeamlessTravel 시 PlayerState 동기화 문제 해결 (```CopyProperties```, ```OverrideWith```)
 - ✅ 컨텐츠/서버 전용 모듈 분리
 - ✅ FFastArraySerializer 적용 네트워크 복제 비용 최적화
 
@@ -523,7 +521,7 @@ void UStateComponent::TickComponent(float DeltaTime, ...)
 ```
 **효과:**
 - 플레이 중 현재 상태 실시간 확인 가능
-- "왜 공격이 안 나가지?" → 화면 보고 `Movement_Disabled` 태그 발견 → 태그 제거 로직 검사
+- "왜 공격이 안 나가지?" → 화면 보고 `Character.State.Attacking` 태그 발견 → 태그 제거 로직 검사
 - 복합 상태 디버깅이 직관적으로 변함
 
 </br>
@@ -537,7 +535,7 @@ void UStateComponent::TickComponent(float DeltaTime, ...)
 | **상태 검사** | `if (!A && !B && C)` | `HasTagExact()` |
 | **디버깅** | 변수 일일이 확인 | Container 출력 |
 | **확장성** | bool 계속 추가 | 태그만 정의 |
-| **가독성** | ⭐⭐ | ⭐⭐⭐⭐⭐ |
+| **가독성** | ⭐⭐ | ⭐⭐⭐⭐ |
 
 
 </br>
@@ -641,7 +639,7 @@ void ASoulCharacterBase::RecoveryHitReaction(UAnimMontage* AnimMontage, bool bIn
 - `bInterrupted`로 종료 상황별 로직 분기 가능
 - 새로운 몽타주 추가 시 동일 패턴 적용
 
-AnimNotify는 **특정 타이밍의 이벤트**(이펙트 재생, 사운드 등)에 적합하지만, **상태 초기화**처럼 반드시 실행되어야 하는 로직은 **Delegate로 보장**해야 합니다. UE5가 제공하는 몽타주 콜백 시스템을 활용하면 복잡한 예외 처리 없이 안전한 상태 관리가 가능합니다.
+`AnimNotify`는 **특정 타이밍의 이벤트**(이펙트 재생, 사운드 등)에 적합하지만, **상태 초기화**처럼 반드시 실행되어야 하는 로직은 **Delegate로 보장**해야 합니다. 
 
 </br>
 
@@ -803,7 +801,7 @@ ComboWindow를 벗어나면 입력이 모두 무시되어 **콤보가 첫 번째
 
 </br>
 
-#### 3차 개선: 이중 입력 윈도우 시스템
+#### 3차 개선: 이중 입력 체크
 **구현 목표:**
 1. **Perfect Timing 보상**: ComboWindow 내 입력 → 후딜 캔슬, 부드러운 연계
 2. **패널티 부여**: ComboWindow 놓침 → 후딜레이 재생 (시간적 불이익)
@@ -886,7 +884,7 @@ void UCombatComponent::ExecuteComboAttack(const FGameplayTag& AttackTypeTag)
 </br>
 
 ### ✅ 결과 
-**조작감을 챙긴 3단계 입력 시스템**
+**조작감을 챙긴 콤보 시스템**
 
 ✅ **Perfect Timing 보상 (ComboWindow)**
 - 공격 모션 30% 이후 입력 → 후딜 캔슬
@@ -981,7 +979,7 @@ Youtube로 다른 사람들이 어떻게 대시를 구현했는지 보기 위해
 **결과:** "실제로 작동한다!"는 확신을 얻고 C++ 구현으로 전환
 
 
-#### 2차 시도: C++ 구현 및 레이캐스트 통합
+#### 2차 시도: C++ 구현
 
 ```cpp
 void ASoulPlayerCharacter::MotionWarpingDashSlash()
@@ -1304,11 +1302,11 @@ ___
 
 **복잡한 의존성: UI가 모든 컴포넌트를 알아야 하는 구조**
 
-초기 설계에선 편의상 UI 위젯(예: ItemSlotWidget)이 InventoryComponent나 CombatComponent를 직접 참조해 기능을 호출했습니다.
+초기 설계에선 편의상 UI 위젯(예: `ItemSlotWidget`)이 `InventoryComponent`나 `CombatComponent`를 직접 참조해 기능을 호출했습니다.
 
-- (문제 1) 복잡성: ItemSlotWidget이 아이템 사용을 위해 InventoryComponent를, 장착을 위해 CombatComponent를, 갱신을 위해 EquipmentWidget을 모두 알아야 했습니다.
+- (문제 1) 복잡성: `ItemSlotWidget`이 아이템 사용을 위해 `InventoryComponent`를, 장착을 위해 `CombatComponent`를, 갱신을 위해 `EquipmentWidget`을 모두 알아야 했습니다.
 
-- (문제 2) 양방향 의존: InventoryComponent도 장비가 해제되면 EquipmentWidget을 업데이트해야 했습니다. UI와 로직이 서로 거미줄처럼 얽혀, 기능 하나를 수정하면 관련된 모든 위젯을 수정해야 하는 '스파게티 코드'가 되었습니다.
+- (문제 2) 양방향 의존: `InventoryComponent`도 장비가 해제되면 `EquipmentWidget`을 업데이트해야 했습니다. UI와 로직이 서로 거미줄처럼 얽혀, 기능 하나를 수정하면 관련된 모든 위젯을 수정해야 하는 '스파게티 코드'가 되었습니다.
 
 핵심 문제 인식: UI가 데이터 로직을 너무 많이 알고 있다. "**UI는 데이터가 변경되었음을 알기만 하면 된다**"는 원칙이 필요했습니다.
 
@@ -1320,9 +1318,9 @@ ___
 
 복잡한 의존성을 끊어내기 위해 데이터 흐름을 단방향으로 강제했습니다.
 
-- 데이터는 Component가 소유: InventoryComponent, CombatComponent가 모든 데이터(아이템 목록, 장착 정보)를 '소유'하고 변경 로직을 독점합니다.
+- 데이터는 Component가 소유: `InventoryComponent`, `CombatComponent`가 모든 데이터(아이템 목록, 장착 정보)를 '소유'하고 변경 로직을 독점합니다.
 
-- UI는 Manager와 소통: UI 위젯은 WidgetManagerComponent라는 **'중앙 관리자'**를 통해서만 Component에 "기능을 요청"합니다. (GetComponentByClass 난사 방지)
+- UI는 Manager와 소통: UI 위젯은 `WidgetManagerComponent`라는 **'중앙 관리자'**를 통해서만 Component에 "기능을 요청"합니다. (GetComponentByClass 난사 방지)
 
 - 갱신은 Delegate로: Component는 데이터가 변경되면, 자신을 참조하는 UI를 찾는 대신 **Delegate(이벤트)`를 방송(Broadcast)**합니다.
 
@@ -2865,56 +2863,657 @@ AnimNotify는 **"타이밍 이벤트"**로만 사용하고, **"상태 관리"**�
 
 ___
 
-- [Dedicated Server] 매번 배열 전체를 네트워크 복제해야 할까? ```Fast Array Serializer```
-### 🎮 구현 목표 
+### [Dedicated Server] 매번 배열 전체를 네트워크 복제해야 할까? ```Fast Array Serializer```
+### 🎮 구현 목표
+
+로비에서 플레이어 목록을 실시간으로 동기화합니다. 누군가 입장/퇴장하거나 준비 버튼을 누를 때마다 **변경된 플레이어 정보만** 네트워크로 전송하여 대역폭을 절약합니다.
 
 </br>
 
 ### 🚨 문제 상황
 
+**배열 전체 복제의 낭비**
+
+일반적인 ```TArray``` Replication:
+````cpp
+UPROPERTY(Replicated)
+TArray<FLobbyPlayerInfo> PlayerList;  // 10명 전체 복제
+````
+
+문제:
+````
+상황: 10명 접속 중, 1명이 준비 버튼 클릭
+   ↓
+Replicated Array 감지: "배열이 변경됨!"
+   ↓
+네트워크 전송: 10명 전체 정보 복제 ❌
+   ↓
+실제 필요: 1명 정보만 업데이트하면 충분
+````
+
+**실제 측정 결과:**
+````
+상황: 플레이어 10명, 각 정보 100바이트
+- 일반 복제: 1,000바이트 전송 (10명 × 100바이트)
+- 필요한 양: 100바이트 (1명만)
+→ 900바이트 낭비 (90%) ❌
+````
+
+로비에서 준비 버튼을 연타하거나, 플레이어가 빈번하게 입/퇴장하면 **불필요한 전송이 급격히 증가**합니다.
+
 </br>
 
 ### 💭 해결 방법
 
+**Fast Array Serializer: "변경된 것만 보낸다"**
+
+핵심 아이디어:
+- 배열 원소마다 "변경 여부" 추적
+- 변경된 원소만 ```MarkItemDirty()```로 표시
+- 언리얼이 자동으로 변경된 것만 복제
+
+**1. 구조체에 FastArraySerializer 상속**
+````cpp
+// LobbyPlayerInfo.h
+USTRUCT(BlueprintType)
+struct FLobbyPlayerInfo : public FFastArraySerializerItem
+{
+    GENERATED_BODY()
+
+    UPROPERTY()
+    FString Username{};
+
+    UPROPERTY()
+    bool bIsReady = false;
+
+    // 변경 콜백
+    void PostReplicatedAdd(const FLobbyPlayerInfoArray& InArraySerializer);
+    void PreReplicatedRemove(const FLobbyPlayerInfoArray& InArraySerializer);
+    void PostReplicatedChange(const FLobbyPlayerInfoArray& InArraySerializer);
+};
+````
+```cpp
+USTRUCT()
+struct FLobbyPlayerInfoArray : public FFastArraySerializer
+{
+    GENERATED_BODY()
+
+    UPROPERTY()
+    TArray<FLobbyPlayerInfo> Items;
+
+    UPROPERTY()
+    AGameState* GameState;
+
+    // 필수 함수
+    bool NetDeltaSerialize(FNetDeltaSerializeInfo& DeltaParams)
+    {
+        return FastArrayDeltaSerialize<FLobbyPlayerInfo, FLobbyPlayerInfoArray>(
+            Items, DeltaParams, *this);
+    }
+
+    void AddPlayer(const FLobbyPlayerInfo& NewPlayerInfo);
+    void RemovePlayer(const FString& Username);
+    void SetPlayerReady(const FString& Username, bool IsReady);
+};
+
+// 필수 템플릿 특수화
+template<>
+struct TStructOpsTypeTraits<FLobbyPlayerInfoArray> 
+    : public TStructOpsTypeTraitsBase2<FLobbyPlayerInfoArray>
+{
+    enum { WithNetDeltaSerializer = true };
+};
+```
+
+**2. GameState에서 사용**
+````cpp
+// DS_GameState.h
+UCLASS()
+class ADS_GameState : public AGameState
+{
+    GENERATED_BODY()
+
+public:
+    UPROPERTY(ReplicatedUsing = OnRep_PlayerList)
+    FLobbyPlayerInfoArray PlayerList;
+
+    UPROPERTY(BlueprintAssignable)
+    FOnPlayerListUpdated OnPlayerListUpdated;
+````
+```cpp
+void ADS_GameState::OnRep_PlayerList()
+{
+	PlayerList.SetOwner(this);
+	OnPlayerListUpdated.Broadcast(); // UI 갱신
+}
+};
+```
+
+**3. 플레이어 추가/제거/수정**
+````cpp
+// LobbyPlayerInfo.cpp
+void FLobbyPlayerInfoArray::AddPlayer(const FLobbyPlayerInfo& NewPlayerInfo)
+{
+    int32 Index = Items.Add(NewPlayerInfo);
+    
+    // 핵심: 추가된 원소만 Dirty 표시
+    MarkItemDirty(Items[Index]);
+    
+    // 서버에서도 콜백 호출 (UI 갱신용)
+    Items[Index].PostReplicatedAdd(*this);
+}
+
+void FLobbyPlayerInfoArray::SetPlayerReady(const FString& Username, bool IsReady)
+{
+    for (FLobbyPlayerInfo& PlayerInfo : Items)
+    {
+        if (PlayerInfo.Username == Username)
+        {
+            PlayerInfo.bIsReady = IsReady;
+            
+            // 핵심: 변경된 원소만 Dirty 표시
+            MarkItemDirty(PlayerInfo);
+            break;
+        }
+    }
+}
+
+void FLobbyPlayerInfoArray::RemovePlayer(const FString& Username)
+{
+    for (int32 PlayerIndex = 0; PlayerIndex < Items.Num(); ++PlayerIndex)
+    {
+        FLobbyPlayerInfo& PlayerInfo = Items[PlayerIndex];
+        if (PlayerInfo.Username == Username)
+        {
+            PlayerInfo.PreReplicatedRemove(*this);
+            Items.RemoveAtSwap(PlayerIndex);
+            
+            // 삭제는 배열 구조 변경이므로 전체 Dirty
+            MarkArrayDirty();
+            break;
+        }
+    }
+}
+````
+
+**4. 클라이언트에서 변경 감지 (UI 갱신)**
+````cpp
+// LobbyPlayerInfo.cpp
+void FLobbyPlayerInfo::TriggerUpdate(const FLobbyPlayerInfoArray& InArraySerializer)
+{
+    if (ADS_GameState* GameState = Cast<ADS_GameState>(InArraySerializer.GetOwner()))
+    {
+        // Delegate 발행 → UI 자동 갱신
+        GameState->OnPlayerListUpdated.Broadcast();
+    }
+}
+
+void FLobbyPlayerInfo::PostReplicatedAdd(const FLobbyPlayerInfoArray& InArraySerializer)
+{
+    // 새 플레이어 추가됨
+    UE_LOG(LogTemp, Log, TEXT("Player joined: %s"), *Username);
+    TriggerUpdate(InArraySerializer);
+}
+
+void FLobbyPlayerInfo::PostReplicatedChange(const FLobbyPlayerInfoArray& InArraySerializer)
+{
+    // 플레이어 정보 변경됨 (준비 상태 등)
+    UE_LOG(LogTemp, Log, TEXT("Player ready changed: %s = %d"), *Username, bIsReady);
+    TriggerUpdate(InArraySerializer);
+}
+
+void FLobbyPlayerInfo::PreReplicatedRemove(const FLobbyPlayerInfoArray& InArraySerializer)
+{
+    // 플레이어 퇴장
+    UE_LOG(LogTemp, Log, TEXT("Player left: %s"), *Username);
+    TriggerUpdate(InArraySerializer);
+}
+````
+
+**동작 흐름:**
+````
+[서버]
+1. Player A 준비 버튼 클릭
+2. PlayerList.SetPlayerReady("PlayerA", true)
+3. Items[0].bIsReady = true
+4. MarkItemDirty(Items[0])  ← 0번만 Dirty 표시
+   ↓
+[네트워크]
+5. Items[0] 정보만 전송 (100바이트) ✅
+   ↓
+[클라이언트]
+6. PostReplicatedChange() 호출
+7. OnPlayerListUpdated.Broadcast()
+8. UI 위젯: "PlayerA [준비 완료]" 표시
+````
+
 </br>
 
-### 🔧 시행착오 
+### 🔧 시행착오
+
+**Owner 설정 누락**
+````PostReplicatedAdd()``` 콜백에서 GameState에 접근하려 했지만 ```nullptr``` 크래시:
+```cpp
+void FLobbyPlayerInfo::PostReplicatedAdd(...)
+{
+    // ❌ InArraySerializer.GameState가 nullptr
+    ADS_GameState* GS = Cast<ADS_GameState>(InArraySerializer.GameState);
+}
+```
+
+**해결:** ```BeginPlay()```와 ```OnRep_PlayerList()```에서 Owner 설정:
+```cpp
+void ADS_GameState::BeginPlay()
+{
+    if (HasAuthority())
+    {
+        PlayerList.SetOwner(this);  // 서버
+    }
+}
+
+void ADS_GameState::OnRep_PlayerList()
+{
+    PlayerList.SetOwner(this);  // 클라이언트
+}
+```
 
 </br>
 
-### ✅ 결과 
+### ✅ 결과
 
-</br>
+✅ **네트워크 대역폭 90% 절감**: 10명 중 1명만 변경 시 100바이트만 전송  
+✅ **자동 UI 동기화**: ```PostReplicatedChange()``` 콜백으로 UI 자동 갱신  
+✅ **확장성**: 준비 상태뿐 아니라 팀 선택, 캐릭터 선택 등 추가 가능
 
-___
+**"배열 복제는 Fast Array Serializer로"**
 
-- [DirectX 11] 드로우 콜을 줄이기 위한 전략 ```Mesh```, ```Material```
-### 🎮 구현 목표 
+일반 ```TArray``` Replication:
+- 배열 변경 시 전체 전송
+- 10명 중 1명 변경 = 10명 전송
+- 대역폭 낭비
 
-</br>
-
-### 🚨 문제 상황
-
-</br>
-
-### 💭 해결 방법
-
-</br>
-
-### 🔧 시행착오 
-
-</br>
-
-### ✅ 결과 
-
-</br>
+Fast Array Serializer:
+- 변경된 원소만 전송
+- 10명 중 1명 변경 = 1명 전송
+- ```MarkItemDirty()```만 추가하면 끝
 
 ___
 
 ### 2-6. 회고
-- 이벤트 방식을 더 빨리 수용했더라면
-- PlayerController가 입력을 처리하는게 적절한가?
+### ```PlayerController```가 입력을 처리하는게 적절한가?
+### 🤔 초기 설계 의도
 
+**"Controller는 입력을 처리하는 게 책임 아닌가?"**
+
+`PlayerController`의 본연 기능이 입력 처리라고 생각했기에, 모든 입력을 Controller에서 받도록 설계했습니다:
+```cpp
+// SoulPlayerControllerBase.cpp
+void ASoulPlayerControllerBase::SetupInputComponent()
+{
+    // 모든 입력을 Controller에 바인딩
+    EnhancedInputComp->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ThisClass::Move);
+    EnhancedInputComp->BindAction(AttackAction, ETriggerEvent::Started, this, &ThisClass::Attack);
+    EnhancedInputComp->BindAction(RollingAction, ETriggerEvent::Started, this, &ThisClass::Rolling);
+    // ... 30개 이상의 입력
+}
+```
+
+**책임 소재가 명확해 보였습니다:**
+- Controller: 입력 받기
+- Character: 행동 실행
+
+</br>
+
+### 🚨 문제 인식
+
+**Controller는 단순 중계자일 뿐**
+
+그러나 실제 코드를 보면 **Controller는 아무것도 하지 않습니다:**
+```cpp
+// SoulPlayerControllerBase.cpp - 반복되는 패턴
+void ASoulPlayerControllerBase::Attack()
+{
+    if (ASoulPlayerCharacter* SoulCharacter = Cast<ASoulPlayerCharacter>(GetCharacter()))
+    {
+        SoulCharacter->Attack();  // 그냥 전달만
+    }
+}
+
+void ASoulPlayerControllerBase::Rolling()
+{
+    if (ASoulPlayerCharacter* SoulCharacter = Cast<ASoulPlayerCharacter>(GetCharacter()))
+    {
+        SoulCharacter->Rolling();  // 그냥 전달만
+    }
+}
+
+void ASoulPlayerControllerBase::HeavyAttack()
+{
+    if (ASoulPlayerCharacter* SoulCharacter = Cast<ASoulPlayerCharacter>(GetCharacter()))
+    {
+        SoulCharacter->HeavyAttack();  // 그냥 전달만
+    }
+}
+
+// ... 30개 함수가 모두 동일한 패턴 ❌
+```
+
+**실제 입력 흐름:**
+```
+입력 → Controller::Attack() 
+       ↓ (캐스팅 + 전달)
+     Character::Attack()
+       ↓ (다시 전달)
+     CombatComponent::Attack()
+       ↓ (실제 로직)
+     DoAttack()
+```
+
+**3단계를 거쳐야 실제 로직 도달** ❌
+
+**관찰한 문제점:**
+
+1. **Controller는 입력 토스하기 바쁨**
+   - 이동 → CharacterMovementComponent
+   - 공격 → CombatComponent
+   - 인벤토리 → InventoryUI
+   - UI 모드 전환 → WidgetManager
+
+2. **Controller가 모든 클래스를 알아야 함**
+```cpp
+// Controller가 알아야 하는 것들
+ASoulPlayerCharacter* Character;
+UCombatComponent* CombatComp;
+UAttributeComponent* AttributeComp;
+UStateComponent* StateComp;
+UInventoryComponent* InventoryComp;
+UWidgetManagerComponent* WidgetManager;
+// ... 계속 증가
+```
+
+3. **결합도 폭발**
+   - CombatComponent 수정 → Controller도 수정 필요
+   - 새 기능 추가 → Controller에 함수 추가
+   - "책임 소재 명확"하지만 실제론 **God Class** ❌
+
+</br>
+
+### 💭 고민의 흐름
+
+**고민 1: "Controller의 결합도를 낮추려면?"**
+
+Character로 위임했지만, **Character도 같은 고민**:
+```cpp
+// SoulPlayerCharacter.cpp
+void ASoulPlayerCharacter::Attack()
+{
+    if (CombatComponent)
+    {
+        CombatComponent->Attack();  // 또 전달
+    }
+}
+```
+
+**결국 "입력 → Controller → Character → Component" 3단계 불필요한 중계**
+
+</br>
+
+**고민 2: "무기별로 다른 입력을 어떻게 처리할까?"**
+
+Q키를 눌렀을 때:
+- 한손검: 즉발 특수 공격
+- 대검: 차징 공격
+- 폴암: 원거리 투척
+
+**시도했던 방법들:**
+
+**A안: Character에서 Switch 문**
+```cpp
+void ASoulPlayerCharacter::SpecialAttack()
+{
+    ECombatType CombatType = CombatComponent->GetWeapon()->GetCombatType();
+    
+    switch (CombatType)
+    {
+    case ECombatType::Sword:
+        CombatComponent->SpecialAttack();
+        break;
+    case ECombatType::GreatSword:
+        CombatComponent->ChargeAttack();
+        break;
+    case ECombatType::Polearm:
+        CombatComponent->ThrowWeapon();
+        break;
+    }
+}
+```
+❌ Character가 모든 무기 타입을 알아야 함  
+❌ 무기 추가 시마다 Switch 문 수정
+
+**B안: Delegate로 태그만 전달?**
+```cpp
+// Controller
+void ASoulPlayerControllerBase::SpecialAttack()
+{
+    OnInputReceived.Broadcast(SoulGameplayTag::Input_SpecialAttack);
+}
+
+// Character
+void ASoulPlayerCharacter::OnInputReceived(FGameplayTag InputTag)
+{
+    switch (InputTag)
+    {
+    case Input_SpecialAttack:
+        // 무기 타입에 따라 분기
+        break;
+    }
+}
+```
+❌ 결국 Character의 Switch 문은 동일  
+❌ 추상화했지만 근본적 해결 아님
+
+**C안: 무기가 IMC를 가지고 장착 시 전달?**
+```cpp
+// 상상 속 코드
+void ASoulWeapon::EquipItem()
+{
+    Character->AddMappingContext(WeaponSpecificIMC);  
+    // Q키 → 차징 공격으로 자동 매핑
+}
+```
+✅ 무기마다 다른 입력 가능  
+❌ 구현 복잡도 높음, Enhanced Input 이해 필요  
+❓ **"이게 과연 올바른 방법일까?"** → 막막함
+
+</br>
+
+### 💡 깨달음: "입력의 소비자에게 책임을"
+
+**왜 ```ACharacter::SetupPlayerInputComponent()```가 존재하는가?**
+
+언리얼 공식 문서와 커뮤니티를 찾아보며 알게 된 사실:
+
+> **"PlayerController는 '플레이어의 의지'를 대변하고,  
+> Pawn은 '그 의지를 수행하는 육체'다."**
+
+**빙의(Possess)의 의미:**
+- Controller가 Pawn에 빙의한다 = 의지(Controller)와 육체(Pawn) 분리
+- 입력을 **'받는' 곳**과 **'소비하는' 곳**을 분리하는 설계 철학
+
+**핵심 인사이트:**
+```
+❌ Controller: "공격 입력 → 공격 실행"
+✅ Controller: "공격 입력 수신" / Pawn: "공격 실행"
+```
+
+</br>
+
+### 🔧 올바른 접근법
+
+**1. Enhanced Input + IMC (가장 추천)**
+
+**무기가 IMC를 소유하는 방식:**
+```cpp
+// SoulWeapon.h
+UCLASS()
+class ASoulWeapon
+{
+    UPROPERTY(EditDefaultsOnly)
+    UInputMappingContext* WeaponInputContext;  // 무기별 IMC
+};
+
+// SoulWeapon.cpp - 장착 시
+void ASoulWeapon::EquipItem()
+{
+    if (APlayerController* PC = Character->GetController<APlayerController>())
+    {
+        if (UEnhancedInputLocalPlayerSubsystem* Subsystem = 
+            ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
+        {
+            // 무기 전용 입력 추가
+            Subsystem->AddMappingContext(WeaponInputContext, 1);
+        }
+    }
+}
+
+// IMC_Sword.asset
+// Q키 → IA_ChargeAttack
+
+// IMC_Axe.asset  
+// Q키 → IA_QuickAttack
+```
+
+**흐름:**
+```
+1. 검 장착 → IMC_Sword 추가
+   Q키 = IA_ChargeAttack 매핑
+   
+2. 도끼 장착 → IMC_Sword 제거 + IMC_Axe 추가
+   Q키 = IA_QuickAttack 매핑
+   
+3. Controller는 "Q가 눌렸다"만 알 뿐, 
+   차징인지 즉발인지는 무기의 IMC가 결정
+```
+
+**장점:**
+- ✅ Controller는 무기 타입을 몰라도 됨
+- ✅ 무기 추가 시 코드 수정 0줄
+- ✅ IMC Asset만 만들면 끝
+- ✅ 결합도 완전 분리
+
+</br>
+
+**2. GameplayTag + Delegate**
+
+**입력을 '의도'로 추상화:**
+```cpp
+// PlayerController
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInputIntent, FGameplayTag, IntentTag);
+
+void ASoulPlayerController::SpecialAttack()
+{
+    // 무기/캐릭터를 모름, 태그만 방송
+    OnInputIntent.Broadcast(GameplayTag::Input_SpecialAttack);
+}
+
+// CombatComponent
+void UCombatComponent::BeginPlay()
+{
+    // 태그 구독
+    PlayerController->OnInputIntent.AddDynamic(this, &ThisClass::OnInputReceived);
+}
+
+void UCombatComponent::OnInputReceived(FGameplayTag IntentTag)
+{
+    if (IntentTag == GameplayTag::Input_SpecialAttack)
+    {
+        // 현재 무기에 맞는 행동 실행
+        Weapon->ExecuteSpecialAttack();
+    }
+}
+```
+
+**장점:**
+- ✅ Controller는 의도만 전달
+- ✅ 여러 시스템이 동시에 구독 가능
+
+</br>
+
+**3. Character에서 직접 입력 처리 (가장 단순)**
+```cpp
+// SoulPlayerCharacter.cpp
+void ASoulPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+    UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+    
+    // Controller 거치지 않고 직접 바인딩
+    EnhancedInput->BindAction(AttackAction, ETriggerEvent::Started, this, &ThisClass::Attack);
+    EnhancedInput->BindAction(RollingAction, ETriggerEvent::Started, this, &ThisClass::Rolling);
+}
+```
+
+**Controller는 시스템 입력만:**
+```cpp
+// SoulPlayerController.cpp
+void ASoulPlayerController::SetupInputComponent()
+{
+    // UI/시스템만
+    EnhancedInput->BindAction(PauseAction, ETriggerEvent::Started, this, &ThisClass::Pause);
+    EnhancedInput->BindAction(InventoryAction, ETriggerEvent::Started, this, &ThisClass::OpenInventory);
+}
+```
+
+**장점:**
+- ✅ 불필요한 중계 함수 제거
+- ✅ 디버깅 용이 (Character만 확인)
+- ✅ AI도 Character 함수 직접 호출
+
+</br>
+
+### ✅ 결론: PlayerController의 진짜 역할
+
+**현재 구조의 문제:**
+```
+❌ PlayerController = "입력 처리자" (God Class)
+   → 모든 시스템을 알아야 함
+   → 결합도 폭발
+   → 중계 함수 30개
+```
+
+**올바른 구조:**
+```
+✅ PlayerController = "입력 관리자" (Input Manager)
+   → IMC 추가/제거 관리
+   → 의도(Tag)로 변환하여 방송
+   → UI/시스템 기능만 직접 처리
+```
+
+**책임 분리:**
+- **Controller**: 누가 조종하는가 (Possess/Unpossess), 입력 컨텍스트 관리
+- **Character**: 무엇을 할 수 있는가 (Move/Attack/Roll), 입력 직접 처리
+- **Component**: 어떻게 하는가 (로직 구현)
+
+**핵심 교훈:**
+
+**"입력을 '처리'하는 것과 '관리'하는 것은 다르다"**
+
+Controller가 모든 입력을 처리하는 것은:
+- ❌ 교과서적이지만 확장성 낮음
+- ❌ 중계 함수만 늘어남
+- ❌ 결합도 문제
+
+Enhanced Input의 IMC나 GameplayTag를 활용하면:
+- ✅ Controller는 "입력 컨텍스트 관리자"
+- ✅ Character/Component는 "입력 소비자"
+- ✅ 무기/스킬 추가 시 코드 수정 불필요
+
+**다음 프로젝트에서는:**
+1. Character에서 직접 입력 처리 (기본)
+2. 무기별 IMC로 동적 매핑 (확장)
+3. Controller는 UI/시스템만 담당
+```ACharacter::SetupPlayerInputComponent()```가 존재하는 이유는 **"행동의 주체가 직접 입력을 받는 게 자연스럽다"**는 언리얼의 철학입니다. 이제야 그 의미를 이해하게 되었습니다.
+
+</br>
 
 ___
 
