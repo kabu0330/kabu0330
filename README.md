@@ -21,14 +21,14 @@
 
 제가 프로젝트들을 진행하며 치열하게 고민한 4가지 핵심 주제입니다. ✅
 
-1.  **[조작감]** '후딜 캔슬'과 '콤보 유지'를 모두 잡은 콤보 시스템
+1.  **[조작감]** 자연스러운 콤보 시스템을 구현하기 위한 고민
     * 🔗 [`[UE5 액션] 부드러운 콤보 연계는 어떻게 구현할까?`](#ue5-액션-부드러운-콤보-연계는-어떻게-구현할까-animnotify-state)
-2.  **[네트워크]** 비동기 작업 순서 문제로 랭킹이 정상적으로 갱신되지 않는 문제
-    * 🔗 [`[Dedicated Server] 아니 방금 이겼는데 왜 내가 2등이예요?`](#dedicated-server-아니-방금-이겼는데-왜-내가-2등이예요)
+2.  **[네트워크]** Seamless Travel 이후 데이터 유실 문제
+    * 🔗 [`왜 님은 닉네임이 안 보여요?`](#dedicated-server-왜-님은-닉네임이-안-보여요-seamlesstravel)
 3.  **[최적화]** 'Tick' 의존성을 제거하고 이벤트 기반으로 프로젝트를 제작한 경험
     * 🔗 [`[UE5 액션] Tick에 미련을 버려라. 대안은 많다.`](#ue5-액션-tick에-미련을-버려라-대안은-많다)
 4.  **[아키텍처]** 불필요한 중계 함수와 결합도를 낮추기 위한 입력 시스템 고찰
-    * 🔗 [`[UE5 액션]PlayerController가 입력을 처리하는게 적절한가?`](#playercontroller가-입력을-처리하는게-적절한가)
+    * 🔗 [`PlayerController가 입력을 처리하는게 적절한가?`](#playercontroller가-입력을-처리하는게-적절한가)
 
       
 ### 2-1. 상태 관리 시스템
@@ -45,15 +45,15 @@
 - 🔗 [[UE5 팀 프로젝트] 클라에서 스폰하면 안 보여요. ```SpawnActorDeferred```](#ue5-팀-프로젝트-클라에서-스폰하면-안-보여요-spawnactordeferred) 
 - 🔗 [[Dedicated Server] "서버에 접속할 수 없습니다" 메시지 없이 한 번에 접속하기](#dedicated-server-서버에-접속할-수-없습니다-메시지-없이-한-번에-접속하기)
 - 🔗 [[Dedicated Server] 시간 오차는 어떻게 해결할까? ```Ping-Pong```](#dedicated-server-시간-오차는-어떻게-해결할까-ping-pong)
-- 🔗 [[Dedicated Server] 왜 님은 닉네임이 안 보여요? ```SeamlessTravel``` ](#dedicated-server-왜-님은-닉네임이-안-보여요-seamlesstravel)
-- 🔗 [[Dedicated Server] 아니 방금 이겼는데 왜 내가 2등이예요?](#dedicated-server-아니-방금-이겼는데-왜-내가-2등이예요) ✅
+- 🔗 [[Dedicated Server] 왜 님은 닉네임이 안 보여요? ```SeamlessTravel``` ](#dedicated-server-왜-님은-닉네임이-안-보여요-seamlesstravel) ✅
+- 🔗 [[Dedicated Server] 아니 방금 이겼는데 왜 내가 2등이예요?](#dedicated-server-아니-방금-이겼는데-왜-내가-2등이예요) 
 ### 2-4. 협업 및 버전 관리
 - 🔗 [[UE5 팀 프로젝트] Pull-Request 시행착오와 교훈](#ue5-팀-프로젝트-pull-request-시행착오와-교훈)
 ### 2-5. 최적화 전략 
 - 🔗 [[UE5 액션] ```Tick```에 미련을 버려라. 대안은 많다.](#ue5-액션-tick에-미련을-버려라-대안은-많다) ✅
 - 🔗 [[Dedicated Server] 매번 배열 전체를 네트워크 복제해야 할까? ```Fast Array Serializer```](#dedicated-server-매번-배열-전체를-네트워크-복제해야-할까-fast-array-serializer)
 ### 2-6. 회고
-- 🔗 [[UE5 액션]```PlayerController```가 입력을 처리하는게 적절한가?](#playercontroller가-입력을-처리하는게-적절한가) ✅
+- 🔗 ```PlayerController```가 입력을 처리하는게 적절한가?](#playercontroller가-입력을-처리하는게-적절한가) ✅
 
 </br>
 
