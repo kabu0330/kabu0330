@@ -21,15 +21,14 @@
 
 제가 프로젝트들을 진행하며 치열하게 고민한 4가지 핵심 주제입니다. ✅
 
-1.  **[조작감]** 자연스러운 콤보 시스템을 구현하기 위한 고민
+1.  **[아키텍처]** 비대해진 Base 클래스와 결합도 문제: 상속에서 인터페이스로의 전환
+    * 🔗 [상속의 달콤함, 그리고 '확장성'이라는 청구서 `Interface`](#상속의-달콤함-그리고-확장성이라는-청구서-interface)
+2.  **[조작감]** 자연스러운 콤보 시스템을 구현하기 위한 고민
     * 🔗 [`[UE5 액션] 부드러운 콤보 연계는 어떻게 구현할까?`](#ue5-액션-부드러운-콤보-연계는-어떻게-구현할까-animnotify-state)
-2.  **[네트워크]** Seamless Travel 이후 데이터 유실 문제
+3.  **[네트워크]** Seamless Travel 이후 데이터 유실 문제
     * 🔗 [`왜 님은 닉네임이 안 보여요?`](#dedicated-server-왜-님은-닉네임이-안-보여요-seamlesstravel)
-3.  **[최적화]** `TArray` 전체 복제의 비효율을 해결하고 대역폭을 절약한 경험
+4.  **[최적화]** `TArray` 전체 복제의 비효율을 해결하고 대역폭을 절약한 경험
     * 🔗 [[Dedicated Server] 매번 배열 전체를 네트워크 복제해야 할까? ```Fast Array Serializer```](#dedicated-server-매번-배열-전체를-네트워크-복제해야-할까-fast-array-serializer)
-4.  **[아키텍처]** 불필요한 중계 함수와 결합도를 낮추기 위한 입력 시스템 고찰
-    * 🔗 [`PlayerController가 입력을 처리하는게 적절한가?`](#playercontroller가-입력을-처리하는게-적절한가)
-
       
 ### 2-1. 상태 관리 시스템
 - 🔗 [[DirectX 11] ```Enum```의 한계 → ```FSM Component```](#directx-11-enum의-한계--fsm-component)
@@ -53,8 +52,8 @@
 - 🔗 [[UE5 액션] ```Tick```에 미련을 버려라. 대안은 많다.](#ue5-액션-tick에-미련을-버려라-대안은-많다) 
 - 🔗 [[Dedicated Server] 매번 배열 전체를 네트워크 복제해야 할까? ```Fast Array Serializer```](#dedicated-server-매번-배열-전체를-네트워크-복제해야-할까-fast-array-serializer) ✅
 ### 2-6. 회고
-- 🔗 [```PlayerController```가 입력을 처리하는게 적절한가?](#playercontroller가-입력을-처리하는게-적절한가) ✅
-- 🔗 "Base 클래스는 만능이 아니다": 상속의 한계와 인터페이스 기반으로의 전환 (작성중)
+- 🔗 [```PlayerController```가 입력을 처리하는게 적절한가?](#playercontroller가-입력을-처리하는게-적절한가) 
+- 🔗 [상속의 달콤함, 그리고 '확장성'이라는 청구서 `Interface`](#상속의-달콤함-그리고-확장성이라는-청구서-interface) ✅
 
 </br>
 
@@ -3174,9 +3173,10 @@ ___
 
 ### 2-6. 회고
 ### ```PlayerController```가 입력을 처리하는게 적절한가?
+
 ### 🤔 초기 설계 의도
 
-**"Controller는 입력을 처리하는 게 책임 아닌가?"**
+**"Controller의 역할은 입력을 처리하는 것이 아닌가?"**
 
 `PlayerController`의 본연 기능이 입력 처리라고 생각했기에, 모든 입력을 Controller에서 받도록 설계했습니다:
 ```cpp
@@ -3544,7 +3544,548 @@ Enhanced Input의 IMC나 GameplayTag를 활용하면:
 3. Controller는 UI/시스템만 담당
 ```ACharacter::SetupPlayerInputComponent()```가 존재하는 이유는 "**행동의 주체가 직접 입력을 받는 게 자연스럽다**"
 
-이제야 그 의미를 이해하게 되었습니다.
+</br>
+
+___
+
+### 상속의 달콤함, 그리고 '확장성'이라는 청구서 `Interface`
+
+### 🤔 초기 설계: "공통점이 많으니 Base로 관리하자."
+
+프로젝트 초기, `ASoulCharacterBase`를 설계할 때 저는 확신에 차 있었습니다.
+
+`Player`와 `Enemy`는 공격, 피격, 사망 등 공통 로직이 80% 이상이었기 때문입니다.
+
+- 공통 시스템: 공격, 피격, 방어, 사망
+- 공통 컴포넌트: Attribute, Combat, State
+- 공통 로직: 데미지 계산, 히트 리액션
+
+```cpp
+// 공통 로직은 Base에!
+class ASoulCharacterBase : public ACharacter, public ISoulCombat
+{
+protected:
+    // 공통 컴포넌트
+    UAttributeComponent* AttributeComponent;
+    UCombatComponent* CombatComponent;
+    UStateComponent* StateComponent;
+    
+public:
+    // 공통 함수
+    virtual float TakeDamage(...);
+    void HitReaction(...);
+    void DoAttack(...);
+};
+
+// 상속 구조
+ASoulPlayerCharacter : public ASoulCharacterBase
+ASoulEnemy : public ASoulCharacterBase
+```
+
+기대했던 장점
+- ✅ 코드 중복 제거
+- ✅ 유지보수 용이 (Base만 수정하면 모두에게 적용)
+- ✅ 상속의 이점 극대화 (코드 재사용성)
+
+"Base 클래스에서 한 번만 정의하면 모든 자식이 공짜로 기능을 쓴다." 이 강력한 코드 재사용성(Code Reusability) 덕분에 개발 속도는 빨랐고, 유지보수도 쉬워 보였습니다.
+
+하지만 개발이 진행될수록, 이 '편리함'에 점점 의구심을 갖기 시작했습니다.
+</br>
+
+### 🚨 문제 인식
+문제는 `Player`와 `Enemy`의 로직이 미세하게 갈라지기 시작한 시점부터였습니다.
+
+#### 딜레마 1: 버려지는 프로퍼티 (Bloated Base Class)
+```cpp
+class ASoulCharacterBase
+{
+    // ❓ Enemy는 평생 쓰지도 않을 메모리 낭비
+    UCameraComponent* Camera; 
+    UInventoryComponent* Inventory;
+    TSubclassOf<UCameraShake> HitShake; 
+};
+```
+`Enemy` 인스턴스가 생성될 때마다 사용하지도 않는 카메라와 인벤토리 포인터를 들고 있는 상황. **"Base 클래스가 쓸데없이 비대해지고 있다"**는 신호였습니다.
+
+#### 딜레마 2: 로직의 분기 (Spawn of Spaghetti)
+`TakeDamage`는 공통 로직이지만, 세부 동작이 달랐습니다.
+- `Player`: 카메라 셰이크 필요
+- `Enemy`: AI에게 데미지 알림 필요
+
+```cpp
+// ASoulCharacterBase.h
+class ASoulCharacterBase
+{
+protected:
+    // 🚨 Player 전용 - Enemy는 빈 구현
+    virtual void ClientStartCameraShake(ECameraShakeType ShakeType) {}
+    
+    // 🚨 Enemy 전용 - Player는 빈 구현
+    virtual void TakeDamageForEnemy(float Damage, AController* EventInstigator, 
+                                     const FVector& EventLocation, const FVector& HitLocation) {}
+    
+public:
+    virtual float TakeDamage(float Damage, const FDamageEvent& DamageEvent, 
+                            AController* EventInstigator, AActor* DamageCauser) override
+    {
+        // 공통 로직
+        float FinalDamage = CalculateDamage(Damage);
+        
+        // 🚨 누군가는 쓰고 누군가는 안 쓰는 코드
+        ClientStartCameraShake(ECameraShakeType::Hit);       // Player만
+        TakeDamageForEnemy(Damage, EventInstigator, ...);    // Enemy만
+        
+        // 공통 로직
+        AttributeComponent->TakeDamageAmount(FinalDamage);
+        return FinalDamage;
+    }
+};
+```
+```cpp
+// 시간이 지날수록 점점 늘어나는 분기점들...
+
+void ASoulCharacterBase::HitReaction(...)
+{
+    PlayHitAnimation();                    // 공통
+    
+    OnPlayerHitEffect();                   // Player만 (빈 함수)
+    OnEnemyHitEffect();                    // Enemy만 (빈 함수)
+    
+    ApplyKnockback();                      // 공통
+    
+    OnPlayerCameraShake();                 // Player만 (빈 함수)
+    OnEnemyUIUpdate();                     // Enemy만 (빈 함수)
+    
+    SetState(SoulGameplayTag::Hit);        // 공통
+}
+
+공통 로직 (Step 1)
+    ↓
+빈 가상 함수 호출 (Player 전용)  ← Enemy는 빈 함수 실행
+    ↓
+공통 로직 (Step 2)
+    ↓
+빈 가상 함수 호출 (Enemy 전용)   ← Player는 빈 함수 실행
+    ↓
+공통 로직 (Step 3)
+    ↓
+빈 가상 함수 호출 (...)
+    ↓
+   ...
+```
+갈수록 이러한 늘어나면서 부모 클래스는 점점 관리가 복잡해지는 코드가 되어갔습니다.
+
+</br>
+
+### 💭 고민 : "전방위적인 결합도 증가"
+
+이 불안함은 **시스템 간의 연결(Coupling)**을 다룰 때 폭발했습니다.
+
+#### 의문 1: AnimNotify가 왜 캐릭터를 알아야 하지?
+
+`AnimNotify`에서 충돌 판정을 켤 때, Cast<ASoulCharacterBase>를 사용하고 있었습니다.
+
+만약 나중에 **"공격 가능한 오브젝트(예: 함정, 포탑)"**가 추가된다면? `ASoulCharacterBase`를 상속받지 않은 그들은 이 노티파이를 쓸 수 없습니다. 
+
+**불필요한 결합**이 발생한 것입니다.
+
+```cpp
+// Before: 구체적인 타입에 의존
+void UAnimNotify_ActivateCollision::Notify(USkeletalMeshComponent* MeshComp, ...)
+{
+    if (ASoulCharacterBase* Character = Cast<ASoulCharacterBase>(MeshComp->GetOwner()))
+    {
+        Character->ActivateCollision(CollisionType, DamageType);
+    }
+}
+```
+
+```cpp
+// ATrapTower.h - 포탑 추가
+class ATrapTower : public AActor  // ❌ ASoulCharacterBase를 상속받지 않음
+{
+    // 공격 기능이 필요한데...
+    // AnimNotify_ActivateCollision을 쓸 수 없다!
+};
+```
+결과:
+- 함정, 포탑 같은 "공격 가능한 오브젝트" 추가 시
+- `ASoulCharacterBase`를 상속받지 않으면 기존 `AnimNotify` 사용 불가
+- 새로운 `AnimNotify`를 또 만들어야 함 → 코드 중복 발생
+
+</br>
+
+#### 의문 2: Manager 클래스는 정답인가?
+컴포넌트 간의 참조가 복잡해지자(Inventory ↔ UI ↔ Combat), 저는 `WidgetManager` 같은 관리자 클래스에 의존성을 몰아넣었습니다. 
+```cpp
+// 복잡한 의존성 그래프
+InventoryComponent ↔ InventoryWidget
+        ↕
+  CombatComponent ↔ StatusWidget
+        ↕
+ AttributeComponent ↔ StatBarWidget
+```
+
+하지만 이것도 미봉책이었습니다. "`AnimNotify`에게 함수를 전달하기 위해 또 Manager를 만들어야 하나?" 
+
+모든 문제를 Manager로 해결하려다 보니, 또 다른 거대 클래스(God Class)를 만들고 있었습니다.
+
+</br>
+
+#### 의문 3: "만약 전투 컨텐츠 이외로 확장이 된다면?"
+지금은 전투 게임이지만, 만약 대화만 가능한 NPC가 추가된다면? 
+
+그 NPC가 `ASoulCharacterBase`를 상속받으면 체력, 공격력, 전투 로직까지 억지로 떠안게 됩니다. 
+
+그렇다고 상속을 안 받자니, 상호작용 로직을 또 새로 짜야 합니다.
+```cpp
+// ANPCCharacter.h - 대화만 가능한 NPC
+class ANPCCharacter : public ASoulCharacterBase  // ❌ 강제 상속
+{
+    // 🚨 억지로 떠안게 되는 것들
+    UAttributeComponent* AttributeComponent;  // 체력? 필요 없는데...
+    UCombatComponent* CombatComponent;        // 공격? 필요 없는데...
+    
+    virtual float TakeDamage(...) override { return 0.f; }  // 빈 구현 강제
+    virtual void DoAttack(...) override { }                 // 빈 구현 강제
+    
+    // 실제로 필요한 건 이것뿐
+    void StartDialogue();
+};
+```
+"상속은 '정체성(Is-A)'을 강제하지만, 게임 개발에서 필요한 건 '기능(Can-Do)'의 확장이 아닐까?"
+
+</br>
+
+### 🔧 문제 해결 접근 방법 : 인터페이스를 통한 "기능 중심 설계"
+
+저는 이 문제를 해결하기 위해 Base 클래스의 해체가 아닌, 인터페이스와의 공존을 선택했습니다.
+
+#### ✅ 전략 1: "정체성"이 아닌 "능력"으로 대화하라
+
+`AnimNotify`나 외부 시스템은 대상이 `ASoulCharacterBase`인지 알 필요가 없습니다. 그저 **"전투가 가능한가(ISoulCombat)?"**만 알면 됩니다.
+```cpp
+// ISoulCombat.h - 전투 능력 계약
+UINTERFACE(MinimalAPI)
+class USoulCombat : public UInterface
+{
+    GENERATED_BODY()
+};
+
+class SOUL_API ISoulCombat
+{
+    GENERATED_BODY()
+    
+public:
+    // "나는 전투할 수 있다"는 계약
+    virtual void ActivateCollision(EWeaponCollisionType CollisionType, TSubclassOf<UDamageType> DamageType) = 0;
+    virtual void DeactivateCollision(EWeaponCollisionType CollisionType) = 0;
+    virtual void DoAttack(const FGameplayTag& AttackTypeTag) = 0;
+    virtual void HitReaction(AActor* Attacker, UDamageType* DamageType, const FVector& HitDirection) = 0;
+};
+```
+```cpp
+// Before : 구체적인 타입에 의존
+void UAnimNotify_ActivateCollision::Notify(USkeletalMeshComponent* MeshComp, ...)
+{
+    // ❌ ASoulCharacterBase만 가능
+    if (ASoulCharacterBase* Character = Cast<ASoulCharacterBase>(MeshComp->GetOwner()))
+    {
+        Character->ActivateCollision(CollisionType, DamageType);
+    }
+}
+
+// After: 인터페이스에 의존
+void UAnimNotify_ActivateCollision::Notify(USkeletalMeshComponent* MeshComp, ...)
+{
+    // 이제 포탑이든, 함정이든, 캐릭터든 ISoulCombat만 구현하면 작동한다.
+    if (ISoulCombat* Combat = Cast<ISoulCombat>(Mesh->GetOwner())) 
+    {
+        Combat->ActivateCollision();
+    }
+}
+```
+```cpp
+// 이제 포탑도 전투 가능!
+class ATrapTower : public AActor, public ISoulCombat  // ✅ 인터페이스만 구현
+{
+    // ISoulCombat 구현
+    virtual void ActivateCollision(...) override
+    {
+        // 포탑만의 충돌 로직
+    }
+    
+    virtual void DoAttack(...) override
+    {
+        // 포탑만의 공격 로직
+    }
+    
+    // ASoulCharacterBase의 무거운 로직은 필요 없음!
+};
+```
+```cpp
+┌──────────────────┐
+│  AnimNotify      │
+└────────┬─────────┘
+         │ Cast<ISoulCombat>
+         ↓
+┌──────────────────────┐
+│  <<interface>>       │
+│  ISoulCombat         │ ← ✅ 추상 계약에 의존
+└──────────────────────┘
+         △
+    ┌────┼────┬────┬────┐
+    │    │    │    │    │
+  Player Enemy 함정 포탑 Boss (자유로운 확장)
+```
+이로써 결합도가 획기적으로 낮아졌고, 추후 어떤 오브젝트가 추가되더라도 인터페이스만 구현하면 기존 시스템을 재사용할 수 있게 되었습니다.
+
+</br>
+
+#### ✅ 전략 2: Base 클래스는 "구현의 도우미"로 남겨라
+Base 클래스를 버린 것이 아닙니다. 공통 로직(데미지 산출, 상태 관리)은 여전히 유효하기 때문입니다. 
+
+대신, Base 클래스의 역할을 재정의했습니다.
+```cpp
+┌─────────────────────────────┐
+│  1. Interface (계약)        │
+│  "이 객체는 전투 가능하다"  │
+└──────────────┬──────────────┘
+               │
+               ↓
+┌─────────────────────────────┐
+│  2. Base (공통 구현)        │
+│  "계약에 대한 기본 구현"    │
+└──────────────┬──────────────┘
+               │
+               ↓
+┌─────────────────────────────┐
+│  3. Child (특수화)          │
+│  "Hook으로 1% 로직만"       │
+└─────────────────────────────┘
+```
+
+- Interface (ISoulCombat): "이 객체는 공격과 피격이 가능하다"는 계약(Protocol) 정의.
+- Base Class (ASoulCharacterBase): 계약에 대한 공통 구현(Default Implementation) 제공.
+- Child Class (Player/Enemy): Hook 함수(OnHitReactionEffect)를 통해 자신만의 1% 로직만 오버라이딩.
+
+```cpp
+// ISoulCombat.h
+class ISoulCombat
+{
+public:
+    virtual void HitReaction(AActor* Attacker, UDamageType* DamageType, const FVector& HitDirection) = 0;
+};
+```
+```cpp
+// ASoulCharacterBase.h
+class ASoulCharacterBase : public ACharacter, public ISoulCombat
+{
+protected:
+    // 공통 컴포넌트
+    UAttributeComponent* AttributeComponent;
+    UCombatComponent* CombatComponent;
+    
+    // 🎯 Hook 함수: 자식이 필요하면 구현
+    virtual void OnHitReactionEffect(AActor* Attacker) {}
+    
+public:
+    // 공통 로직 구현
+    virtual void HitReaction(AActor* Attacker, UDamageType* DamageType, const FVector& HitDirection) override 
+    {
+        // ✅ 공통 로직 90%
+        PlayHitAnimation();
+        ApplyKnockback(HitDirection);
+        
+        // 🎯 Hook: 자식만의 1% 로직 호출
+        OnHitReactionEffect(Attacker);
+        
+        // ✅ 공통 로직 계속
+        SetState(SoulGameplayTag::Character_State_Hit);
+    }
+};
+```
+```cpp
+// ASoulPlayerCharacter.h
+class ASoulPlayerCharacter : public ASoulCharacterBase, public IPlayerCharacter
+{
+protected:
+    // Player만의 프로퍼티
+    UCameraComponent* Camera;
+    TSubclassOf<UCameraShakeBase> HitCameraShake;
+    
+    // 🎯 Hook 구현: Player만의 1% 로직
+    virtual void OnHitReactionEffect(AActor* Attacker) override
+    {
+        // 카메라 셰이크 (Player 전용)
+        ClientStartCameraShake(HitCameraShake);
+    }
+};
+
+// ASoulEnemy.h
+class ASoulEnemy : public ASoulCharacterBase, public IEnemy
+{
+protected:
+    // Enemy만의 프로퍼티
+    UWidgetComponent* HealthBar;
+    
+    // 🎯 Hook 구현: Enemy만의 1% 로직
+    virtual void OnHitReactionEffect(AActor* Attacker) override
+    {
+        // 체력바 표시 (Enemy 전용)
+        ToggleHealthBarVisibility(true);
+    }
+};
+```
+```cpp
+HitReaction() 호출
+    ↓
+PlayHitAnimation()     // ✅ 공통 (Base)
+    ↓
+ApplyKnockback()       // ✅ 공통 (Base)
+    ↓
+OnHitReactionEffect()  // 🎯 Hook 호출
+    ├─ Player: ClientStartCameraShake()  // Player만의 1%
+    └─ Enemy: ToggleHealthBarVisibility() // Enemy만의 1%
+    ↓
+SetState()             // ✅ 공통 (Base)
+```
+Base 클래스의 공통 로직을 살리되, 더 포괄적인 항목의 가상 함수를 만들어 자식에서 재정의하는 방식을 사용했습니다.
+
+</br>
+
+#### 문제 인식
+
+이제는 전투 관련 함수이지만, `Player`만 또는 `Enemy`만 사용하는 함수에 대한 구현을 올려놓아야 하는 고민이 남았습니다.
+
+```cpp
+// ❌ Fat Interface
+class ISoulCombat
+{
+    // 공통
+    virtual void DoAttack(...) = 0;
+    virtual void HitReaction(...) = 0;
+    
+    // Player 전용
+    virtual void ClientStartCameraShake(...) = 0;  // ❌ Enemy도 구현 강제
+    virtual void AddItem(...) = 0;                 // ❌ Enemy도 구현 강제
+    
+    // Enemy 전용
+    virtual void PerformAttack(...) = 0;           // ❌ Player도 구현 강제
+    virtual void OnTargeted(...) = 0;              // ❌ Player도 구현 강제
+};
+```
+
+아예 과감히 인터페이스를 세분화(ISP, Interface Segregation Principle)하기로 결정했습니다.
+
+```cpp
+// ISoulCombat.h - 전투 공통
+class ISoulCombat
+{
+    virtual void DoAttack(const FGameplayTag& AttackTypeTag) = 0;
+    virtual void HitReaction(AActor* Attacker, UDamageType* DamageType, const FVector& HitDirection) = 0;
+    virtual void ActivateCollision(EWeaponCollisionType CollisionType, TSubclassOf<UDamageType> DamageType) = 0;
+};
+
+// IPlayerCharacter.h - Player 전용
+class IPlayerCharacter
+{
+    virtual void BroadcastStatusMessage(const FString& Message) const = 0;
+    virtual bool AddItem(const FName ItemID, const int32 Amount = 1, const int32 SlotIndex = -1) = 0;
+    virtual void ClientStartCameraShake(TSubclassOf<UCameraShakeBase> ShakeClass) const = 0;
+};
+
+// IEnemy.h - Enemy 전용
+class IEnemy
+{
+    virtual bool PerformAttack(FGameplayTag& AttackTypeTag, FOnMontageEnded& MontageEndedDelegate) = 0;
+};
+
+// ISoulTargeting.h - 타게팅 가능 객체
+class ISoulTargeting
+{
+    virtual void OnTargeted(bool bTarget) = 0;
+    virtual bool CanBeTargeted() = 0;
+};
+```
+이제 Derived 클래스는 Base 클래스와 달리 더 많은 인터페이스를 상속받는 구조가 되었습니다.
+```cpp
+// Player: 필요한 인터페이스만 구현
+class ASoulPlayerCharacter : public ASoulCharacterBase,   // 공통 구현
+                            public IPlayerCharacter       // Player 전용
+{
+    // IPlayerCharacter 구현
+    virtual void ClientStartCameraShake(...) override;
+    virtual bool AddItem(...) override;
+};
+
+// Enemy: 필요한 인터페이스만 구현
+class ASoulEnemy : public ASoulCharacterBase,   // 공통 구현
+                  public IEnemy,                // Enemy 전용
+                  public ISoulTargeting         // 타게팅 대상
+{
+    // IEnemy 구현
+    virtual bool PerformAttack(...) override;
+    
+    // ISoulTargeting 구현
+    virtual void OnTargeted(...) override;
+    virtual bool CanBeTargeted() override;
+};
+
+        <<interface>>           <<interface>>           <<interface>>
+        ┌─────────────┐         ┌─────────────┐         ┌─────────────┐
+        │ ISoulCombat │         │IPlayerChar  │         │   IEnemy    │
+        └──────┬──────┘         └──────┬──────┘         └──────┬──────┘
+               │                       │                       │
+               │                       │                       │
+               └───────┬───────────────┴───────────────┬───────┘
+                       │                               │
+              ┌────────▽────────┐            ┌────────▽────────┐
+              │     Player      │             │     Enemy       │
+              │  ─────────────  │             │  ─────────────  │
+              │ - Camera        │             │ - HealthBar     │
+              │ - Inventory     │             │ - AI            │
+              │  ─────────────  │             │  ─────────────  │
+              │ + AddItem()     │             │ + PerformAttack │
+              │ + CameraShake() │             │ + OnTargeted()  │
+              └─────────────────┘             └─────────────────┘
+                       △                               △
+                       └───────────┬───────────────────┘
+                                   │
+                          ┌────────▽────────┐
+                          │   CharBase      │
+                          │  ─────────────  │
+                          │ + HitReaction() │
+                          │ + DoAttack()    │
+                          └─────────────────┘
+```
+
+</br>
+
+### ✅ 결론: 복잡성을 제어하는 힘
+
+이번 리팩토링을 통해 얻은 깨달은 것은 다음과 같습니다.
+
+1. 상속의 한계
+
+- "상속은 코드 재사용을 위해 좋지만, 설계를 유연하게 만들지는 못한다"
+
+이유:
+- 상속은 부모-자식 간의 결합도가 가장 높은 형태
+- 부모의 변경이 자식 전체에 영향
+- 자식은 부모의 모든 것을 떠안음 (필요 없어도)
+
+2. 인터페이스는 확장성을 위한 투자
+
+- "당장은 코드가 늘어나는 것 같지만, 새로운 컨텐츠가 추가될 때 기존 코드를 수정하지 않고도 확장할 수 있는 길을 열어준다"
+
+3. Base와 Interface는 양자택일이 아니다
+
+- "Base로 중복을 줄이고, Interface로 결합도를 낮추는 하이브리드 설계가 실무적인 정답에 가깝다"
+
+
+결국 좋은 설계란, **"미래에 닥쳐올 변화(컨텐츠 추가)를 최소한의 비용으로 받아들일 준비를 하는 것"**임을 깨닫게 된 소중한 경험이었습니다.
+
 
 </br>
 
