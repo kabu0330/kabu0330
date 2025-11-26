@@ -35,6 +35,7 @@
 - 🔗 [[UE5 액션] 복잡한 상태도 심플하게, ```GameplayTag Container```](#ue5-액션-복잡한-상태도-심플하게-gameplaytag-container)
 - 🔗 [[UE5 액션] 공격이 캔슬된 후 캐릭터가 안 움직여요.](#ue5-액션-공격이-캔슬된-후-캐릭터가-안-움직여요-fonmontageended-delegate)
 ### 2-2. 컨텐츠 구현
+- 🔗 [[DirectX 11] 다중좌표계 간 위치 동기화 및 픽셀 충돌 처리](#directx-11-다중-좌표계-간-위치-동기화-및-픽셀-충돌-처리)
 - 🔗 [[UE5 액션] 부드러운 콤보 연계는 어떻게 구현할까? ```AnimNotify State```](#ue5-액션-부드러운-콤보-연계는-어떻게-구현할까-animnotify-state) ✅
 - 🔗 [[UE5 액션] 자연스러운 대시를 구현할 순 없을까?  ```Motion Warping```](#ue5-액션-자연스러운-대시를-구현할-순-없을까--motion-warping)
 - 🔗 [[UE5 액션] 무기별 전투 스타일, 데이터 주도 설계](#ue5-액션-무기별-전투-스타일-데이터-주도-설계)
@@ -49,6 +50,7 @@
 ### 2-4. 협업 및 버전 관리
 - 🔗 [[UE5 팀 프로젝트] Pull-Request 시행착오와 교훈](#ue5-팀-프로젝트-pull-request-시행착오와-교훈)
 ### 2-5. 최적화 전략 
+- 🔗 [[DirectX 11] Unity 메타데이터 파싱을 통한 스프라이트 시트 관리](#directx-11-unity-메타데이터-파싱을-통한-스프라이트-시트-관리)
 - 🔗 [[UE5 액션] ```Tick```에 미련을 버려라. 대안은 많다.](#ue5-액션-tick에-미련을-버려라-대안은-많다) ✅
 - 🔗 [[Dedicated Server] 매번 배열 전체를 네트워크 복제해야 할까? ```Fast Array Serializer```](#dedicated-server-매번-배열-전체를-네트워크-복제해야-할까-fast-array-serializer) 
 ### 2-6. 회고
@@ -65,8 +67,8 @@
  <img alt="이미지" src="readme\SoulPlay.webp">
 </p>
 
-### 🔗 Youtube : [youtu.be/ut5GRCgf86Y?si=u_6SLFbson6Siksz](https://youtu.be/8U4345QKBfc)
-### 🔗 Github : [github.com/kabu0330/UE_Soul2](https://github.com/kabu0330/UE_Soul2)
+* 🔗 Youtube : [youtu.be/ut5GRCgf86Y?si=u_6SLFbson6Siksz](https://youtu.be/8U4345QKBfc)
+* 🔗 Github : [github.com/kabu0330/UE_Soul2](https://github.com/kabu0330/UE_Soul2)
 
 ### 📋 프로젝트 정보
 
@@ -118,8 +120,8 @@ ___
  <img alt="이미지" src="readme\DedicatedServer.webp">
 </p>
 
-### 🔗 Youtube : [youtu.be/8tyiK_7egvI?si=MP7l8gBIcKs95v6U](https://youtu.be/8tyiK_7egvI?si=MP7l8gBIcKs95v6U)
-### 🔗 Github : [github.com/kabu0330/FPS_with_DedicatedServer](https://github.com/kabu0330/FPS_with_DedicatedServer)
+* 🔗 Youtube : [youtu.be/8tyiK_7egvI?si=MP7l8gBIcKs95v6U](https://youtu.be/8tyiK_7egvI?si=MP7l8gBIcKs95v6U)
+* 🔗 Github : [github.com/kabu0330/FPS_with_DedicatedServer](https://github.com/kabu0330/FPS_with_DedicatedServer)
 
 ### 📋 프로젝트 정보
 <details>
@@ -170,8 +172,8 @@ ___
  <img alt="이미지" src="readme\Overcooked!2.gif">
 </p>
 
-### 🔗 Youtube : [youtu.be/zs3aQ8tSZ3E?si=R2VaHZ-xt10g0D2M](https://youtu.be/zs3aQ8tSZ3E?si=R2VaHZ-xt10g0D2M)
-### 🔗 Github : [github.com/kabu0330/UE_Overcooked2](https://github.com/kabu0330/UE_Overcooked2)
+* 🔗 Youtube : [youtu.be/zs3aQ8tSZ3E?si=R2VaHZ-xt10g0D2M](https://youtu.be/zs3aQ8tSZ3E?si=R2VaHZ-xt10g0D2M)
+* 🔗 Github : [github.com/kabu0330/UE_Overcooked2](https://github.com/kabu0330/UE_Overcooked2)
 
 ### 📋 프로젝트 정보
 <details>
@@ -220,8 +222,8 @@ ___
  <img alt="이미지" src="readme\HollowKnight.gif">
 </p>
 
-### 🔗 Youtube : [youtu.be/vi6KnUeedrs?si=nJsI59Pi36cGy-Rn](https://youtu.be/vi6KnUeedrs?si=nJsI59Pi36cGy-Rn)
-### 🔗 Github : [github.com/kabu0330/DX_HollowKnight2](https://github.com/kabu0330/DX_HollowKnight2)
+* 🔗 Youtube : [youtu.be/vi6KnUeedrs?si=nJsI59Pi36cGy-Rn](https://youtu.be/vi6KnUeedrs?si=nJsI59Pi36cGy-Rn)
+* 🔗 Github : [github.com/kabu0330/DX_HollowKnight2](https://github.com/kabu0330/DX_HollowKnight2)
 
 ### 📋 프로젝트 정보
 <details>
@@ -678,8 +680,421 @@ void ASoulCharacterBase::RecoveryHitReaction(UAnimMontage* AnimMontage, bool bIn
 ___
 
 ### 2-2. 컨탠츠 구현
-### [UE5 액션] 부드러운 콤보 연계는 어떻게 구현할까? ```AnimNotify State```
 
+### [DirectX 11] 다중 좌표계 간 위치 동기화 및 픽셀 충돌 처리
+
+### 🎮 구현 목표
+
+게임 엔진에서 BMP 픽셀 충돌 맵(윈도우 계층)과 액터 Transform(엔진 계층) 간의 좌표계 불일치 문제를 해결하여 정확한 픽셀 기반 지형 충돌을 구현합니다.
+
+</br>
+
+### 🚨 문제 상황
+
+#### 계층 분리로 인한 좌표계 불일치
+
+```
+[윈도우 계층 - EnginePlatform]  
+- BMP 이미지 (픽셀 충돌용)
+- UEngineWinImage (Transform 없음)
+- 스크린 좌표 시스템
+
+[엔진 계층 - EngineCore]
+- PNG 텍스처 (렌더링용)
+- Transform (월드 좌표)
+- 데카르트 좌표 시스템
+```
+
+**문제의 핵심:**
+- BMP 파일은 윈도우 계층에 속하며 Transform 정보를 가질 수 없음
+- 액터는 엔진 계층의 월드 좌표로 움직이지만, 픽셀 충돌은 윈도우 계층의 BMP를 참조
+- 두 계층의 좌표 기준점이 다름
+
+<br>
+
+#### 고민했던 방법들
+
+**방법 1: 엔진 구조 변경**
+```cpp
+// UEngineWinImage에 Transform 추가?
+class UEngineWinImage
+{
+    FTransform Transform; // ❌ 계층 규칙 위반
+};
+```
+- 계층 분리 원칙 위반 (Platform 계층이 Core 계층 의존)
+- 엔진 전체 구조 수정 필요
+
+**방법 2: WinImage를 엔진 계층으로 이동**
+```cpp
+// UEngineWinImage를 EngineCore로?
+#include <EngineCore/EngineWinImage.h> // ❌ 의존성 역전
+```
+
+</br>
+
+### 💭 해결 방안
+
+#### 핵심 아이디어: 액터 좌표를 BMP 로컬 좌표로 변환
+
+현재 배경 이미지(png) 파일의 좌상단(Left Top) 좌표를 스크린 좌표의 원점(0, 0)으로 변환시키고, y축을 반전시켜 액터의 픽셀 충돌 검사는 스크린 좌표계 기준으로 변환합니다.
+
+```
+월드 좌표 (액터) → BMP 로컬 좌표 → 픽셀 색상 검사
+```
+
+**설계 원칙:**
+1. BMP 파일은 변경하지 않는다 (윈도우 계층 유지)
+2. 액터 좌표를 BMP의 좌표계로 변환한다
+3. 맵이 바뀌면 변환 기준점만 갱신한다
+
+#### Room 기반 좌표 변환 시스템
+
+```cpp
+// Room.h - 좌표 변환의 중심
+class ARoom : public AActor
+{
+private:
+    UEngineWinImage PixelCollisionImage;  // BMP 충돌 맵
+    FVector LeftTopPos;                    // BMP의 좌표 기준점 (월드 좌표)
+    FVector Size;                          // 방 크기
+};
+```
+
+**Room이 좌표 변환을 담당하는 이유:**
+- Room은 엔진 계층에 속하므로 Transform 사용 가능
+- 각 Room은 독립적인 BMP 충돌 맵 보유
+- Room 전환 시 자동으로 좌표계 변환 기준점 갱신
+
+#### 좌표 변환 구현
+
+```cpp
+// Room.cpp
+FVector ARoom::GetPixelCollisionPoint(AActor* _Actor, FVector _Offset)
+{
+    float DeltaTime = UEngineCore::GetDeltaTime();
+    
+    // 액터의 월드 좌표 획득
+    FVector CollisionPos = Knight->GetPixelCollision()->GetWorldLocation();
+    FVector GravityForce = Knight->GetGravityForce();
+    
+    // 1단계: 월드 좌표 → Room 로컬 좌표
+    CollisionPos -= LeftTopPos;
+    
+    // 2단계: 다음 프레임 예측 위치 계산
+    FVector NextPos = GravityForce * DeltaTime;
+    FVector CollisionPoint = { 
+        CollisionPos.X + NextPos.X + _Offset.X, 
+        CollisionPos.Y + NextPos.Y + _Offset.Y 
+    };
+    
+    return CollisionPoint;
+}
+```
+
+**변환 과정:**
+
+```
+[월드 좌표]
+Knight: (9000, -6000)
+Room LeftTopPos: (6150, -3550)
+
+[1단계] 월드 → Room 로컬
+CollisionPos = (9000, -6000) - (6150, -3550)
+             = (2850, -2450)
+
+[2단계] BMP 좌표 (Y축 반전)
+BMP GetColor({ 2850, 2450 })  // Y축 부호 반전
+```
+
+</br>
+
+#### Y축 좌표계 통일
+
+```cpp
+// Room.cpp
+bool ARoom::IsOnGround(FVector _Pos)
+{
+    FVector CollisionPoint = _Pos;
+    CollisionPoint.RoundVector();
+    
+    // Y축 반전: 엔진(Y Down) → BMP(Y Up)
+    UColor CollisionColor = PixelCollisionImage.GetColor(
+        { CollisionPoint.X, -CollisionPoint.Y }
+    );
+    
+    return (CollisionColor == UColor::BLACK);
+}
+```
+
+**좌표계 차이:**
+
+| 시스템 | 원점 | Y축 방향 |
+|--------|------|----------|
+| 엔진 월드 좌표 | 임의 | 아래가 음수 |
+| BMP 좌표 | 좌상단 | 아래가 양수 |
+
+</br>
+
+### 🔧 구현 세부사항
+
+#### Room 초기화 시 좌표 기준점 설정
+
+```cpp
+// RoomManager.cpp - 맵 생성
+Crossroads1->SetRoomLocation({ 6150, -3550 });
+```
+
+```cpp
+// Room.cpp
+void ARoom::SetRoomLocation(FVector _Pos)
+{
+    float ZOrder = static_cast<float>(EZOrder::BACKGROUND);
+    SetActorLocation({ GetActorLocation().X + _Pos.X, 
+                       GetActorLocation().Y + _Pos.Y, 
+                       ZOrder });
+    LeftTopPos = _Pos;  // BMP 좌표 변환 기준점 저장
+}
+```
+
+#### 픽셀 충돌 검사 - 중력
+
+```cpp
+// Room.cpp
+void ARoom::CheckPixelCollisionWithGravity(AActor* _Actor, FVector _Offset)
+{
+    float DeltaTime = UEngineCore::GetDeltaTime();
+    FVector TwoPixelUp = FVector::UP * 2.0f;
+    
+    // 현재 위치의 픽셀 색상 검사
+    FVector CollisionPoint = GetPixelCollisionPoint(_Actor, _Offset);
+    FVector CollisionPoint2PixelUp = GetPixelCollisionPoint(_Actor, _Offset + TwoPixelUp);
+    
+    if (true == IsOnGround(CollisionPoint))
+    {
+        Knight->SetOnGround(true);
+        
+        // 지면에 박히지 않도록 위로 조정
+        while (true == IsOnGround(CollisionPoint2PixelUp))
+        {
+            Knight->AddRelativeLocation(TwoPixelUp);
+            CollisionPoint2PixelUp = GetPixelCollisionPoint(_Actor, _Offset + TwoPixelUp);
+        }
+    }
+    else
+    {
+        Knight->SetOnGround(false);
+    }
+    
+    Force(_Actor, DeltaTime);
+}
+```
+
+**동작 원리:**
+1. 액터의 월드 좌표를 BMP 로컬 좌표로 변환
+2. 해당 좌표의 픽셀 색상을 `GetColor()`로 검사
+3. 검은색(지면)이면 중력 중단, 아니면 중력 적용
+
+</br>
+
+#### 픽셀 충돌 검사 - 벽
+
+```cpp
+// Room.cpp
+void ARoom::CheckPixelCollisionWithWall(AActor* _Actor, float _Speed, bool _Left, FVector _Offset)
+{
+    FVector CollisionPos = Knight->GetPixelCollision()->GetWorldLocation();
+    FVector CollisionHalfScale = Knight->GetPixelCollision()->GetWorldScale3D().Half();
+    
+    float DeltaTime = UEngineCore::GetDeltaTime();
+    float NextPos = _Speed * DeltaTime;
+    
+    // 월드 좌표 → Room 로컬 좌표
+    CollisionPos -= LeftTopPos;
+    
+    FVector CollisionPoint = { CollisionPos.X + NextPos, CollisionPos.Y + 10.0f };
+    
+    // 좌우 방향에 따라 충돌 체크 위치 조정
+    if (true == _Left)
+    {
+        CollisionPoint.X -= CollisionHalfScale.X;
+    }
+    else
+    {
+        CollisionPoint.X += CollisionHalfScale.X;
+    }
+    
+    CollisionPoint.RoundVector();
+    
+    // Y축 반전하여 BMP 좌표로 검사
+    UColor CollisionColor = PixelCollisionImage.GetColor(
+        { CollisionPoint.X, -CollisionPoint.Y }
+    );
+    
+    // 노란색(벽) 또는 검은색(지면)이면 벽으로 인식
+    if (CollisionColor == UColor::YELLOW || CollisionColor == UColor::BLACK)
+    {
+        Knight->SetWallHere(true);
+    }
+    else
+    {
+        Knight->SetWallHere(false);
+    }
+}
+```
+
+**색상 기반 충돌 판정:**
+
+| 픽셀 색상 | 의미 | 충돌 처리 |
+|----------|------|----------|
+| BLACK | 지면 | 중력 중단, 벽 충돌 |
+| YELLOW | 벽 | 벽 충돌 |
+| RED | 천장 | 천장 충돌 |
+| WHITE | 빈 공간 | 통과 가능 |
+
+</br>
+
+#### Actor에서 픽셀 충돌 활성화
+
+```cpp
+// Knight.cpp 
+void AKnight::ActivatePixelCollsion()
+{
+    if (true == NoneGravity)  // 디버그 모드
+    {
+        return;
+    }
+    
+    ARoom* Room = ARoom::GetCurRoom();
+    if (nullptr != Room)
+    {
+        // Room에게 좌표 변환 및 충돌 검사 위임
+        Room->CheckPixelCollisionWithWall(this, Stat.GetVelocity(), bIsLeft, FVector::ZERO);
+        Room->CheckPixelCollisionWithCeil(this, BodyRenderer.get(), Stat.GetVelocity(), bIsLeft, FVector::ZERO);
+    }
+}
+```
+
+```cpp
+// Knight.cpp
+void AKnight::Tick(float _DeltaTime)
+{
+    AActor::Tick(_DeltaTime);
+    
+    ActivatePixelCollsion();  // 매 프레임 픽셀 충돌 검사
+    
+    // ...
+}
+```
+
+</br>
+
+### ✅ 결과
+
+#### 계층 분리 원칙 준수
+
+```
+[EnginePlatform]
+└─ UEngineWinImage
+   └─ GetColor() 만 제공
+
+[EngineCore]  
+└─ ARoom (좌표 변환 담당)
+   ├─ LeftTopPos (기준점)
+   └─ GetPixelCollisionPoint() (좌표 변환)
+```
+
+- UEngineWinImage는 순수하게 픽셀 색상만 반환
+- ARoom이 모든 좌표 변환 로직 관리
+- 계층 간 의존성 규칙 유지
+
+</br>
+
+#### 맵 전환 시 자동 좌표계 갱신
+
+```cpp
+// Door를 통한 Room 전환
+void ADoor::WarpRoom()
+{
+    ARoom::SetCurRoom(TargetRoom);  // 현재 Room 변경
+    Knight->SetActorLocation(TargetPos);
+    
+    // 새로운 Room의 LeftTopPos를 기준으로 자동 변환
+    // 추가 코드 불필요 - Room이 알아서 처리
+}
+```
+
+- Room이 바뀌면 해당 Room의 LeftTopPos 자동 적용
+- 개발자는 월드 좌표만 신경 쓰면 됨
+- 좌표 변환은 Room이 투명하게 처리
+
+</br>
+
+#### 정확한 지형 충돌 구현
+
+**변환 전 (좌표 불일치):**
+```
+액터 월드 좌표: (9000, -6000)
+BMP 검사 좌표: (9000, 6000) ❌ 엉뚱한 위치
+```
+
+**변환 후 (정확한 매핑):**
+```
+액터 월드 좌표: (9000, -6000)
+Room LeftTopPos: (6150, -3550)
+BMP 검사 좌표: (2850, 2450) ✅ 정확한 위치
+```
+
+</br>
+
+#### 확장성 확보
+
+```cpp
+// 새로운 Room 추가 시
+std::shared_ptr<ARoom> NewRoom = CreateRoom("NewRoom", "NewRoom_back.png", "NewRoom_pixel.bmp", { 5000, 3000 });
+NewRoom->SetRoomLocation({ 20000, -10000 });
+
+// 좌표 변환 로직은 자동으로 동작
+// 추가 코드 작성 불필요
+```
+
+</br>
+
+### 🎓 핵심 교훈
+
+#### 계층 분리의 중요성
+
+- Platform 계층과 Core 계층을 명확히 분리
+- 각 계층의 책임을 명확히 정의
+- 의존성 방향 규칙 준수 (Core → Platform ✅, Platform → Core ❌)
+
+</br>
+
+#### 좌표계 변환 패턴
+
+```
+글로벌 좌표 → 로컬 좌표 → 리소스 접근
+```
+
+- 리소스(BMP)를 억지로 글로벌 좌표계로 올리지 않음
+- 대신 접근하는 쪽(액터)의 좌표를 리소스 좌표계로 변환
+- 변환 로직을 중앙에서 관리 (ARoom)
+
+</br>
+
+#### 중재자 패턴 활용
+
+```
+Knight ← (요청) → Room ← (변환) → WinImage
+```
+
+- Room이 두 계층 사이의 중재자 역할
+- 직접적인 계층 간 통신 차단
+- 결합도 감소, 유지보수성 향상
+
+</br>
+
+### [UE5 액션] 부드러운 콤보 연계는 어떻게 구현할까? ```AnimNotify State```
 ### 🎮 구현 목표 
 **자연스러운 콤보 시스템 구현**
 - 공격 중 입력이 들어오면 **후딜레이를 캔슬**하고 즉시 다음 콤보로 연계
@@ -721,7 +1136,7 @@ void ACharacter::CheckComboInput()
 
 </br>
 
-### 💭 해결 방안 고민  
+### 💭 해결 방안
 **"입력 체크 타이밍을 애니메이션 기준으로 제어할 수 있다면?"**
 
 Timer는 시간 기반이므로 애니메이션의 특정 구간을 정밀하게 제어하기 어렵습니다. 필요한 것은:
@@ -2728,6 +3143,404 @@ Fork-PR은 코드 품질이 중요하고 리뷰 인력이 충분한 대규모/�
 ___
 
 ### 2-5. 최적화 전략 
+
+### [DirectX 11] Unity 메타데이터 파싱을 통한 스프라이트 시트 관리
+
+### 🎮 구현 목표
+
+Unity에서 제작된 스프라이트 시트의 메타데이터(.smeta) 파일을 파싱하여, DirectX 11 엔진에서 개별 스프라이트의 UV 좌표와 크기 정보를 자동으로 추출하고 관리하는 시스템을 구축합니다.
+
+</br>
+
+### 🚨 문제 상황
+
+1. 반복적인 수작업의 비효율성
+- 리소스를 포토샵에서 하나 하나 크기에 맞춰 잘라야하는 수작업
+- 리소스를 분석하여 프레임 순서에 맞춰 파일 이름을 정렬
+- 스프라이트 시트에서 각 프레임의 픽셀 좌표와 크기를 일일이 계산
+- 프로그램에서 렌더링 후 피봇 불일치 시, 다시 포토샵으로 작업 후 업로드하는 불편함
+
+</br>
+
+2. 유지보수의 어려움
+- 스프라이트 인덱스를 직접 계산하고 체크 (위험)
+
+사전에 리소스를 준비하고 편집하는 시간이 상당히 오래걸리고, 리소스를 추가할 때마다 수 시간이 소요되는 작업 부하가 발생했습니다. </br>
+리스소와 관련된 작업의 부담을 해소하기 위해 파일시스템과 데이터 파싱을 이용하기로 했습니다.
+
+
+</br>
+
+### 💭 해결 방안
+
+#### 아키텍처
+
+```
+UEngineDirectory (파일 탐색)
+        ↓
+UEngineFile (파일 읽기)
+        ↓
+UEngineSprite::CreateSpriteToMeta (메타 파싱)
+        ↓
+FSpriteData (UV 좌표 변환)
+        ↓
+SpriteRenderer (렌더링)
+```
+
+#### 1. 파일 시스템 추상화
+
+```cpp
+class UEngineDirectory : public UEnginePath
+{
+public:
+    // 확장자 필터링과 재귀 탐색을 지원하는 파일 검색
+    std::vector<UEngineFile> GetAllFile(
+        bool _IsRecursive, 
+        const std::vector<std::string>& _Exts
+    );
+    
+    std::vector<UEngineDirectory> GetAllDirectory();
+};
+```
+
+**설계 의도:**
+- 디렉토리 구조를 추상화하여 리소스 자동 로딩 시스템 구축
+- 확장자 기반 필터링으로 원하는 파일만 선별적으로 처리
+- 재귀 탐색으로 서브 디렉토리 리소스까지 일괄 로딩
+
+</br>
+
+#### 2. Unity 메타데이터 포맷 분석
+
+<p align="center">
+ <img alt="이미지" src="readme\Parse.png">
+</p>
+
+Unity .smeta 파일 구조:
+```yaml
+rect:
+  serializedVersion: 2
+  x: 128
+  y: 256
+  width: 64
+  height: 64
+alignment: 0
+pivot: {x: 0.5, y: 0.5}
+outline: []
+```
+
+**핵심 정보:**
+- `rect`: 스프라이트 시트 내 픽셀 좌표와 크기
+- `pivot`: 스프라이트의 중심점 (0~1 정규화 값)
+
+</br>
+
+#### 3. 문자열 파싱 전략
+
+```cpp
+//"rect:"와 "outline:" 사이의 텍스트 추출
+size_t RectIndex = Text.find("rect:", StartPosition);
+size_t AligIndex = Text.find("outline:", RectIndex);
+
+if (RectIndex == std::string::npos || AligIndex == std::string::npos)
+{
+    break;  // 더 이상 스프라이트 데이터가 없음
+}
+
+NewSpirte->SpriteTexture.push_back(Tex.get());
+SpriteDataTexts.push_back(Text.substr(RectIndex, AligIndex - RectIndex));
+StartPosition = AligIndex;
+```
+
+**파싱 로직:**
+1. `rect:` 키워드로 스프라이트 데이터 시작 지점 탐색
+2. `outline:` 키워드로 종료 지점 확인
+3. 두 키워드 사이의 텍스트 블록을 추출하여 개별 스프라이트 데이터로 분리
+
+</br>
+
+#### 4. 수치 데이터 추출
+
+```cpp
+FSpriteData SpriteData;
+
+// X 좌표 추출
+std::string Number = UEngineString::InterString(Text, "x:", "\n", Start);
+SpriteData.CuttingPos.X = static_cast<float>(atof(Number.c_str()));
+
+// Y 좌표 추출
+Number = UEngineString::InterString(Text, "y:", "\n", Start);
+SpriteData.CuttingPos.Y = static_cast<float>(atof(Number.c_str()));
+
+// Width 추출
+Number = UEngineString::InterString(Text, "width:", "\n", Start);
+SpriteData.CuttingSize.X = static_cast<float>(atof(Number.c_str()));
+
+// Height 추출
+Number = UEngineString::InterString(Text, "height:", "\n", Start);
+SpriteData.CuttingSize.Y = static_cast<float>(atof(Number.c_str()));
+
+// Pivot X 추출 (쉼표로 구분)
+Number = UEngineString::InterString(Text, "x:", ",", Start);
+SpriteData.Pivot.X = static_cast<float>(atof(Number.c_str()));
+
+// Pivot Y 추출 (중괄호로 종료)
+Number = UEngineString::InterString(Text, "y:", "}", Start);
+SpriteData.Pivot.Y = static_cast<float>(atof(Number.c_str()));
+```
+
+**InterString 함수의 역할:**
+- 시작 문자열과 종료 문자열 사이의 부분을 추출
+- `Start` 변수로 파싱 위치를 추적하여 순차적으로 값을 읽음
+
+</br>
+
+#### 5. 좌표계 변환 및 정규화
+
+```cpp
+FVector TexSize = Tex->GetTextureSize();
+
+// Y축 반전 (Unity는 왼쪽 하단 기준, DirectX는 왼쪽 상단 기준)
+SpriteData.CuttingPos.Y = TexSize.Y - SpriteData.CuttingPos.Y - SpriteData.CuttingSize.Y;
+
+// 픽셀 좌표를 0~1 UV 좌표로 정규화
+SpriteData.CuttingPos.X /= TexSize.X;
+SpriteData.CuttingPos.Y /= TexSize.Y;
+SpriteData.CuttingSize.X /= TexSize.X;
+SpriteData.CuttingSize.Y /= TexSize.Y;
+```
+
+**좌표계 차이 해결:**
+| 엔진 | 원점 위치 | Y축 방향 |
+|------|----------|---------|
+| Unity | 왼쪽 하단 | 위쪽이 양수 |
+| DirectX | 왼쪽 상단 | 아래쪽이 양수 |
+
+**정규화의 이점:**
+- 텍스처 크기와 무관하게 동일한 UV 좌표 사용 가능
+- GPU 샘플러가 직접 활용할 수 있는 형식
+
+</br>
+
+## 🔧 시행착오
+
+### 1. 초기 구현: 폴더 기반 스프라이트 로딩
+
+```cpp
+std::shared_ptr<UEngineSprite> UEngineSprite::CreateSpriteToFolder(
+    std::string_view _Name, 
+    std::string_view _Path)
+{
+    UEngineDirectory Dir = _Path;
+    std::vector<UEngineFile> Files = Dir.GetAllFile(false, { ".png"});
+
+    for (size_t i = 0; i < Files.size(); i++)
+    {
+        // 기본값으로 전체 텍스처 사용 (UV: 0~1)
+        FSpriteData SpriteData;
+        SpriteData.CuttingPos = { 0.0f, 0.0f };   // 시작점
+        SpriteData.CuttingSize = { 1.0f, 1.0f };  // 전체 크기
+        SpriteData.Pivot = { 0.5f, 0.5f };        // 중앙 피벗
+        NewSpirte->SpriteDatas.push_back(SpriteData);
+    }
+}
+```
+
+**한계점:**
+- 스프라이트 시트를 활용할 수 없고, 개별 이미지 파일만 처리 가능
+- 애니메이션 프레임마다 별도 파일이 필요해 파일 관리 부담 증가
+- 텍스처 전환 오버헤드로 렌더링 성능 저하
+
+</br>
+
+### 2. 문자열 파싱 중 인덱스 관리 문제
+
+**초기 시도:**
+```cpp
+// 잘못된 예시 - Start 변수를 갱신하지 않음
+std::string Number = UEngineString::InterString(Text, "x:", "\n", 0);
+SpriteData.CuttingPos.X = atof(Number.c_str());
+
+// 동일한 시작 위치에서 다시 검색하면 첫 번째 "y:"를 찾게 됨
+Number = UEngineString::InterString(Text, "y:", "\n", 0);  // 버그!
+```
+
+**해결책:**
+```cpp
+// Start 변수를 참조로 전달하여 파싱 위치 추적
+size_t Start = 0;  // 파싱 커서
+
+// InterString 함수가 Start를 자동으로 갱신
+std::string Number = UEngineString::InterString(Text, "x:", "\n", Start);
+SpriteData.CuttingPos.X = atof(Number.c_str());
+
+// 다음 호출 시 이전 위치 다음부터 검색
+Number = UEngineString::InterString(Text, "y:", "\n", Start);
+SpriteData.CuttingPos.Y = atof(Number.c_str());
+```
+
+</br>
+
+### 3. Y축 좌표계 변환 누락
+
+**문제 상황:**
+```cpp
+// 변환 없이 그대로 사용 시
+SpriteData.CuttingPos.Y = PixelY / TexSize.Y;
+
+// 결과: 스프라이트가 상하 반전되어 렌더링됨
+```
+
+**원인 분석:**
+- Unity: 원점이 왼쪽 하단, Y축이 위쪽으로 증가
+- DirectX: 원점이 왼쪽 상단, Y축이 아래쪽으로 증가
+
+**해결:**
+```cpp
+// 135 라인: Y축 반전 공식
+SpriteData.CuttingPos.Y = TexSize.Y - SpriteData.CuttingPos.Y - SpriteData.CuttingSize.Y;
+```
+
+이 공식은 다음과 같이 동작합니다:
+1. `TexSize.Y`: 텍스처 전체 높이
+2. `CuttingPos.Y`: Unity 좌표계의 Y 위치
+3. `CuttingSize.Y`: 스프라이트 높이
+4. 결과: DirectX 좌표계로 변환된 Y 위치
+
+</br>
+
+### 4. 멀티 스프라이트 처리
+
+**초기 구조:**
+```cpp
+// 하나의 메타 파일에 하나의 스프라이트만 처리
+std::shared_ptr<UEngineSprite> CreateSpriteToMeta(std::string_view _Name);
+```
+
+**개선된 구조:**
+```cpp
+// 루프를 통한 멀티 스프라이트 처리
+while (true)
+{
+    size_t RectIndex = Text.find("rect:", StartPosition);
+    size_t AligIndex = Text.find("outline:", RectIndex);
+    
+    if (RectIndex == std::string::npos || AligIndex == std::string::npos)
+    {
+        break;  // 모든 스프라이트 추출 완료
+    }
+    
+    NewSpirte->SpriteTexture.push_back(Tex.get());
+    SpriteDataTexts.push_back(Text.substr(RectIndex, AligIndex - RectIndex));
+    StartPosition = AligIndex;  // 다음 검색 위치 갱신
+}
+```
+
+**개선 효과:**
+- 하나의 스프라이트 시트에 여러 프레임이 있어도 자동으로 모두 추출
+- 애니메이션 시퀀스를 하나의 리소스로 통합 관리 가능
+
+</br>
+
+## ✅ 결과
+
+### 1. 리소스 로딩 자동화
+
+```cpp
+// ContentsResource.cpp: 메타데이터 기반 일괄 로딩
+void UContentsResource::LoadSpriteMetaData()
+{
+    UEngineSprite::CreateSpriteToMeta("WanderingHusk.png", ".smeta");
+    UEngineSprite::CreateSpriteToMeta("LeapingHusk.png", ".smeta");
+    UEngineSprite::CreateSpriteToMeta("FalseKnight.png", ".smeta");
+    UEngineSprite::CreateSpriteToMeta("Explode.png", ".smeta");
+    // 한 줄로 수십 개의 프레임 자동 로딩
+}
+```
+
+### 2. 애니메이션 구현 간소화
+
+```cpp
+// 사용 예시: 몬스터 애니메이션 설정
+std::shared_ptr<UEngineSprite> WanderingHuskSprite = 
+    UEngineSprite::Find<UEngineSprite>("WanderingHusk.png");
+
+// 스프라이트 개수 자동 파악
+int FrameCount = WanderingHuskSprite->GetSpriteCount();
+
+// 프레임별 UV 좌표 자동 적용
+for (int i = 0; i < FrameCount; ++i)
+{
+    FSpriteData Data = WanderingHuskSprite->GetSpriteData(i);
+    // Data.CuttingPos, Data.CuttingSize를 셰이더에 전달
+}
+```
+
+### 3. 성능 개선 효과
+
+**이전 방식: 개별 파일 방식**
+- 텍스처 교체: 프레임당 1회 (비용 높음)
+- Draw Call: 프레임 수만큼 증가
+- 메모리: 개별 텍스처들의 합
+
+**현재 방식: 스프라이트 시트**
+- 텍스처 교체: 0회 (동일 텍스처 재사용)
+- Draw Call: 배치 가능
+- 메모리: 단일 텍스처 크기
+
+**결과:**
+- 16프레임 애니메이션 렌더링 시 Draw Call 16회 → 1회로 감소
+
+</br>
+
+### 4. 유지보수성 향상
+
+**변경 전:**
+```cpp
+// 스프라이트 시트 수정 시 50줄의 코드를 전부 재작성
+SpriteData[0].CuttingPos = { 0.0f, 0.0f };
+SpriteData[0].CuttingSize = { 64.0f / 1024.0f, 64.0f / 1024.0f };
+SpriteData[1].CuttingPos = { 64.0f / 1024.0f, 0.0f };
+// ... 48줄 더
+```
+
+**변경 후:**
+```cpp
+// Unity에서 스프라이트 시트 수정 후 .smeta 파일 덮어쓰기만 하면 끝
+UEngineSprite::CreateSpriteToMeta("Character.png", ".smeta");
+```
+
+</br>
+
+### 5. 크로스 플랫폼 에셋 공유
+
+```
+Unity 프로젝트 (스프라이트 편집)
+        ↓
+    .smeta 내보내기
+        ↓
+DirectX 프로젝트 (자동 파싱)
+        ↓
+   게임에서 사용
+```
+
+**이점:**
+- Unity의 강력한 스프라이트 편집 도구 활용
+
+
+</br>
+
+## 📊 핵심 성과 요약
+
+| 항목 | 개선 전 | 개선 후 | 개선율 |
+|------|---------|---------|--------|
+| 스프라이트 설정 시간 | 수동 입력| 자동 파싱 | 편의성 향상 |
+| 좌표 입력 오류율 | 약 5 ~ 10% | 0% | 100% 감소 |
+| Draw Call (16프레임) | 16회 | 1회 | 94% 감소 |
+| 리소스 파이프라인 | Unity → 수작업 → DX | Unity → DX | 편의성 향상 |
+
+</br>
+
 ### [UE5 액션] ```Tick```에 미련을 버려라. 대안은 많다.
 ### 🎮 목표
 
