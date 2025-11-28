@@ -1,61 +1,64 @@
 # 💻 클라이언트 프로그래머 포트폴리오
 
-> **"왜 안 될까?"에서 시작해 "이렇게 하면 되겠다"로 끝내는 개발자**
+> **"DirectX부터 서버까지, 바닥부터 단단하게 다져온 프로그래머"**
 
-안녕하세요! 클라이언트 프로그래머 지망생 류성민입니다.  
-**문제 해결 과정**을 기록하고, **대안을 고민하는** 개발자입니다.
+안녕하세요, 기본기의 힘을 믿는 클라이언트 개발자 류성민입니다. 
+게임이 화면에 그려지는 원리를 이해하기 위해 DirectX와 자체 엔진을 연구했고, 데이터의 흐름을 알기 위해 AWS 서버까지 직접 구축했습니다. 
+이러한 폭넓은 기술적 베이스를 바탕으로 언리얼 엔진 5를 깊이 있게 활용하며, 화려한 연출 뒤에 숨겨진 복잡한 로직들을 안정적으로 구현해내는 역할을 수행하고 있습니다.
 
 </br>
 
 ## 📜 목차
 ### 1. 📄 프로젝트 개요
-- 🔗 1. [UE5] 액션 게임 프로젝트 [github.com/kabu0330/UE_Soul2](https://github.com/kabu0330/UE_Soul2)
-- 🔗 2. [UE5, AWS] Dedicated Server 프로젝트 [github.com/kabu0330/FPS_with_DedicatedServer](https://github.com/kabu0330/FPS_with_DedicatedServer)
-- 🔗 3. [UE5 팀 프로젝트] 시뮬레이션 게임 (Overcooked! 2 모작) [github.com/kabu0330/UE_Overcooked2](https://github.com/kabu0330/UE_Overcooked2)
-- 🔗 4. [DirectX 11] 2D 액션 게임 프로젝트 (Hollow Knight 모작) [github.com/kabu0330/DX_HollowKnight2](https://github.com/kabu0330/DX_HollowKnight2)
+- 🔗 1. [[UE5] 액션 게임 프로젝트 (25.10 ~ 25. 11)](https://github.com/kabu0330/UE_Soul2) 
+- 🔗 2. [[UE5, AWS] Dedicated Server 프로젝트 (25.05 ~ 25.08)](https://github.com/kabu0330/FPS_with_DedicatedServer) 
+- 🔗 3. [[UE5 팀 프로젝트] 시뮬레이션 게임 (Overcooked! 2 모작) (25.02 ~ 25.05)](https://github.com/kabu0330/UE_Overcooked2) 
+- 🔗 4. [[DirectX 11] 2D 액션 게임 프로젝트 (Hollow Knight 모작) (24.11 ~ 25.02)](https://github.com/kabu0330/DX_HollowKnight2) 
+- 🔗 5. [[Win API] 슈팅 게임 프로젝트(The Binding of Isaac 모작) (24.07 ~ 24.11)](https://github.com/kabu0330/WinAPI) 
 
 </br>
 
 ### 2. 📑 주요 구현 내용 
 ### 🚀 대표 주제
 
-제가 프로젝트들을 진행하며 치열하게 고민한 4가지 핵심 주제입니다. ✅
+제가 프로젝트들을 진행하며 문제 해결을 깊이 고민했던 여섯가지 주제입니다. ✅
 
-1.  **[아키텍처]** 비대해진 Base 클래스와 결합도 문제: 상속에서 인터페이스로의 전환
-    * 🔗 [상속의 달콤함, 그리고 '확장성'이라는 청구서 `Interface`](#상속의-달콤함-그리고-확장성이라는-청구서-interface)
-2.  **[조작감]** 자연스러운 콤보 시스템을 구현하기 위한 고민
-    * 🔗 [`[UE5 액션] 부드러운 콤보 연계는 어떻게 구현할까?`](#ue5-액션-부드러운-콤보-연계는-어떻게-구현할까-animnotify-state)
-3.  **[네트워크]** 네트워크 지연 시간 보정
-    * 🔗 [[Dedicated Server] 시간 오차는 어떻게 해결할까? ```Ping-Pong```](#dedicated-server-시간-오차는-어떻게-해결할까-ping-pong)
-4.  **[최적화]** 이벤트 기반 로직으로 전환
-    * 🔗 [[UE5 액션] ```Tick```에 미련을 버려라. 대안은 많다.](#ue5-액션-tick에-미련을-버려라-대안은-많다)
-      
+1.  **[컨텐츠]** 타격감과 반응성을 극대화한 전투 시스템 구현
+    * 🔗 [유연한 콤보 시스템: 이벤트 기반 Perfect/Mercy 구간을 통한 공격 후딜레이 캔슬 및 콤보 연계](#ue5-액션-유연한-콤보-시스템-이벤트-기반-perfectmercy-구간-설정) 
+    * 🔗 [루트 모션 기반 자연스러운 대시 구현](#ue5-액션-루트-모션-기반-자연스러운-대시-구현--motion-warping)
+2.  **[안정성]** 애니메이션 중단 시에도 꼬이지 않는 견고한 상태 동기화
+    * 🔗 [애니메이션 라이프 사이클 기반 비동기 상태 관리](#ue5-액션-애니메이션-라이프-사이클-기반-비동기-상태-관리)
+3.  **[확장성]** 코드 수정 없는 데이터 관리 및 UI 결합도 최소화
+    * 🔗 [데이터 에셋 기반 무기별 전투 스타일 관리](#ue5-액션-데이터-에셋-기반-무기별-전투-스타일-관리)
+    * 🔗 [델리게이트(Delegate)를 활용한 유연한 인벤토리 시스템](#ue5-액션-델리게이트delegate를-활용한-유연한-인벤토리-시스템)
+4.  **[리팩토링]** 강한 결합도(Tight Coupling) 해소를 위한 리팩토링
+    * 🔗 [[리팩토링] OCP(개방 폐쇄 원칙) 기반 설계: 상속에서 인터페이스로 전환](#리팩토링-ocp개방-폐쇄-원칙-기반-설계-상속에서-인터페이스로-전환)
+    
 ### 2-1. 상태 관리 시스템
-- 🔗 [[DirectX 11] ```Enum```의 한계 → ```FSM Component```](#directx-11-enum의-한계--fsm-component)
-- 🔗 [[UE5 액션] 복잡한 상태도 심플하게, ```GameplayTag Container```](#ue5-액션-복잡한-상태도-심플하게-gameplaytag-container)
-- 🔗 [[UE5 액션] 공격이 캔슬된 후 캐릭터가 안 움직여요.](#ue5-액션-공격이-캔슬된-후-캐릭터가-안-움직여요-fonmontageended-delegate)
+- 🔗 [```Enum```의 한계 → ```FSM Component```](#directx-11-enum의-한계--fsm-component)
+- 🔗 [상태 관리: StateComponent와 ```GameplayTag```](#ue5-액션-상태-관리-statecomponent와-gameplaytag)
+- 🔗 [애니메이션 라이프 사이클 기반 비동기 상태 관리](#ue5-액션-애니메이션-라이프-사이클-기반-비동기-상태-관리) ✅
 ### 2-2. 컨텐츠 구현
-- 🔗 [[DirectX 11] 다중좌표계 간 위치 동기화 및 픽셀 충돌 처리](#directx-11-다중-좌표계-간-위치-동기화-및-픽셀-충돌-처리)
-- 🔗 [[UE5 액션] 부드러운 콤보 연계는 어떻게 구현할까? ```AnimNotify State```](#ue5-액션-부드러운-콤보-연계는-어떻게-구현할까-animnotify-state) ✅
-- 🔗 [[UE5 액션] 자연스러운 대시를 구현할 순 없을까?  ```Motion Warping```](#ue5-액션-자연스러운-대시를-구현할-순-없을까--motion-warping)
-- 🔗 [[UE5 액션] 무기별 전투 스타일, 데이터 주도 설계](#ue5-액션-무기별-전투-스타일-데이터-주도-설계)
-- 🔗 [[UE5 액션] 슬롯 기반 인벤토리 UI 동기화 전략  ```Inventory Component```, ```WidgetManager```](#ue5-액션-슬롯-기반-인벤토리-ui-동기화-전략--inventory-component-widgetmanager)
-- 🔗 [[UE5 팀 프로젝트] 다이나믹 머티리얼로 강조 효과 구현하기](#ue5-팀-프로젝트-다이나믹-머티리얼로-강조-효과-구현하기) 
-### 2-3. 네트워크 동기화 문제 해결 전략
-- 🔗 [[UE5 팀 프로젝트] 클라에서 스폰하면 안 보여요. ```SpawnActorDeferred```](#ue5-팀-프로젝트-클라에서-스폰하면-안-보여요-spawnactordeferred) 
-- 🔗 [[Dedicated Server] "서버에 접속할 수 없습니다" 메시지 없이 한 번에 접속하기](#dedicated-server-서버에-접속할-수-없습니다-메시지-없이-한-번에-접속하기)
-- 🔗 [[Dedicated Server] 시간 오차는 어떻게 해결할까? ```Ping-Pong```](#dedicated-server-시간-오차는-어떻게-해결할까-ping-pong) ✅
-- 🔗 [[Dedicated Server] 왜 님은 닉네임이 안 보여요? ```SeamlessTravel``` ](#dedicated-server-왜-님은-닉네임이-안-보여요-seamlesstravel) 
-- 🔗 [[Dedicated Server] 아니 방금 이겼는데 왜 내가 2등이예요?](#dedicated-server-아니-방금-이겼는데-왜-내가-2등이예요) 
+- 🔗 [다중좌표계 간 위치 동기화](#directx-11-다중-좌표계-간-위치-동기화)
+- 🔗 [유연한 콤보 시스템: 이벤트 기반 Perfect/Mercy 구간을 통한 공격 후딜레이 캔슬 및 콤보 연계](#ue5-액션-유연한-콤보-시스템-이벤트-기반-perfectmercy-구간을-통한-공격-후딜레이-캔슬-및-콤보-연계) ✅
+- 🔗 [루트 모션 기반 자연스러운 대시 구현](#ue5-액션-루트-모션-기반-자연스러운-대시-구현--motion-warping) ✅
+- 🔗 [데이터 에셋 기반 무기별 전투 스타일 관리](#ue5-액션-데이터-에셋-기반-무기별-전투-스타일-관리) ✅
+- 🔗 [델리게이트(Delegate)를 활용한 유연한 인벤토리 시스템](#ue5-액션-델리게이트delegate를-활용한-유연한-인벤토리-시스템) ✅
+- 🔗 [다이나믹 머티리얼로 강조 효과 구현하기](#ue5-팀-프로젝트-다이나믹-머티리얼로-강조-효과-구현하기) 
+### 2-3. 네트워크
+- 🔗 [지연 초기화: 런타임 액터 스폰, BeginPlay 호출 전 DataTable 데이터 무결성 확보](#ue5-팀-프로젝트-지연-초기화-런타임-액터-스폰-beginplay-호출-전-datatable-데이터-무결성-확보) 
+- 🔗 [비동기 폴링 기반 서버 접속 시도](#dedicated-server-비동기-폴링-기반-서버-접속-시도)
+- 🔗 [```SeamlessTravel```: 레벨 전환 시 데이터 유실 방지](#dedicated-server-seamlesstravel-레벨-전환-시-데이터-유실-방지) 
+- 🔗 [콜백(Callback) 체인을 활용한 데이터 무결성 확보](#dedicated-server-콜백callback-체인을-활용한-데이터-무결성-확보) 
 ### 2-4. 협업 및 버전 관리
-- 🔗 [[UE5 팀 프로젝트] Pull-Request 시행착오와 교훈](#ue5-팀-프로젝트-pull-request-시행착오와-교훈)
+- 🔗 [Pull-Request 시행착오와 교훈](#ue5-팀-프로젝트-pull-request-시행착오와-교훈)
 ### 2-5. 최적화 전략 
-- 🔗 [[DirectX 11] Unity 메타데이터 파싱을 통한 스프라이트 시트 관리](#directx-11-unity-메타데이터-파싱을-통한-스프라이트-시트-관리)
-- 🔗 [[UE5 액션] ```Tick```에 미련을 버려라. 대안은 많다.](#ue5-액션-tick에-미련을-버려라-대안은-많다) ✅
-- 🔗 [[Dedicated Server] 매번 배열 전체를 네트워크 복제해야 할까? ```Fast Array Serializer```](#dedicated-server-매번-배열-전체를-네트워크-복제해야-할까-fast-array-serializer) 
+- 🔗 [Unity 리소스 메타데이터 파싱을 통한 스프라이트 시트 관리](#directx-11-unity-메타데이터-파싱을-통한-스프라이트-시트-관리)
+- 🔗 [[리팩토링] CPU 성능 최적화: ```Tick``` 의존성 해소, 이벤트 기반(Event-Driven Architecture)으로의 전환](#ue5-액션-리팩토링-cpu-성능-최적화-tick-의존성-해소-이벤트-기반event-driven-architecture으로의-전환) 
+- 🔗 [네트워크 복제 대역폭 최적화: ```Fast Array Serializer```를 활용한 배열 요소 단위 델타 복제(Delta Replication)](#dedicated-server-네트워크-복제-대역폭-최적화-fast-array-serializer를-활용한-배열-요소-단위-델타-복제delta-replication) 
 ### 2-6. 회고
 - 🔗 [```PlayerController```가 입력을 처리하는게 적절한가?](#playercontroller가-입력을-처리하는게-적절한가) 
-- 🔗 [상속의 달콤함, 그리고 '확장성'이라는 청구서 `Interface`](#상속의-달콤함-그리고-확장성이라는-청구서-interface) ✅
+- 🔗 [[리팩토링] OCP(개방 폐쇄 원칙) 기반 설계: 상속에서 인터페이스로 전환](#리팩토링-ocp개방-폐쇄-원칙-기반-설계-상속에서-인터페이스로-전환) ✅
 
 </br>
 
@@ -67,8 +70,8 @@
  <img alt="이미지" src="readme\SoulPlay.webp">
 </p>
 
-* 🔗 Youtube : [youtu.be/ut5GRCgf86Y?si=u_6SLFbson6Siksz](https://youtu.be/8U4345QKBfc)
-* 🔗 Github : [github.com/kabu0330/UE_Soul2](https://github.com/kabu0330/UE_Soul2)
+* 🔗 [Youtube](https://youtu.be/8U4345QKBfc)
+* 🔗 [Github](https://github.com/kabu0330/UE_Soul2)
 
 ### 📋 프로젝트 정보
 
@@ -120,8 +123,8 @@ ___
  <img alt="이미지" src="readme\DedicatedServer.webp">
 </p>
 
-* 🔗 Youtube : [youtu.be/8tyiK_7egvI?si=MP7l8gBIcKs95v6U](https://youtu.be/8tyiK_7egvI?si=MP7l8gBIcKs95v6U)
-* 🔗 Github : [github.com/kabu0330/FPS_with_DedicatedServer](https://github.com/kabu0330/FPS_with_DedicatedServer)
+* 🔗 [Youtube](https://youtu.be/8tyiK_7egvI?si=MP7l8gBIcKs95v6U)
+* 🔗 [Github](https://github.com/kabu0330/FPS_with_DedicatedServer)
 
 ### 📋 프로젝트 정보
 <details>
@@ -172,8 +175,8 @@ ___
  <img alt="이미지" src="readme\Overcooked!2.gif">
 </p>
 
-* 🔗 Youtube : [youtu.be/zs3aQ8tSZ3E?si=R2VaHZ-xt10g0D2M](https://youtu.be/zs3aQ8tSZ3E?si=R2VaHZ-xt10g0D2M)
-* 🔗 Github : [github.com/kabu0330/UE_Overcooked2](https://github.com/kabu0330/UE_Overcooked2)
+* 🔗 [Youtube](https://youtu.be/zs3aQ8tSZ3E?si=R2VaHZ-xt10g0D2M)
+* 🔗 [Github](https://github.com/kabu0330/UE_Overcooked2)
 
 ### 📋 프로젝트 정보
 <details>
@@ -222,8 +225,8 @@ ___
  <img alt="이미지" src="readme\HollowKnight.gif">
 </p>
 
-* 🔗 Youtube : [youtu.be/vi6KnUeedrs?si=nJsI59Pi36cGy-Rn](https://youtu.be/vi6KnUeedrs?si=nJsI59Pi36cGy-Rn)
-* 🔗 Github : [github.com/kabu0330/DX_HollowKnight2](https://github.com/kabu0330/DX_HollowKnight2)
+* 🔗 [Youtube](https://youtu.be/vi6KnUeedrs?si=nJsI59Pi36cGy-Rn)
+* 🔗 [Github](https://github.com/kabu0330/DX_HollowKnight2)
 
 ### 📋 프로젝트 정보
 <details>
@@ -259,6 +262,52 @@ ___
 - ✅ 멀티스레드 비동기 리소스 로딩 구현 (초기 실행 시간 단축)
 
 > 💡 **배운 점**: 엔진을 분석하며 **UE5의 설계 철학**을 이해하게 되었습니다. "왜 Actor와 Component를 분리하는가", "왜 Tick이 필요한가" 같은 질문에 답하며, UE5로 돌아왔을 때 단순히 "사용"하는 것이 아니라 "이해하고 활용"할 수 있게 되었습니다.
+
+</br>
+
+___
+
+### 🔭 [Win API] 슈팅 게임 프로젝트(The Binding of Isaac 모작)
+### 📸 Gif
+
+<p align="center">
+ <img alt="이미지" src="readme\Isaac.webp">
+</p>
+
+* 🔗 [Youtube](https://youtu.be/Uf7M80sdum0?si=vpmTN5Q4YahdKVrY)
+* 🔗 [Github](https://github.com/kabu0330/WinAPI)
+
+### 📋 프로젝트 정보
+<details>
+<summary><b>📖 상세 정보 펼치기</b></summary>
+
+| 항목 | 내용 | 항목 | 내용 |
+|:------|:-----|:-----|:-----|
+| 🖥️ **플랫폼** | PC (Windows) | 🎮 **장르** | 슈팅 |
+| 👤 **개발 인원** | 1인 | 📅 **개발 기간** | 2024.07 ~ 2024.11 |
+| 🛠️ **개발 도구** | C++|
+| 📝 **게임 소개** | 아이템을 수집하고 조합하며 슈팅 게임 |
+
+### 💻 작업 내용
+
+| 분류 | 상세 내용 |
+|:-----|:----------|
+| **컨텐츠** | 캐릭터, 몬스터, 맵, 이펙트 및 스킬, UI |
+
+</details>
+
+### 🎯 작업 목표
+**게임을 제작하는 기본 구조 학습**
+- 상속 구조를 활용한 메모리 관리
+- Vector, Sin, Cos 등 게임 제작에 필요한 수학 활용
+
+
+### 📊 핵심 성과
+- ✅ Windows에서 게임 엔진을 구동하는 원리 이해(WinProc, PeekMessage, HDC, Bitmap 등)
+- ✅ 상속 구조와 RTTI의 활용을 통한 기능 구현
+- ✅ 자료구조(vector, list, map)를 활용한 게임 제작 기초 이해
+
+> 💡 **배운 점**: 어떻게 프로그램이 운영체제에서 동작하는지에 대한 밑그림을 그릴 수 있었습니다. 게임을 직접 제작해보며 물리 세계를 구현하는데 수학이 어떻게 쓰이는지 이해할 수 있게 되었습니다.
 
 </br>
 
@@ -434,7 +483,7 @@ CreateState(EKnightState::FOCUS)
 
 ___
 
-### [UE5 액션] 복잡한 상태도 심플하게, ```GameplayTag Container```
+### [UE5 액션] 상태 관리: StateComponent와 ```GameplayTag```
 
 ### 🎮 구현 목표 
 **복합 상태를 bool 변수 없이 직관적으로 표현하고, 상태 검사를 체계적으로 관리하기**
@@ -576,7 +625,7 @@ void UStateComponent::TickComponent(float DeltaTime, ...)
 
 ___
 
-### [UE5 액션] 공격이 캔슬된 후 캐릭터가 안 움직여요. ```FOnMontageEnded Delegate```
+### [UE5 액션] 애니메이션 라이프 사이클 기반 비동기 상태 관리
 
 ### 🎮 구현 목표 
 
@@ -681,8 +730,7 @@ ___
 
 ### 2-2. 컨탠츠 구현
 
-### [DirectX 11] 다중 좌표계 간 위치 동기화 및 픽셀 충돌 처리
-
+### [DirectX 11] 다중 좌표계 간 위치 동기화
 ### 🎮 구현 목표
 
 게임 엔진에서 BMP 픽셀 충돌 맵(윈도우 계층)과 액터 Transform(엔진 계층) 간의 좌표계 불일치 문제를 해결하여 정확한 픽셀 기반 지형 충돌을 구현합니다.
@@ -691,7 +739,9 @@ ___
 
 ### 🚨 문제 상황
 
-#### 계층 분리로 인한 좌표계 불일치
+#### 엔진 계층 구조로 인한 좌표계 불일치
+
+게임 엔진을 Windows에 종속된 Platform 계층과 게임 컨텐츠 제작에 필요한 기능을 지원하는 Core 계층으로 분리한 것이 문제의 시작이었습니다.
 
 ```
 [윈도우 계층 - EnginePlatform]  
@@ -712,7 +762,7 @@ ___
 
 <br>
 
-#### 고민했던 방법들
+#### 대안
 
 **방법 1: 엔진 구조 변경**
 ```cpp
@@ -735,9 +785,11 @@ class UEngineWinImage
 
 ### 💭 해결 방안
 
-#### 핵심 아이디어: 액터 좌표를 BMP 로컬 좌표로 변환
+#### 핵심 아이디어: 픽셀 충돌 검사는 데카르트 좌표계에서 윈도우 좌표계로 변환
 
-현재 배경 이미지(png) 파일의 좌상단(Left Top) 좌표를 스크린 좌표의 원점(0, 0)으로 변환시키고, y축을 반전시켜 액터의 픽셀 충돌 검사는 스크린 좌표계 기준으로 변환합니다.
+현재 배경 이미지(png) 파일의 좌상단(Left Top) 좌표를 스크린 좌표의 원점(0, 0)으로 변환하고, y축을 반전시켜 액터의 픽셀 충돌 검사는 스크린 좌표계 기준으로 변환합니다.
+
+플레이어가 속하지 않은 맵 리소스는 모두 비활성화시켜 항상 플레이어가 입장한 맵에서만 좌표계를 변환한 충돌 검사를 수행합니다.
 
 ```
 월드 좌표 (액터) → BMP 로컬 좌표 → 픽셀 색상 검사
@@ -1060,41 +1112,7 @@ NewRoom->SetRoomLocation({ 20000, -10000 });
 
 </br>
 
-### 🎓 핵심 교훈
-
-#### 계층 분리의 중요성
-
-- Platform 계층과 Core 계층을 명확히 분리
-- 각 계층의 책임을 명확히 정의
-- 의존성 방향 규칙 준수 (Core → Platform ✅, Platform → Core ❌)
-
-</br>
-
-#### 좌표계 변환 패턴
-
-```
-글로벌 좌표 → 로컬 좌표 → 리소스 접근
-```
-
-- 리소스(BMP)를 억지로 글로벌 좌표계로 올리지 않음
-- 대신 접근하는 쪽(액터)의 좌표를 리소스 좌표계로 변환
-- 변환 로직을 중앙에서 관리 (ARoom)
-
-</br>
-
-#### 중재자 패턴 활용
-
-```
-Knight ← (요청) → Room ← (변환) → WinImage
-```
-
-- Room이 두 계층 사이의 중재자 역할
-- 직접적인 계층 간 통신 차단
-- 결합도 감소, 유지보수성 향상
-
-</br>
-
-### [UE5 액션] 부드러운 콤보 연계는 어떻게 구현할까? ```AnimNotify State```
+### [UE5 액션] 유연한 콤보 시스템: 이벤트 기반 Perfect/Mercy 구간을 통한 공격 후딜레이 캔슬 및 콤보 연계
 ### 🎮 구현 목표 
 **자연스러운 콤보 시스템 구현**
 - 공격 중 입력이 들어오면 **후딜레이를 캔슬**하고 즉시 다음 콤보로 연계
@@ -1103,7 +1121,7 @@ Knight ← (요청) → Room ← (변환) → WinImage
 
 </br>
 
-### 🚨 문제 상황
+### 🚨 기존 방식
 **Timer 기반 콤보의 한계: 뚝뚝 끊기는 연계**
 
 기존 시스템은 공격 몽타주 재생 시간을 기준으로 Timer를 설정하고, Timer 종료 시점에 입력 여부를 확인하여 다음 콤보를 재생했습니다.
@@ -1137,7 +1155,7 @@ void ACharacter::CheckComboInput()
 </br>
 
 ### 💭 해결 방안
-**"입력 체크 타이밍을 애니메이션 기준으로 제어할 수 있다면?"**
+**"입력 체크 타이밍을 구간으로 나눠 관리하고 싶다."**
 
 Timer는 시간 기반이므로 애니메이션의 특정 구간을 정밀하게 제어하기 어렵습니다. 필요한 것은:
 
@@ -1352,7 +1370,7 @@ void UCombatComponent::ExecuteComboAttack(const FGameplayTag& AttackTypeTag)
 
 ___
 
-### [UE5 액션] 자연스러운 대시를 구현할 순 없을까?  ```Motion Warping```
+### [UE5 액션] 루트 모션 기반 자연스러운 대시 구현  ```Motion Warping```
 
 ### 🎮 구현 목표 
 액션 게임의 핵심인 **빠르고 역동적인 이동**을 구현하되, 애니메이션과 자연스럽게 어우러지는 대시 시스템을 만들고자 했습니다. 특히 적에게 빠르게 접근하는 "돌진형 스킬"의 자연스러운 연출이 목표였습니다.
@@ -1502,7 +1520,7 @@ void ASoulPlayerCharacter::MotionWarpingDashSlash()
 
 ___
 
-### [UE5 액션] 무기별 전투 스타일, 데이터 주도 설계
+### [UE5 액션] 데이터 에셋 기반 무기별 전투 스타일 관리
 
 ### 🎮 구현 목표 
 
@@ -1737,7 +1755,7 @@ AnimInstance 전투 모드 변경
 
 ___
 
-### [UE5 액션] 슬롯 기반 인벤토리 UI 동기화 전략  ```Inventory Component```, ```WidgetManager```
+### [UE5 액션] 델리게이트(Delegate)를 활용한 유연한 인벤토리 시스템
 
 ### 🎮 구현 목표 
 
@@ -2088,8 +2106,8 @@ void AOC2Actor::SetHighlight(bool Value)
 
 ___
 
-### 2-3. 네트워크 동기화 문제 해결 전략
-### [UE5 팀 프로젝트] 클라에서 스폰하면 안 보여요. ```SpawnActorDeferred```
+### 2-3. 네트워크
+### [UE5 팀 프로젝트] 지연 초기화: 런타임 액터 스폰, BeginPlay 호출 전 DataTable 데이터 무결성 확보
 
 ### 🎮 구현 목표 
 플레이어가 스폰 테이블과 상호작용하면 **재료 액터를 동적으로 생성**합니다. 재료는 타입(토마토, 양파 등)에 따라 다른 메시와 데이터를 가지며, 모든 플레이어에게 동일하게 보여야 합니다.
@@ -2261,7 +2279,7 @@ void AIngredient::BeginPlay()
 
 ___
 
-### [Dedicated Server] "서버에 접속할 수 없습니다" 메시지 없이 한 번에 접속하기
+### [Dedicated Server] 비동기 폴링 기반 서버 접속 시도
 ### 🎮 구현 목표 
 플레이어가 "게임 참가" 버튼을 클릭하면 **게임 세션 상태와 무관하게 자동으로 접속**되도록 합니다. 게임 세션이 없으면 생성하고, 활성화 중이면 대기했다가 자동으로 접속하는 것이 목표입니다.
 
@@ -2393,11 +2411,6 @@ void UGameSessionsManager::HandleGameSessionStatus(const FString& Status, const 
 
 </br>
 
-### 🔧 고려사항 
-**무한 루프 방지는?**
-
-GameLift가 일정 시간 내에 `ACTIVE` 또는 실패 상태로 전환되므로, **타임아웃 로직은 추가하지 않았습니다**. 대신 UI에 "연결 중..." 메시지를 계속 표시하여 플레이어가 상황을 인지하도록 했습니다.
-
 **Delegate로 UI 피드백**
 
 재시도 중에도 플레이어가 "멈춘 게 아니구나"를 알 수 있도록 ```BroadcastJoinGameSessionMessage``` Delegate로 상태 메시지를 전달:
@@ -2429,222 +2442,7 @@ BroadcastJoinGameSessionMessage.Broadcast(TEXT("Creating Player Session..."), fa
 </br>
 
 ___
-
-
-### [Dedicated Server] 시간 오차는 어떻게 해결할까? ```Ping-Pong```
-### 🎮 구현 목표 
-게임 시작 전 **카운트다운 타이머를 모든 플레이어에게 동기화**합니다. 서버는 "3초 남음"을 알리지만, 네트워크 지연으로 클라이언트는 "2.8초"에 받을 수 있습니다. 이 시간 차이를 보정하여 **모든 플레이어가 같은 시간을 보도록** 합니다.
-
-### 🚨 문제 상황
-**서버 시간과 클라이언트 시간의 불일치**
-
-Dedicated Server에서는 **서버만 시간을 계산**하고, 결과를 클라이언트에 전파합니다:
-```cpp
-// GameMode (서버)
-void ADS_GameModeBase::UpdateCountdownTimer(const FCountdownTimerHandle& Handle)
-{
-    for (AController* Controller : GetWorld()->GetPlayerControllerIterator())
-    {
-        ADS_PlayerController* PC = Cast(Controller);
-        float TimeLeft = Handle.CountdownTime - GetWorldTimerManager().GetTimerElapsed(...);
-        
-        // 서버: "4초 남았어!"
-        PC->Client_TimerUpdated(TimeLeft, Handle.Type);
-    }
-}
-```
-
-**문제:**
-```
-서버: 4.0초 남음 → RPC 전송
-(네트워크 지연 0.2초)
-클라: "4.0초 남음" 메시지 수신 ← 실제로는 3.8초만 남음!
-```
-
-테스트 중 플레이어마다 **카운트다운이 다른 시점에 끝나는** 현상 발견:
-- 플레이어 A (지연 50ms): "0초!" → 게임 시작
-- 플레이어 B (지연 200ms): "0.15초..." → 아직 카운트다운 중 😕
-
-</br>
-
-### 💭 해결 방법
-
-사실 이걸 구현해야하나 고민이 많았습니다. 1초마다 서버에서 시간을 전파하고 있어서 최대 오차는 1초를 넘지 않고, 지연 시간을 감안하더라도 게임 플레이 전체를 놓고 치명적일만큼 체감되지 않아서 넘길까 하다가 게임은 실시간 동기화가 그 어느 분야보다 중요하다고 생각해 공부 목적으로 시작했습니다.
-
-**"지연 시간을 알면 보정할 수 있지 않을까?"**
-
-문제의 핵심은 **"메시지가 언제 도착했는지"**를 모른다는 것입니다. 
-
-**초기 아이디어: 클라이언트가 자체 타이머 실행**
-```
-서버: 10초 카운트다운 시작!
-클라: 알았어, 나도 10초 타이머 시작!
-```
-
-시도해보니 문제 발생:
-- 각 클라이언트의 ```GetWorld()->GetTimeSeconds()```가 다름
-- 프레임 드롭으로 타이머 오차 누적
-- 결국 서버와 클라이언트 시간이 점점 벌어짐 ❌
-
-</br>
-
-**두 번째 아이디어: 지연 시간만 측정하자**
-
-"서버와 클라이언트 시간을 맞출 필요는 없다. **메시지 전달 시간**만 알면 된다!"
-
-고민: 네트워크 지연 시간을 어떻게 측정하지?
-
-처음엔 "서버에 타임스탬프를 찍어서 보내면 되지 않을까?" 생각했습니다:
-- 서버: "지금 내 시간 10.5초야" (타임스탬프 포함)
-- 클라: "10.5초 받았는데 내 시간은 5.2초..." ❌
-
-문제는 **서버와 클라의 시작 시간 자체가 다르다**는 것. 비교 불가능.
-
-"그럼 왕복 시간을 재면?" → **Ping-Pong 패턴** 발견:
-```
-1. 클라: 시간 기록하고 Ping 전송
-2. 서버: 즉시 Pong 응답
-3. 클라: 왕복 시간 측정
-4. 왕복 시간 / 2 = 단방향 지연
-```
-
-평균 지연시간을 계산하여 이를 서버에서 보내주는 시간에서 보정하는 방식으로 처리
-
-</br>
-
-**Ping-Pong으로 지연 시간 측정**
-
-핵심 아이디어: **"서버 ↔ 클라이언트 왕복 시간 / 2 = 단방향 지연 시간"**
-```cpp
-// PlayerController.cpp (클라이언트)
-void ADS_PlayerController::ReceivedPlayer()
-{
-    Super::ReceivedPlayer();
-
-    if (IsLocalPlayerController())
-    {
-        Server_Ping(GetWorld()->GetTimeSeconds());
-    }
-}
-
-// PlayerController.cpp (서버)
-void ADS_PlayerController::Server_Ping_Implementation(float TimeOfRequest)
-{
-    // 서버: "Ping 받았으니 즉시 Pong 응답"
-    Client_Pong(TimeOfRequest);
-}
-
-// PlayerController.cpp (클라이언트)
-void ADS_PlayerController::Client_Pong_Implementation(float TimeOfRequest)
-{
-    // 클라: "왕복 시간 = 현재 시간 - 요청 시간"
-    const float RoundTripTime = GetWorld()->GetTimeSeconds() - TimeOfRequest;
-    
-    // 클라: "단방향 지연 = 왕복 / 2"
-    SingleTripTime = RoundTripTime * 0.5f;
-}
-```
-
-**실행 흐름:**
-```
-1. 클라: 시간 1.0초에 Ping 전송
-2. (네트워크 지연 0.1초)
-3. 서버: 시간 1.1초에 Ping 수신 → 즉시 Pong 전송
-4. (네트워크 지연 0.1초)
-5. 클라: 시간 1.2초에 Pong 수신
-   → 왕복 시간 = 1.2 - 1.0 = 0.2초
-   → 단방향 지연 = 0.2 / 2 = 0.1초
-```
-
-**타이머 동기화에 적용:**
-```cpp
-void ADS_PlayerController::Client_TimerUpdated_Implementation(
-    float CountdownTimeLeft, 
-    ECountdownTimerType Type) const
-{
-    // 서버: "4.0초 남았어!"
-    // 클라: "0.1초 전에 보낸 거니까 실제로는 3.9초"
-    OnTimerUpdated.Broadcast(CountdownTimeLeft - SingleTripTime, Type);
-}
-```
-
-**개선된 흐름:**
-```
-서버: 4.0초 남음 → RPC 전송 (시간 T)
-(네트워크 지연 0.1초)
-클라: "4.0초" 메시지 수신 (시간 T+0.1초)
-     → 보정: 4.0 - 0.1 = 3.9초 표시 ✅
-```
-
-
-</br>
-
-### 🔧 시행착오 
-
-**Ping 타이밍: 언제 측정할까?**
-
-처음엔 타이머 시작 직전에만 Ping을 보냈는데, **네트워크 상태가 변동**되는 문제 발견:
-- 로비 입장 시: 지연 50ms
-- 게임 중: 지연 150ms (트래픽 증가)
-
-**해결:** ```ReceivedPlayer()```와 ```PostSeamlessTravel()```에서 Ping 재측정
-```cpp
-void ADS_PlayerController::ReceivedPlayer()
-{
-    // 서버 접속 직후
-    if (IsLocalPlayerController())
-    {
-        Server_Ping(GetWorld()->GetTimeSeconds());
-    }
-}
-
-void ADS_PlayerController::PostSeamlessTravel()
-{
-    // 레벨 전환 후 (Seamless Travel)
-    if (IsLocalPlayerController())
-    {
-        Server_Ping(GetWorld()->GetTimeSeconds());
-    }
-}
-```
-
-**BindWeakLambda의 중요성**
-
-타이머 종료 전에 GameMode가 파괴되면 크래시 발생:
-```cpp
-// Before: 일반 Lambda (크래시 위험)
-CountdownTimerHandle.TimerFinishedDelegate.BindLambda([&]() {
-    OnCountdownTimerFinished(CountdownTimerHandle.Type);
-});
-
-// After: Weak Lambda (안전)
-CountdownTimerHandle.TimerFinishedDelegate.BindWeakLambda(this, [&]() {
-    OnCountdownTimerFinished(CountdownTimerHandle.Type);
-});
-```
-```BindWeakLambda```는 객체가 파괴되면 자동으로 ```nullptr```을 반환하여 Lambda 실행을 방지합니다.
-
-
-</br>
-
-### ✅ 결과 
-✅ **시간 동기화 정확도 향상**: 지연 시간만큼 자동 보정  
-✅ **일관된 게임 경험**: 모든 플레이어가 같은 시점에 "0초" 확인  
-✅ **네트워크 상태 적응**: 레벨 전환마다 지연 시간 재측정
-
-**"완벽한 동기화는 불가능하다"**
-
-처음엔 "서버와 클라이언트 시간을 완전히 동일하게 맞춰야 한다"고 생각했지만, 이는 네트워크의 본질적 한계로 불가능합니다. 
-
-대신:
-- 서버와 클라의 **절대 시간**은 달라도 됨
-- 상대적 시간 차이(지연)만 보정하면 충분
-- Ping-Pong으로 간단하지만 효과적인 보정
-
-</br>
-
-___
-### [Dedicated Server] 왜 님은 닉네임이 안 보여요? ```SeamlessTravel```
+### [Dedicated Server] ```SeamlessTravel```: 레벨 전환 시 데이터 유실 방지
 ### 🎮 구현 목표 
 서버에 접속한 플레이어들은 로비 레벨에서 모인 뒤, 게임 시작 시 **SeamlessTravel**로 플레이 레벨로 이동합니다. 이 과정에서 플레이어의 `Username`이 유지되어야 DB에 플레이 기록을 정상적으로 저장할 수 있습니다.
 
@@ -2830,10 +2628,11 @@ FString DefaultUsername = "";
 
 ___
 
-### [Dedicated Server] 아니 방금 이겼는데 왜 내가 2등이예요? 
+### [Dedicated Server] 콜백(Callback) 체인을 활용한 데이터 무결성 확보
 ### 🎮 구현 목표
 
-경기 종료 후 **Player Table → Leaderboard Table** 순서로 DB 업데이트가 진행되어, 랭킹이 정확하게 반영되도록 합니다. Player Table에 최신 승수가 저장된 후에야 Leaderboard가 올바르게 갱신될 수 있습니다.
+경기 종료 후 **Player Table → Leaderboard Table** 순서로 DB 업데이트가 진행되어, 랭킹이 정확하게 반영되도록 합니다. 
+Player Table에 최신 승수가 저장된 후에야 Leaderboard가 올바르게 갱신될 수 있습니다.
 
 </br>
 
@@ -3144,7 +2943,7 @@ ___
 
 ### 2-5. 최적화 전략 
 
-### [DirectX 11] Unity 메타데이터 파싱을 통한 스프라이트 시트 관리
+### [DirectX 11] Unity 리소스 메타데이터 파싱을 통한 스프라이트 시트 관리
 
 ### 🎮 구현 목표
 
@@ -3541,7 +3340,7 @@ DirectX 프로젝트 (자동 파싱)
 
 </br>
 
-### [UE5 액션] ```Tick```에 미련을 버려라. 대안은 많다.
+### [UE5 액션] [리팩토링] CPU 성능 최적화: ```Tick``` 의존성 해소, 이벤트 기반(Event-Driven Architecture)으로의 전환
 ### 🎮 목표
 
 Tick 사용을 최소화하고 **이벤트 기반**으로 게임 로직 구성하기
@@ -3708,7 +3507,7 @@ AnimNotify는 "**타이밍 이벤트**"로만 사용하고, "**상태 관리**"�
 
 ___
 
-### [Dedicated Server] 매번 배열 전체를 네트워크 복제해야 할까? ```Fast Array Serializer```
+### [Dedicated Server] 네트워크 복제 대역폭 최적화: ```Fast Array Serializer```를 활용한 배열 요소 단위 델타 복제(Delta Replication)
 ### 🎮 구현 목표
 
 로비에서 플레이어 목록을 실시간으로 동기화합니다. 누군가 입장/퇴장하거나 준비 버튼을 누를 때마다 **변경된 플레이어 정보만** 네트워크로 전송하여 대역폭을 절약합니다.
@@ -4361,7 +4160,7 @@ Enhanced Input의 IMC나 GameplayTag를 활용하면:
 
 ___
 
-### 상속의 달콤함, 그리고 '확장성'이라는 청구서 `Interface`
+### [리팩토링] OCP(개방 폐쇄 원칙) 기반 설계: 상속에서 인터페이스로 전환
 
 ### 🤔 초기 설계: "공통점이 많으니 Base로 관리하자."
 
