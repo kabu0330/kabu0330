@@ -103,21 +103,7 @@
 
 **🔧구현 상세**
 
-**1). UI와 캐릭터의 느슨한 결합**
-
-UI(UserWidget)는 캐릭터의 존재를 알지만, 캐릭터는 UI의 존재를 모르게 설계하여 **의존성을 단방향**으로 제한했습니다.
-
-* `Delegate` + `UserWidget` 
-    - **[Observer Pattern]** 모든 `UserWidget`은 캐릭터 컴포넌트의 `Delegate`에 바인딩하여 데이터가 변경될 때 `Broadcast`를 통해 값을 받아 위젯을 갱신하는 구조입니다.
-    - [PlayerOverlay 코드](https://github.com/kabu0330/UE_Soul2/blob/a50d719eae8d32e24b870c4d6342dd97015d2f46/Source/Soul/UI/Play/SoulPlayOverlay.cpp#L32-L65) /
-     [InventoryWidget 코드](https://github.com/kabu0330/UE_Soul2/blob/a50d719eae8d32e24b870c4d6342dd97015d2f46/Source/Soul/UI/Play/Inventory/InventoryWidget.cpp#L17-L21) /
-    [EquipmentWidget 코드](https://github.com/kabu0330/UE_Soul2/blob/a50d719eae8d32e24b870c4d6342dd97015d2f46/Source/Soul/UI/Play/Equipment/EquipmentWidget.cpp#L23-L29)
-
- **[💡 회고 및 개선점]** `PlayerOverlay`는 UI가 캐릭터 컴포넌트에 직접 접근하여 바인딩하는 구조입니다. 이후 개발된 `UserWidget` 클래스는 중재자(Mediator) 역할을 하는 `Manager` 클래스로부터 참조하는 구조로 바꿨으나, `Character`의 `ActorComponent`로 컴포넌트의 생명주기에 의존한 구조로 설정한 것이 아쉽습니다. `Subsystem` 내부 또는 `static class`로 만들었으면 더 좋았겠습니다.
-
-</br>
-
-**2). 입력과 애니메이션의 연쇄 작용**
+**1). 입력과 애니메이션의 연쇄 작용**
 
 플레이어의 입력은 단순한 함수 호출이 아닌, 애니메이션 시스템과 결합되어 시각적 피드백과 게임 로직을 동시에 처리합니다.
 
@@ -136,6 +122,20 @@ UI(UserWidget)는 캐릭터의 존재를 알지만, 캐릭터는 UI의 존재를
     - [피격 OnMontageEnded 사용 코드](https://github.com/kabu0330/UE_Soul2/blob/a50d719eae8d32e24b870c4d6342dd97015d2f46/Source/Soul/Character/SoulCharacterBase.cpp#L979-L1004)
 
  **[💡 회고 및 개선점]** 초기에는 `AnimNotify`로 태그를 해제했으나, 블렌드 아웃이나 강제 중단 시 노티파이가 씹히는(Skip) 문제가 있었습니다. 이를 델리게이트 기반의 보장된 콜백으로 변경하여 상태 무결성을 확보했습니다.
+
+</br>
+
+**2). UI와 캐릭터의 느슨한 결합**
+
+UI(UserWidget)는 캐릭터의 존재를 알지만, 캐릭터는 UI의 존재를 모르게 설계하여 **의존성을 단방향**으로 제한했습니다.
+
+* `Delegate` + `UserWidget` 
+    - **[Observer Pattern]** 모든 `UserWidget`은 캐릭터 컴포넌트의 `Delegate`에 바인딩하여 데이터가 변경될 때 `Broadcast`를 통해 값을 받아 위젯을 갱신하는 구조입니다.
+    - [PlayerOverlay 코드](https://github.com/kabu0330/UE_Soul2/blob/a50d719eae8d32e24b870c4d6342dd97015d2f46/Source/Soul/UI/Play/SoulPlayOverlay.cpp#L32-L65) /
+     [InventoryWidget 코드](https://github.com/kabu0330/UE_Soul2/blob/a50d719eae8d32e24b870c4d6342dd97015d2f46/Source/Soul/UI/Play/Inventory/InventoryWidget.cpp#L17-L21) /
+    [EquipmentWidget 코드](https://github.com/kabu0330/UE_Soul2/blob/a50d719eae8d32e24b870c4d6342dd97015d2f46/Source/Soul/UI/Play/Equipment/EquipmentWidget.cpp#L23-L29)
+
+ **[💡 회고 및 개선점]** `PlayerOverlay`는 UI가 캐릭터 컴포넌트에 직접 접근하여 바인딩하는 구조입니다. 이후 개발된 `UserWidget` 클래스는 중재자(Mediator) 역할을 하는 `Manager` 클래스로부터 참조하는 구조로 바꿨으나, `Character`의 `ActorComponent`로 컴포넌트의 생명주기에 의존한 구조로 설정한 것이 아쉽습니다. `Subsystem` 내부 또는 `static class`로 만들었으면 더 좋았겠습니다.
 
 </br>
 
