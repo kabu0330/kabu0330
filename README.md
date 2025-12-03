@@ -35,9 +35,9 @@
 
 ## 📜 목차
 1. [Unreal Engine 5] Action RPG Project "Soul"
-2. [Dedicated Server Project] FPS Game
-3. [Team Project] Unreal Engine ver 'Overooked! 2' 모작
-4. [Custom Engine Projects] DirectX 11 2D 'HollowKnight' / WinAPI 'The Binding of Isaac'
+2. [[Dedicated Server Project] FPS Game](#-2-dedicated-server-project-fps-game)
+3. [[Team Project] Unreal Engine ver 'Overooked! 2' 모작](#-3-team-project-unreal-engine-ver-overooked-2-모작)
+4. [[Custom Engine Projects] DirectX 11 2D 'HollowKnight' 모작 / WinAPI 'The Binding of Isaac' 모작](#-4-custom-engine-projects-directx-11-2d-hollowknight-모작--winapi-the-binding-of-isaac-모작)
 
 </br>
 
@@ -63,7 +63,7 @@
 
 </br>
 
-이 프로젝트는 기능 구현보다 **구조**에 대한 고민을 담은 프로젝트입니다. </br>
+이 프로젝트는 게임 개발 **구조**에 대한 고민을 담은 프로젝트입니다. </br>
 `Tick` 사용을 최소화하고, 입력과 애니메이션 이벤트(`AnimNotify`)를 트리거로 로직을 순환시키는 이벤트 기반(Event-Driven) 구조를 목표로 삼았습니다.
 
 
@@ -175,6 +175,10 @@ ___
 
 특히 `PrimaryDataAsset`을 상속받아 필요한 시점에 비동기 로드할 수 있는 구조를 마련했습니다.
 
+<p align="center">
+ <img alt="이미지" src="readme\DataAsset1.png">
+</p>
+
 </br>
 
 **🔧구현 상세**
@@ -185,6 +189,10 @@ ___
     - [MontageActionData 코드](https://github.com/kabu0330/UE_Soul2/blob/a50d719eae8d32e24b870c4d6342dd97015d2f46/Source/Soul/DataAsset/MontageActionData.h#L11-L47)
 
 **[💡 회고 및 개선점]** 전투 시스템이 고도화되면서(백어택, 잡기 등) `FMontageGroup` 내에 발동 조건 필드가 늘어나는 현상을 겪었습니다. 모든 스킬이 해당 조건을 쓰지 않음에도 구조체가 비대해지는 문제가 있어, 추후에는 조건 검사 로직 자체를 별도의 객체나 컴포넌트로 분리하는 **데코레이터 패턴**을 도입할 예정입니다.
+
+<p align="center">
+ <img alt="이미지" src="readme\DataAsset2.png">
+</p>
 
 </br>
 
@@ -214,10 +222,10 @@ ___
  <img alt="이미지" src="readme\ComboWindow.png">
 </p>
 
-* 퍼펙트 콤보 구현: 애니메이션 시퀀스 내에 `AnimNotifyState`를 배치하여 입력 허용 구간을 시각적으로 설정하고, 해당 구간 내 입력 감지 시 즉시 몽타주 재생을 중단하고 다음 콤보를 실행합니다.
+* 퍼펙트 콤보(선입력) 구현: 애니메이션 시퀀스 내에 `AnimNotifyState`를 배치하여 입력 허용 구간을 시각적으로 설정하고, 해당 구간 내 입력 감지 시 즉시 몽타주 재생을 중단하고 다음 콤보를 실행합니다.
     - [Perfect Combo Window: 콤보 공격 선입력 실행 코드](https://github.com/kabu0330/UE_Soul2/blob/a50d719eae8d32e24b870c4d6342dd97015d2f46/Source/Soul/Components/CombatComponent.cpp#L225-L257)
     - [Perfect Combo Window: NotifyEnd() 시점 호출 코드](https://github.com/kabu0330/UE_Soul2/blob/a50d719eae8d32e24b870c4d6342dd97015d2f46/Source/Soul/Components/CombatComponent.cpp#L300-L319)
-* 자비 구간(선입력) 구현: 애니메이션 종료 직전부터 일정 시간(`Timer`) 동안 입력 플래그를 활성화하여, 뒤늦게 들어온 입력도 다음 콤보의 트리거로 인정합니다.
+* 자비 구간 구현: 애니메이션 종료 직전부터 일정 시간(`Timer`) 동안 입력 플래그를 활성화하여, 뒤늦게 들어온 입력도 다음 콤보의 트리거로 인정합니다.
     - [Mercy Combo Window 코드](https://github.com/kabu0330/UE_Soul2/blob/a50d719eae8d32e24b870c4d6342dd97015d2f46/Source/Soul/Components/CombatComponent.cpp#L279-L292)
 * 통합 공격 로직: 위 두 가지 입력 방식을 하나의 `DoAttack` 함수에서 분기 처리하여, 현재 콤보 카운트와 입력 시점에 따라 적절한 다음 행동을 결정합니다.   
     - [실제 Player 공격 함수(DoAttack) 코드](https://github.com/kabu0330/UE_Soul2/blob/a50d719eae8d32e24b870c4d6342dd97015d2f46/Source/Soul/Character/SoulPlayerCharacter.cpp#L245-L304)
@@ -271,8 +279,6 @@ ___
 
 </br>
 
-___
-
 #### 프로젝트 관련 글(Blog)
 
 * [인벤토리 시스템과 UI](https://kabu0129.tistory.com/378)
@@ -282,7 +288,7 @@ ___
 
 </br>
 
-___
+
 
 ## 📄 2. [Dedicated Server Project] FPS Game
 
@@ -301,7 +307,7 @@ ___
 | 항목 | 내용 | 항목 | 내용 |
 |:------|:-----|:-----|:-----|
 | 🖥️ **플랫폼** | PC (Windows) | 🎮 **장르** | FPS |
-| 👤 **개발 인원** | 1인 | 📅 **개발 기간** | 2025.06 ~ 2025.08 |
+| 👤 **개발 인원** | 1인 | 📅 **개발 기간** | 2025.05 ~ 2025.08 |
 | 🛠️ **기술 스택** | C++, Node.js, Unreal Engine 5, AWS, Rider, Git |
 | 📝 **게임 소개** | 최대 10인의 플레이어가 경쟁하는 1인칭 슈팅게임 |
 | 🎯 **핵심 목표** | 서버-클라이언트 아키텍처 및 AWS 클라우드 인프라 실전 경험 | | 
@@ -452,7 +458,7 @@ Dedicated Server는 게임 플레이 자체에 집중해야 하므로, 사용자
 
 <div style="display: flex; justify-content: space-between;">
   <img src="readme\Reflection2.png" alt="이미지 1 설명" style="width: 35%;" />
-  <img src="readme\Reflection3.png" alt="이미지 2 설명" style="width: 55%;" />
+  <img src="readme\Reflection3.png" alt="이미지 2 설명" style="width: 60%;" />
 </div>
 
 </br>
@@ -463,7 +469,7 @@ Dedicated Server는 게임 플레이 자체에 집중해야 하므로, 사용자
 
 </br>
 
-___
+
 
 #### 프로젝트 관련 글(Blog)
 
@@ -473,7 +479,7 @@ Dedicated Sever와 관련한 작업은 블로그에 과정을 기록해두었습
 
 </br>
 
-___
+
 
 ## 📄 3. [Team Project] Unreal Engine ver 'Overooked! 2' 모작
 
@@ -491,7 +497,7 @@ ___
 |:------|:-----|:-----|:-----|
 | 🖥️ **플랫폼** | PC (Windows) | 🎮 **장르** | 시뮬레이션 |
 | 👤 **개발 인원** | 6인 | 📅 **개발 기간** | 2025.02 ~ 2025.05 |
-| 🛠️ **개발 도구** | C++, Unreal Engine 5 |
+| 🛠️ **개발 도구** | C++, Unreal Engine 5, Visual Studio, Git |
 | 📝 **게임 소개** | 최대 4인의 플레이어가 함께 재료를 전달/손질/조합하여 </br> 제한 시간 내에 최대한 많은 요리를 제출하는 협동 게임|
 | 🎯 **핵심 목표** | 협업 방식을 학습하고 멀티 플레이어 게임을 구현하는 방법을 습득 | | 
 | 📑 **주요 특징** | 데이터 기반 요리 컨텐츠 개발, 레벨 디자인, RPC / Replication | | 
@@ -508,24 +514,68 @@ ___
 
 **🚨 문제 상황**
 
-플레이어 상호작용으로 런타임에 생성되는 재료(Ingredient) 액터가 클라이언트 화면에서 보이지 않거나, 데이터(메시, 타입 등)가 비정상적으로 표시되는 문제가 발생했습니다. 원인은 SpawnActor 호출 시, 서버에서는 데이터 설정 전에 BeginPlay가 실행되고, 클라이언트에서는 데이터가 복제되기 전에 BeginPlay가 실행되는 등 초기화와 복제 타이밍의 불일치 때문이었습니다.
+플레이어 상호작용으로 런타임에 생성되는 재료(`Ingredient`) 액터가 클라이언트 화면에서 보이지 않거나, 데이터(메시, 타입 등)가 비정상적으로 표시되는 문제가 발생했습니다. 원인은 `SpawnActor` 호출 시, 서버에서는 데이터 설정 전에 `BeginPlay`가 실행되고, 클라이언트에서는 데이터가 복제되기 전에 `BeginPlay`가 실행되는 등 초기화와 복제 타이밍의 불일치 때문이었습니다.
 
 </br>
 
 **💭 해결 방안**
 
-액터 생성과 초기화를 분리하는 지연 스폰(Deferred Spawn) 방식을 도입했습니다. SpawnActorDeferred를 사용하여 액터를 메모리에 먼저 할당한 뒤, 필요한 Replicated 데이터(예: 재료 타입)를 설정하고, 마지막으로 FinishSpawning을 호출하여 BeginPlay가 실행되도록 했습니다. 이로써 BeginPlay 시점에는 모든 데이터가 안전하게 복제된 상태임을 보장했습니다.
+액터 생성과 초기화를 분리하는 지연 스폰(Deferred Spawn) 방식을 도입했습니다. `SpawnActorDeferred`를 사용하여 액터를 메모리에 먼저 할당한 뒤, 필요한 Replicated 데이터(예: 재료 타입)를 설정하고, 마지막으로 `FinishSpawning`을 호출하여 `BeginPlay`가 실행되도록 했습니다. 이로써 `BeginPlay` 시점에는 모든 데이터가 안전하게 복제된 상태임을 보장했습니다.
 
+**❌ 기존 방식 (SpawnActor)**
+```mermaid
+sequenceDiagram
+    participant Server
+    participant Network
+    participant Client
+    
+    Note over Server: SpawnActor 호출
+    Server->>Server: 액터 생성
+    Server->>Server: BeginPlay 실행 ⚠️
+    Server->>Server: 데이터 설정 (IngredientType 등)
+    Server->>Network: 액터 복제 시작
+    
+    Network->>Client: 액터 생성 알림
+    Client->>Client: 액터 생성
+    Client->>Client: BeginPlay 실행 ⚠️
+    Note over Client: 데이터 아직 복제 안됨!
+    Network-->>Client: 데이터 복제 (지연됨)
+    
+    Note over Client: 메시/타입 정보 없음화면에 안보이거나비정상 표시
+```
+
+**✅ 개선 방식 (SpawnActorDeferred)**
+```mermaid
+sequenceDiagram
+    participant Server
+    participant Network
+    participant Client
+    
+    Note over Server: SpawnActorDeferred 호출
+    Server->>Server: 액터 메모리 할당
+    Server->>Server: 데이터 설정 (IngredientType 등)
+    Server->>Server: FinishSpawning 호출
+    Server->>Server: BeginPlay 실행 ✅
+    Note over Server: 모든 데이터 준비 완료
+    Server->>Network: 액터 복제 시작
+    
+    Network->>Client: 액터 + 데이터 복제
+    Client->>Client: 액터 생성
+    Note over Client: 복제된 데이터 수신 완료
+    Client->>Client: BeginPlay 실행 ✅
+    
+    Note over Client: 메시/타입 정보 정상화면에 올바르게 표시
+```
 
 </br>
 
 **🔧구현 상세**
 
 - 서버: SpawnActorDeferred → Replicated 변수 설정 → FinishSpawning 호출 순서로 구현.
-    - []
+    - [Server 재료 스폰 코드](https://github.com/kabu0330/UE_Overcooked2/blob/fa2b9ce77865d74c9d8ebb40c070b3c568b2ac21/Overcooked2/Source/Overcooked2/Global/Component/SpawnManageComponent.cpp#L18-L38)
 
 - 클라이언트: BeginPlay에서 이미 복제된 데이터를 안전하게 사용하여 메시와 아이콘을 설정.
-    - []
+    - [Ingredient 초기화 코드](https://github.com/kabu0330/UE_Overcooked2/blob/fa2b9ce77865d74c9d8ebb40c070b3c568b2ac21/Overcooked2/Source/Overcooked2/LevelContent/Cook/Ingredient.cpp#L32-L107)
 
  **[💡 회고 및 개선점]** 이 경험을 통해 멀티플레이어 환경에서 객체의 생명주기(Lifecycle)와 네트워크 복제 순서를 이해하는 것이 얼마나 중요한지 깨달았습니다. 단순히 변수를 Replicated로 설정하는 것을 넘어, "언제" 복제되고 "언제" 사용되는지를 고려하는 설계 시각을 갖게 되었습니다.
 
@@ -553,26 +603,33 @@ ___
 * 김 - 완제품
 * 밥 - 끓이기
 
-재료는 타입과 상태로 손쉽게 정의할 수 있었습니다. 문제는 원작 게임은 조리 과정을 여러 번 거치는 재료가 존재한다는 
-점입니다. 해당 문제는 데이터 테이블의 구조체가 타입과 상태를 배열로 정의한다는 규칙을 추가하여 해결했습니다.
+재료는 타입과 상태로 손쉽게 정의할 수 있었습니다. 문제는 원작 게임은 조리 과정을 여러 번 거치는 재료가 존재한다는 점입니다. 해당 문제는 데이터 테이블의 구조체가 타입과 상태를 배열로 정의한다는 규칙을 추가하여 해결했습니다.
+
+<p align="center">
+ <img alt="이미지" src="readme\Ingredient.png" width = 90% >
+</p>
 
 </br>
 
-**2). 접시가 곧 요리다.**
+**2). 접시 == 요리**
 
-원작 게임의 재밌는 규칙 중 하나가, "재료의 조합은 접시 위에서만 가능하다"는 것입니다. 이 점에 착안해 요리라는 개념의 모든 기능을 `Plate` 클래스 하나로 정리했습니다. 이로써 요리 컨텐츠는 재료와 접시, 조리도구 세 개의 클래스로 컨텐츠를 완성할 수 있습니다.
+원작 게임의 재밌는 규칙 중 하나가, "재료의 조합은 접시 위에서만 가능하다"는 것입니다. 이 점에 착안해 요리라는 개념의 모든 기능을 접시(`Plate`) 클래스 하나로 정리했습니다. 이로써 요리 컨텐츠는 재료와 접시, 조리도구 세 개의 클래스로 컨텐츠를 완성할 수 있습니다.
 
 접시는 재료의 타입과 상태를 배열로 저장하고 해당 데이터를 서버에 넘겨 데이터 테이블에서 조회 후 메시만 바꾸는 객체입니다.
+
+<p align="center">
+ <img alt="이미지" src="readme\Recipe.png" width = 90% >
+</p>
 
 </br>
 
 **🔧구현 상세**
 
-* 재료 데이터 테이블
+* [재료 데이터 테이블 구현 코드](https://github.com/kabu0330/UE_Overcooked2/blob/fa2b9ce77865d74c9d8ebb40c070b3c568b2ac21/Overcooked2/Source/Overcooked2/Global/Data/IngredientDataTable.h#L11-L53)
 
-* 요리 데이터 테이블
+* [요리 데이터 테이블 구현 코드](https://github.com/kabu0330/UE_Overcooked2/blob/fa2b9ce77865d74c9d8ebb40c070b3c568b2ac21/Overcooked2/Source/Overcooked2/Global/Data/RecipeDataTable.h#L11-L36)
 
-* 레시피 대조
+* [요리 조합 검사 코드](https://github.com/kabu0330/UE_Overcooked2/blob/fa2b9ce77865d74c9d8ebb40c070b3c568b2ac21/Overcooked2/Source/Overcooked2/Global/OC2GameInstance.cpp#L354-L416)
 
 
  **[💡 회고 및 개선점]** 데이터 기반 설계를 통해 새로운 요리를 추가할 때 코드 수정 없이 데이터 테이블 행(Row)만 추가하면 되는 유연한 시스템을 구축할 수 있었습니다. 이를 통해 기획자가 직접 밸런싱과 콘텐츠 추가를 할 수 있는 환경을 마련하여 팀 전체의 개발 효율성을 높였습니다.
@@ -611,11 +668,11 @@ ___
 
 </br>
 
-___
 
-### 🔭 [DirectX 11] 2D 액션 게임 프로젝트 (Hollow Knight 모작)
-### 📸 Gif
 
+## 📄 4. [Custom Engine Projects] DirectX 11 2D 'HollowKnight' 모작 / WinAPI 'The Binding of Isaac' 모작
+
+### [DirectX 11] 2D 'HollowKnight' 모작
 <p align="center">
  <img alt="이미지" src="readme\HollowKnight.gif">
 </p>
@@ -623,33 +680,27 @@ ___
 * 🔗 [Youtube](https://youtu.be/vi6KnUeedrs?si=nJsI59Pi36cGy-Rn)
 * 🔗 [Github](https://github.com/kabu0330/DX_HollowKnight2)
 
-### 📋 프로젝트 정보
-<details>
-<summary><b>📖 상세 정보 펼치기</b></summary>
+</br>
+
+📋 프로젝트 정보
 
 | 항목 | 내용 | 항목 | 내용 |
 |:------|:-----|:-----|:-----|
 | 🖥️ **플랫폼** | PC (Windows) | 🎮 **장르** | 액션, 메트로베니아 |
 | 👤 **개발 인원** | 1인 | 📅 **개발 기간** | 2024.11 ~ 2025.02 |
-| 🛠️ **개발 도구** | C++|
-| 📝 **게임 소개** | 액션 기반 전투 게임|
+| 🛠️ **개발 도구** | C++, Visual Studio, Git, ImGUI |
+| 📝 **게임 소개** | 액션 기반 전투 게임 |
+| 🎯 **핵심 목표** | DirectX 11를 활용한 게임 개발 | | 
+| 📑 **주요 특징** | Actor-Component 패턴(Actor/Scene, FSM, Renderer, Collision, TimeEvent 등) | | 
 
-### 💻 작업 내용
 
-| 분류 | 상세 내용 |
-|:-----|:----------|
-| **컨텐츠** | 캐릭터, 몬스터, 맵, 이펙트 및 스킬, UI |
-| **기타** | FSM, 멀티 스레드 로딩 |
-
-</details>
-
-### 🎯 작업 목표
+**🎯 작업 목표**
 **상용 엔진 프레임워크 이해 및 그래픽 프로그래밍 기초 습득**
 - 게임 엔진의 구조 분석 및 활용
 - Actor-Component 패턴 기반 게임 제작
 - 이벤트 기반 상태 관리(FSM Component)
 
-### 📊 핵심 성과
+**📊 핵심 성과**
 - ✅ UE5 프레임워크 구조 이해 (Engine Core, Level, GameMode, Actor, Component)
 - ✅ DirectX 11 렌더링 파이프라인 흐름 이해
 - ✅ 상속 기반 기능 구현(AEffect, ASkill, AParticle, AKnightSkill, AMonsterSkill)
@@ -662,8 +713,7 @@ ___
 
 ___
 
-### 🔭 [Win API] 슈팅 게임 프로젝트(The Binding of Isaac 모작)
-### 📸 Gif
+**[WinAPI] 'The Binding of Isaac'모작**
 
 <p align="center">
  <img alt="이미지" src="readme\Isaac.webp">
@@ -672,24 +722,18 @@ ___
 * 🔗 [Youtube](https://youtu.be/Uf7M80sdum0?si=vpmTN5Q4YahdKVrY)
 * 🔗 [Github](https://github.com/kabu0330/WinAPI)
 
-### 📋 프로젝트 정보
-<details>
-<summary><b>📖 상세 정보 펼치기</b></summary>
+</br>
 
+📋 프로젝트 정보
 | 항목 | 내용 | 항목 | 내용 |
 |:------|:-----|:-----|:-----|
 | 🖥️ **플랫폼** | PC (Windows) | 🎮 **장르** | 슈팅 |
 | 👤 **개발 인원** | 1인 | 📅 **개발 기간** | 2024.07 ~ 2024.11 |
-| 🛠️ **개발 도구** | C++|
+| 🛠️ **개발 도구** | C++, Visual Studio, Git |
 | 📝 **게임 소개** | 아이템을 수집하고 조합하며 슈팅 게임 |
-
-### 💻 작업 내용
-
-| 분류 | 상세 내용 |
-|:-----|:----------|
-| **컨텐츠** | 캐릭터, 몬스터, 맵, 이펙트 및 스킬, UI |
-
-</details>
+| 📝 **게임 소개** | 스태미나 기반 전투 액션 게임 | | 
+| 🎯 **핵심 목표** | 게임 기능 구현 학습, 자료구조 활용, 선형대수학 활용 | | 
+| 📑 **주요 특징** | 상속 기반 구조, Enum-State | | 
 
 ### 🎯 작업 목표
 **게임을 제작하는 기본 구조 학습**
@@ -705,10 +749,6 @@ ___
 > 💡 **배운 점**: 어떻게 프로그램이 운영체제에서 동작하는지에 대한 밑그림을 그릴 수 있었습니다. 게임을 직접 제작해보며 물리 세계를 구현하는데 수학이 어떻게 쓰이는지 이해할 수 있게 되었습니다.
 
 </br>
-
-
-
-
 
 ___
 
