@@ -25,7 +25,7 @@
 해당 글은 문제, 해결 방안, 구현 상세 순으로 기재되어 있습니다. 프로젝트 종료 후 다시 코드리뷰를 해보며 과거의 작업물을 되돌아 본 시점의 생각을 회고로 중간에 삽입했습니다. 참고 부탁드립니다.
 
 
-## 📄 링크
+## 📄 레포지토리 링크
 - 🔗 1. [[UE5] 액션 게임 프로젝트 (25.10 ~ 25. 11)](https://github.com/kabu0330/UE_Soul2) 
 - 🔗 2. [[UE5, AWS] Dedicated Server 프로젝트 (25.05 ~ 25.08)](https://github.com/kabu0330/FPS_with_DedicatedServer) 
 - 🔗 3. [[UE5 팀 프로젝트] 시뮬레이션 게임 (Overcooked! 2 모작) (25.02 ~ 25.05)](https://github.com/kabu0330/UE_Overcooked2) 
