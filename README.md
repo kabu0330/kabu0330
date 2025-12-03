@@ -311,7 +311,7 @@ ___
 | 🛠️ **기술 스택** | C++, Node.js, Unreal Engine 5, AWS, Rider, Git |
 | 📝 **게임 소개** | 최대 10인의 플레이어가 경쟁하는 1인칭 슈팅게임 |
 | 🎯 **핵심 목표** | 서버-클라이언트 아키텍처 및 AWS 클라우드 인프라 실전 경험 | | 
-| 📑 **주요 특징** | AWS SDK C++ 빌드 및 UE 프로젝트 연동, SeamlessTravel, 네트워크 대역폭 최적화  | | 
+| 📑 **주요 특징** | AWS SDK C++ 빌드 및 UE 연동, SeamlessTravel, 네트워크 대역폭 최적화  | | 
 
 </br>
 
@@ -691,7 +691,7 @@ ___
 | 🛠️ **개발 도구** | C++, Visual Studio, Git, ImGUI |
 | 📝 **게임 소개** | 액션 기반 전투 게임 |
 | 🎯 **핵심 목표** | DirectX 11를 활용한 게임 개발 | | 
-| 📑 **주요 특징** | Actor-Component 패턴(Actor/Scene, FSM, Renderer, Collision, TimeEvent 등) | | 
+| 📑 **주요 특징** | Actor-Component 패턴(Actor/Scene, FSM, Renderer, Collision 등) | | 
 
 
 **🎯 작업 목표**
@@ -699,6 +699,8 @@ ___
 - 게임 엔진의 구조 분석 및 활용
 - Actor-Component 패턴 기반 게임 제작
 - 이벤트 기반 상태 관리(FSM Component)
+
+</br>
 
 **📊 핵심 성과**
 - ✅ UE5 프레임워크 구조 이해 (Engine Core, Level, GameMode, Actor, Component)
@@ -735,13 +737,14 @@ ___
 | 🎯 **핵심 목표** | 게임 기능 구현 학습, 자료구조 활용, 선형대수학 활용 | | 
 | 📑 **주요 특징** | 상속 기반 구조, Enum-State | | 
 
-### 🎯 작업 목표
+**🎯 작업 목표**
 **게임을 제작하는 기본 구조 학습**
 - 상속 구조를 활용한 메모리 관리
 - Vector, Sin, Cos 등 게임 제작에 필요한 수학 활용
 
+</br>
 
-### 📊 핵심 성과
+**📊 핵심 성과**
 - ✅ Windows에서 게임 엔진을 구동하는 원리 이해(WinProc, PeekMessage, HDC, Bitmap 등)
 - ✅ 상속 구조와 RTTI의 활용을 통한 기능 구현
 - ✅ 자료구조(vector, list, map)를 활용한 게임 제작 기초 이해
