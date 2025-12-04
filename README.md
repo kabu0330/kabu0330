@@ -327,7 +327,7 @@ ___
 
 **🚨 문제 상황**
 
-서버에 접속한 플레이어들을 관리하기 위해 일반 배열(TArray)을 사용하게 될 경우, 하나의 수정 사항이 발생해도 배열 전체를 네트워크 전송되어 심각한 대역폭 낭비가 발생합니다. </br> 해당 문제를 변경사항이 발생한 원소만 특정하여 네트워크 전송을 한다면 획기적으로 대역폭 낭비를 줄일 수 있습니다.
+서버에 접속한 플레이어들을 관리하기 위해 일반 배열(TArray)을 사용하게 될 경우, 하나의 수정 사항이 발생해도 배열 전체를 네트워크 전송되어 심각한 대역폭 낭비가 발생합니다. </br> 해당 문제를 변경사항이 발생한 원소만 특정(`MarkItemDirty`)하여 네트워크 전송을 한다면 획기적으로 대역폭 낭비를 줄일 수 있습니다.
 
 
 </br>
@@ -693,23 +693,126 @@ ___
 | 🎯 **핵심 목표** | DirectX 11를 활용한 게임 개발 | | 
 | 📑 **주요 특징** | Actor-Component 패턴(Actor/Scene, FSM, Renderer, Collision 등) | | 
 
+</br>
 
-**🎯 작업 목표**
-**상용 엔진 프레임워크 이해 및 그래픽 프로그래밍 기초 습득**
-- 게임 엔진의 구조 분석 및 활용
-- Actor-Component 패턴 기반 게임 제작
-- 이벤트 기반 상태 관리(FSM Component)
+게임 엔진을 구현해보며 프로그램이 어떻게 운영체제에서 실행되는지 머릿 속에 그려볼 수 있었습니다. 언리얼 엔진의 프레임워크를 흉내내며 **UE5의 설계 철학**을 이해하게 되었습니다. "왜 상속 기반 구조로 구성되었는가", "어떻게 Component가 Actor에 부착하여 동작하는가"와 같은 질문에 답하며, UE5로 돌아왔을 때 단순히 "사용"하는 것이 아니라 "이해하고 활용"할 수 있게 되었습니다.
+
+
+* 엔진 프레임워크
+<p align="center">
+ <img alt="이미지" src="readme\Engine.png" width = 90% >
+</p>
+
+<p align="center">
+ <img alt="이미지" src="readme\Rendering.png" width = 90% >
+</p>
 
 </br>
 
-**📊 핵심 성과**
-- ✅ UE5 프레임워크 구조 이해 (Engine Core, Level, GameMode, Actor, Component)
-- ✅ DirectX 11 렌더링 파이프라인 흐름 이해
-- ✅ 상속 기반 기능 구현(AEffect, ASkill, AParticle, AKnightSkill, AMonsterSkill)
-- ✅ 컴포넌트 기반 기능 구현(UFSMStateComponent, UTimeEventComponent, UCollision, USpriteRenderer)
-- ✅ 멀티스레드 비동기 리소스 로딩 구현 (초기 실행 시간 단축)
+### 기능구현
+#### 🛠️ 1. 이벤트 기반 FSM
 
-> 💡 **배운 점**: 엔진을 분석하며 **UE5의 설계 철학**을 이해하게 되었습니다. "왜 Actor와 Component를 분리하는가", "왜 Tick이 필요한가" 같은 질문에 답하며, UE5로 돌아왔을 때 단순히 "사용"하는 것이 아니라 "이해하고 활용"할 수 있게 되었습니다.
+**🚨 문제 상황**
+
+일반적인 `Switch-Case`와 `bool`변수 기반의 상태 관리 방식은 상태가 증가할수록, 복잡도가 높아질수록 유지보수가 어려웠습니다. 특히 플레이어에서 발생하는 상태 문제가 발생했을 때, 이를 디버깅하여 추적하는 과정에서 해당 상태에서 실행될 수 있는 모든 로직을 뒤져야했습니다.상태에 따라 특정 구간(코드)만 따로 관리할 수 있는 방법이 간절했습니다.
+
+
+</br>
+
+**💭 해결 방안**
+
+C++ `std::function`을 활용하여 상태를 이벤트(함수 포인터) 단위로 관리하는 FSM 구조로 변경했습니다. `enum class`로 정의한 상태를 `int`로 캐스팅하여 Key로 사용하고 콜백 함수(Enter/Stay/End)를 Value로 저장하여 상태가 바뀌면 자동으로 콜백 함수가 호출되며 바인딩한 세 개의 함수를 통해 상태 하나를 관리하는 방식입니다.
+
+</br>
+
+<p align="center">
+ <img alt="이미지" src="readme\FSM.png" width = 90% >
+</p>
+
+
+</br>
+
+**🔧구현 상세**
+
+* 구조: `FSMStateManager` 컴포넌트는 State를 Key로, Enter, Update, End 함수(Lambda Function)를 Value로 가지는 `std::map`을 관리합니다.
+
+* 이벤트 바인딩: 상태 전환 시 `ChangeState()` 함수 내부에서 이전 상태의 End 콜백을 호출하고, 새로운 상태의 Enter 콜백을 호출합니다.
+
+* [FSMStateManager 구현 코드](https://github.com/kabu0330/DX_HollowKnight2/blob/fd06b77a8f3283c254f2a705d03b0a267235d72d/DX_HollowKnight/EngineBase/FSMStateManager.h#L7-L84) / [FSM 초기 설정 코드](https://github.com/kabu0330/DX_HollowKnight2/blob/fd06b77a8f3283c254f2a705d03b0a267235d72d/DX_HollowKnight/Contents/Knight_FSM.cpp#L527-L535) / [FSM 활용 코드](https://github.com/kabu0330/DX_HollowKnight2/blob/fd06b77a8f3283c254f2a705d03b0a267235d72d/DX_HollowKnight/Contents/Knight_FSM.cpp#L8-L41)
+
+ **[💡 회고 및 개선점]** FSM의 Start를 항상 애니메이션 재생에 할당시켜 상태 전환 시 최초 초기화 로직을 Tick마다 호출되는 Stay 함수에서 `bool`값으로 통제한 점이 아쉽습니다. 조금만 더 생각을 해보면 Start를 `std::vector`로 만들어서 애니메이션, 사운드, 이펙트, 변수 초기화 등 모두 손쉽게 처리할 수 있었을텐데 당시에는 이벤트 방식의 동작 원리를 이해하고 사용하는 것에도 벅차 리팩토링을 생각하지 못했었습니다.
+
+</br>
+
+#### 🛠️ 2. Time Event Component
+
+**🚨 문제 상황**
+
+게임 로직을 구현하다보면, 시간 차를 두고 로직이 호출되면 좋았을 상황들이 계속해서 연출되었습니다. 이를 `Tick` 함수 내에서 일일이 관리한다면 XXDuration += DeltaTime; if (XXDuration >= XXCooldown) Fire();와 같이 조건을 검사하는 로직들로 관리가 어려워집니다.
+
+</br>
+
+**💭 해결 방안**
+
+언리얼 엔진의 `TimerManager` 아이디어를 차용하되, 정말 타이머 로직 구현이 필요한 액터 클래스만 따로 사용할 수 있도록 `ActorComponent`를 상속받아 `TimeEventComponent`를 구현했습니다. 액터에 컴포넌트를 부착하기만 하면, 시간차 로직은 `TimeEventComponent`가 엔진 단에 있는 `Actor`의 `Tick` 로직에서 deltaTime 값을 끌어와 `ComponentTick`에서 시간을 계산하여 바인딩된 함수를 호출합니다.
+
+</br>
+
+<p align="center">
+ <img alt="이미지" src="readme\TimeEvent.png" width = 90% >
+</p>
+
+</br>
+
+**🔧구현 상세**
+
+* 자료구조: `std::list<FTimeEvent>`를 사용하여 다수의 타이머 이벤트를 관리합니다.
+    - 바인딩된 함수 호출 이후 삭제를 시켜야 하므로 삽입/삭제가 빈번할 것을 고려해 `list` 자료구조를 채택했습니다.
+* 라이프 사이클
+    - Update : `ComponentTick`에서 델타 티임을 누적하며 `TimeUpdateEvent`를 실행합니다.
+    - End : 시간이 만료되면 `TimeEndEvent`를 호출합니다.
+* 안전한 순회 
+    - 리스트 순회 중 콜백 함수가 삭제되거나 만료될 경우를 대비해, 이터레이터(`iterator`)를 사용하여 안전하게 원소를 `erase`하거나 갱신하도록 구현했습니다.
+* [구현 코드](https://github.com/kabu0330/DX_HollowKnight2/blob/fd06b77a8f3283c254f2a705d03b0a267235d72d/DX_HollowKnight/EngineCore/TimeEventComponent.cpp#L38-L84) / [활용 코드](https://github.com/kabu0330/DX_HollowKnight2/blob/fd06b77a8f3283c254f2a705d03b0a267235d72d/DX_HollowKnight/Contents/FalseKnight.cpp#L621-L630)
+
+</br>
+
+#### 🛠️ 3. Unity 메타파일 자동 파싱 및 로드 시스템
+
+**🚨 문제 상황**
+
+자체 엔진을 통해 게임 개발을 할 때 가장 큰 어려움은 리소스 문제였습니다. 원하는 리소스를 구하기도 어려울 뿐만 아니라 이를 분류하고 관리하는 과정까지 어려움이 있었습니다. 모작할 게임을 제가 선택하는 것이 아닌 리소스가 허락된 게임에게 선택받아야되는 느낌입니다. 
+
+</br>
+
+**💭 해결 방안**
+
+이러한 문제를 해소하고자 Unity meta 파일에 들어있는 스프라이트 데이터를 파싱하여 리소스를 등록시키는 파이프라인을 구축했습니다.
+
+</br>
+
+<p align="center">
+ <img alt="이미지" src="readme\Parse.png" width = 90% >
+</p>
+
+</br>
+
+**🔧구현 상세**
+
+* 파일 파싱: `UEngineSprite::CreateSpriteToMeta` 함수에서 Unity의 .meta 텍스트 파일을 읽어옵니다. 문자열 파싱을 통해 rect, width, height, pivot 정보를 추출합니다.
+
+* 좌표계 변환: Unity(좌하단 원점)와 DirectX(좌상단 원점)의 UV 좌표계 차이를 해결하기 위해 SpriteData.CuttingPos.Y 계산 시 텍스처 전체 높이를 고려하여 Y축 반전 연산을 적용했습니다.
+
+* 자동화: 특정 폴더에 리소스를 넣으면 엔진이 실행될 때 자동으로 메타 파일을 탐색하여 Atlas Texture를 생성하도록 자동화했습니다.
+
+* [구현 코드](https://github.com/kabu0330/DX_HollowKnight2/blob/fd06b77a8f3283c254f2a705d03b0a267235d72d/DX_HollowKnight/EngineCore/EngineSprite.cpp#L53-L147) / [사용 코드](https://github.com/kabu0330/DX_HollowKnight2/blob/main/DX_HollowKnight/Contents/ContentsResource.cpp#L169-L198)
+
+
+</br>
+
+#### 프로젝트 관련 글(Blog)
+
+* [DirectX 기초 공부](https://kabu0129.tistory.com/category/WindowsAPI/DirectX%2011)
 
 </br>
 
