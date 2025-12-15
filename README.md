@@ -35,9 +35,11 @@
 
 ## 📜 목차
 1. [Unreal Engine 5] Action RPG Project "Soul"
-2. [[Dedicated Server Project] FPS Game](#-2-dedicated-server-project-fps-game)
+2. [[Dedicated Server] FPS Game Project](#-2-dedicated-server-project-fps-game)
 3. [[Team Project] Unreal Engine ver 'Overooked! 2' 모작](#-3-team-project-unreal-engine-ver-overooked-2-모작)
-4. [[Custom Engine Projects] DirectX 11 2D 'HollowKnight' 모작 / WinAPI 'The Binding of Isaac' 모작](#-4-custom-engine-projects-directx-11-2d-hollowknight-모작--winapi-the-binding-of-isaac-모작)
+4. [[Custom Engine Projects] DirectX 11 2D 'HollowKnight' 모작](#-4-custom-engine-projects-directx-11-2d-hollowknight-모작)
+5. [Unity] Project TinyRush (개발 중) 
+    * [Notion](https://www.notion.so/Project-Tiny-Rush-Technical-Spec-2c14969443dc807abdebca937cabb76d?source=copy_link)
 
 </br>
 
@@ -70,6 +72,40 @@
 </br>
 
 ### 기능 구현
+
+<p align="center">
+ <img alt="이미지" src="readme\Inventory.png">
+</p>
+
+<p align="center">
+ <img alt="이미지" src="readme\Targeting.png">
+</p>
+
+<p align="center">
+ <img alt="이미지" src="readme\montionwarp.png">
+</p>
+
+<p align="center">
+ <img alt="이미지" src="readme\HitReaction.png">
+</p>
+
+<p align="center">
+ <img alt="이미지" src="readme\Guard.png">
+</p>
+
+<p align="center">
+ <img alt="이미지" src="readme\InteractAnim.png", width = 100%>
+</p>
+
+<p align="center">
+ <img alt="이미지" src="readme\behaviorTree.png">
+</p>
+
+<p align="center">
+ <img alt="이미지" src="readme\PostProcess.png">
+</p>
+
+
 #### 🛠️ 1. Tick 의존성 해소와 이벤트 기반 설계
 
 **🚨 문제 상황**
@@ -323,6 +359,24 @@ ___
 
 
 ### 기능구현
+
+<p align="center">
+ <img alt="이미지" src="readme\cognito.png">
+</p>
+
+<p align="center">
+ <img alt="이미지" src="readme\ready.png">
+</p>
+
+<p align="center">
+ <img alt="이미지" src="readme\killdeath.png">
+</p>
+
+<p align="center">
+ <img alt="이미지" src="readme\db.png">
+</p>
+
+
 #### 🛠️ 1. 네트워크 대역폭 최적화
 
 **🚨 문제 상황**
@@ -510,6 +564,11 @@ Dedicated Sever와 관련한 작업은 블로그에 과정을 기록해두었습
 
 
 ### 기능구현
+
+<p align="center">
+ <img alt="이미지" src="readme\overcookedIngame.png">
+</p>
+
 #### 🛠️ 1. 동적 액터의 네트워크 동기화와 타이밍 이슈 해결
 
 **🚨 문제 상황**
@@ -670,9 +729,8 @@ ___
 
 
 
-## 📄 4. [Custom Engine Projects] DirectX 11 2D 'HollowKnight' 모작 / WinAPI 'The Binding of Isaac' 모작
+## 📄 4. [Custom Engine Projects] DirectX 11 2D 'HollowKnight' 모작
 
-### [DirectX 11] 2D 'HollowKnight' 모작
 <p align="center">
  <img alt="이미지" src="readme\HollowKnight.gif">
 </p>
@@ -698,6 +756,8 @@ ___
 게임 엔진을 구현해보며 프로그램이 어떻게 운영체제에서 실행되는지 머릿 속에 그려볼 수 있었습니다. 언리얼 엔진의 프레임워크를 흉내내며 **UE5의 설계 철학**을 이해하게 되었습니다. "왜 상속 기반 구조로 구성되었는가", "어떻게 Component가 Actor에 부착하여 동작하는가"와 같은 질문에 답하며, UE5로 돌아왔을 때 단순히 "사용"하는 것이 아니라 "이해하고 활용"할 수 있게 되었습니다.
 
 
+</br>
+
 * 엔진 프레임워크
 <p align="center">
  <img alt="이미지" src="readme\Engine.png" width = 90% >
@@ -710,6 +770,11 @@ ___
 </br>
 
 ### 기능구현
+
+<p align="center">
+ <img alt="이미지" src="readme\hollowknight.png" >
+</p>
+
 #### 🛠️ 1. 이벤트 기반 FSM
 
 **🚨 문제 상황**
@@ -817,47 +882,6 @@ C++ `std::function`을 활용하여 상태를 이벤트(함수 포인터) 단위
 </br>
 
 ___
-
-**[WinAPI] 'The Binding of Isaac'모작**
-
-<p align="center">
- <img alt="이미지" src="readme\Isaac.webp">
-</p>
-
-* 🔗 [Youtube](https://youtu.be/Uf7M80sdum0?si=vpmTN5Q4YahdKVrY)
-* 🔗 [Github](https://github.com/kabu0330/WinAPI)
-
-</br>
-
-📋 프로젝트 정보
-| 항목 | 내용 | 항목 | 내용 |
-|:------|:-----|:-----|:-----|
-| 🖥️ **플랫폼** | PC (Windows) | 🎮 **장르** | 슈팅 |
-| 👤 **개발 인원** | 1인 | 📅 **개발 기간** | 2024.07 ~ 2024.11 |
-| 🛠️ **개발 도구** | C++, Visual Studio, Git |
-| 📝 **게임 소개** | 아이템을 수집하고 조합하며 슈팅 게임 |
-| 📝 **게임 소개** | 스태미나 기반 전투 액션 게임 | | 
-| 🎯 **핵심 목표** | 게임 기능 구현 학습, 자료구조 활용, 선형대수학 활용 | | 
-| 📑 **주요 특징** | 상속 기반 구조, Enum-State | | 
-
-**🎯 작업 목표**
-**게임을 제작하는 기본 구조 학습**
-- 상속 구조를 활용한 메모리 관리
-- Vector, Sin, Cos 등 게임 제작에 필요한 수학 활용
-
-</br>
-
-**📊 핵심 성과**
-- ✅ Windows에서 게임 엔진을 구동하는 원리 이해(WinProc, PeekMessage, HDC, Bitmap 등)
-- ✅ 상속 구조와 RTTI의 활용을 통한 기능 구현
-- ✅ 자료구조(vector, list, map)를 활용한 게임 제작 기초 이해
-
-> 💡 **배운 점**: 어떻게 프로그램이 운영체제에서 동작하는지에 대한 밑그림을 그릴 수 있었습니다. 게임을 직접 제작해보며 물리 세계를 구현하는데 수학이 어떻게 쓰이는지 이해할 수 있게 되었습니다.
-
-</br>
-
-___
-
 
 <h3 align="left">Connect with me:</h3>
 <p align="left">
