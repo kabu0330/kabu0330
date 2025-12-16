@@ -1,28 +1,17 @@
 # 💻 클라이언트 프로그래머 포트폴리오
 
-> **C++에서 Windows API, DX, Unreal을 넘어 Unity까지**
+> **"DirectX 엔진 개발 경험을 통해, 엔진의 동작 원리와 효율적인 구조를 고민하는 클라이언트 프로그래머 류성민입니다."**
 
-안녕하세요, 게임 클라이언트 프로그래머 류성민입니다. 저는 무언가를 직접 만들고 타인에게 경험을 제공하며 피드백을 받는 것을 좋아하는 사람입니다. 
+* Core Competency: C/C++, C#, Unreal Engine 5, Unity 6, DirectX 11, AWS (GameLift/Lambda)
 
-경영학을 전공했다는 이유로 군에서 재정행정병이란 특수병과로 차출되어 매일 밤 사단의 출납 업무로 밤샘 야근을 피하기 위해 죽기살기로 엑셀을 사용했던 경험 덕분에, 엑셀을 활용해 제가 필요한 기능은 함수를 조합해 자동화 툴로 만들 수준이 되었습니다.
+* Strength:
 
-그 덕분에 여러 직장에서 능력을 인정받아 업무 프로세스를 만들고 그 기능을 직장 동료들이 사용하며 잘 사용하고 있다는 긍정적인 피드백을 줄 때마다 내면에서 끓어오르는 쾌감을 느꼈습니다. 자신감도 생겼고요. 그래서 개발이라는 세계에 뛰어들었습니다.
+    * Tick 의존성을 제거한 Event-Driven 아키텍처 설계 능력
 
-많은 개발 업무 중에 게임을 선택한 것은, 20여 년 전의 제가 선망했던 꿈이기 때문입니다. 
+    * AWS GameLift 기반의 Dedicated Server 및 Serverless 백엔드 구축 경험
 
-</br>
+    * Data-Driven 설계를 통한 기획 데이터와 로직의 완벽한 분리
 
-저는 24년 6월부터 현재까지 C/C++ 언어 공부부터 시작해 Windows API, DirectX 11, Unreal Engine을 활용해 게임 모작을 포함하여 5종의 프로젝트를 개발했습니다.
-
-이 과정에서 게임 엔진을 어떻게 Windows OS 위에서 프레임을 돌리고 입력을 처리하는지, 렌더링 파이프라인에서 어떻게 메시와 머티리얼이 등장하고 드로우콜을 줄이기 위해 인스턴싱 기법이 등장했는지 등을 구현해보며 지식을 쌓아나갔습니다.
-
-또 Actor-Component 구조를 구현하고 활용해보며 Unreal Engine의 ActorComponent와 SceneComponent의 구조를 이해할 수 있었고, FSM을 std::function 기반으로 구현해보며 이벤트 방식의 편리함을 실감했습니다.
-
-팀원과 함께 언리얼 엔진을 활용한 모작 게임 프로젝트를 수행하며 프로그래머가 협업하는 방법을 배워나갔고, AWS EC2와 GameLift를 활용해 언리얼 엔진 위에 Dedicated Server 모듈을 만들어보며 클라이언트-서버 로직을 어떻게 분리하고 관리해 나가는지 엿볼 수 있었습니다.
-
-현재는 Unity Engine으로 Android AppStore 출시를 목표로 개발을 진행 중입니다.
-
-해당 글은 문제, 해결 방안, 구현 상세 순으로 기재되어 있습니다. 프로젝트 종료 후 다시 코드리뷰를 해보며 과거의 작업물을 되돌아 본 시점의 생각을 회고로 중간에 삽입했습니다. 참고 부탁드립니다.
 
 
 ## 📄 레포지토리 링크
@@ -69,6 +58,25 @@
 `Tick` 사용을 최소화하고, 입력과 애니메이션 이벤트(`AnimNotify`)를 트리거로 로직을 순환시키는 이벤트 기반(Event-Driven) 구조를 목표로 삼았습니다.
 
 
+핵심 기술적 성취 (Key Achievements)
+
+* Zero-Tick Architecture:
+
+    * Tick() 사용을 배제하고 Delegate와 AnimNotify를 활용한 완전한 Event-Driven 구조 구축.
+
+    * 결과: 유휴 상태(Idle)에서의 CPU 점유율 최소화 및 로직 추적 용이성 확보.
+
+* OCP(개방-폐쇄 원칙) 기반 전투 시스템:
+
+    * 거대한 Character 클래스를 ISoulCombat, ISoulInteract 등 인터페이스로 분리(ISP).
+
+    * 결과: 신규 몬스터/무기 추가 시 기존 코드 수정 없이 확장 가능하도록 결합도(Coupling) 제거.
+
+* Data-Driven Skill System:
+
+    * DataAsset과 GameplayTag를 활용해 코드 컴파일 없이 스킬 속성(데미지, 모션, 이펙트) 제어.
+
+
 </br>
 
 ### 기능 구현
@@ -105,6 +113,13 @@
  <img alt="이미지" src="readme\PostProcess.png">
 </p>
 
+</br>
+
+___
+
+
+<details>
+<summary> 1. Tick 의존성 해소와 이벤트 기반 설계 (클릭) </summary><p>
 
 #### 🛠️ 1. Tick 의존성 해소와 이벤트 기반 설계
 
@@ -194,6 +209,13 @@ UI(UserWidget)는 캐릭터의 존재를 알지만, 캐릭터는 UI의 존재를
 
 ___
 
+
+</details>
+
+
+<details>
+<summary> 2. DataAsset / DataTable, 코드 수정 없이 무기 타입 및 스킬 추가 (클릭) </summary><p>
+
 #### 🛠️ 2. DataAsset / DataTable, 코드 수정 없이 무기 타입 및 스킬 추가
 
 **🚨 문제 상황**
@@ -234,6 +256,11 @@ ___
 
 ___
 
+</details>
+
+<details>
+<summary> 3. 입력 타이밍 기반(Perfect/Mercy) 콤보 시스템 (클릭) </summary><p>
+
 #### 🛠️ 3. 입력 타이밍 기반(Perfect/Mercy) 콤보 시스템
 
 **🚨 문제 상황**
@@ -270,6 +297,11 @@ ___
 </br>
 
 ___
+
+</details>
+
+<details>
+<summary> 4. [리팩토링] 인터페이스 도입 (클릭) </summary><p>
 
 #### 🛠️ 4. [리팩토링] 인터페이스 도입
 
@@ -315,6 +347,10 @@ ___
 
 </br>
 
+
+</details>
+
+
 #### 프로젝트 관련 글(Blog)
 
 * [인벤토리 시스템과 UI](https://kabu0129.tistory.com/378)
@@ -351,9 +387,18 @@ ___
 
 </br>
 
-※ 이 프로젝트는 서버에 대한 목적의 프로젝트로, FPS 컨텐츠 코드는 거의 작성하지 않았습니다.
 
 서버에 대한 개념을 이해하고자 AWS 서비스(EC2, GameLift, Lambda, Cognito, CloudWatch, DynamoDB)를 활용해 데디케이티드 서버를 구축하고 사용자 관리, 세션, 토큰, 서버리스 아키텍처, DB 등 개념을 이해하고 언리얼 엔진과 연동해 언리얼 엔진의 구조 안에서 서버를 구축하고 서버-클라이언트 간 로직을 분리하고 결합하며 게임을 완성해나갔습니다.
+
+* 목표: 상용 게임 수준의 라이브 서비스 아키텍처 구축 (매치메이킹, DB, 로그)
+
+* 기술적 도전 & 해결:
+
+    * Network Bandwidth Optimization: FFastArraySerializer를 구현하여 변경된 데이터(Delta)만 전송, 배열 복제 대비 네트워크 부하 감소.
+
+    * Seamless Travel Data Persistence: 레벨 전환 시 소실되는 데이터를 GameInstanceSubsystem과 PlayerState::CopyProperties 재정의를 통해 보존 파이프라인 구축.
+
+    * Serverless Matchmaking: EC2 상시 구동 비용 절감을 위해 AWS Lambda + API Gateway 기반의 온디맨드 매치메이킹 시스템 구현.
 
 </br>
 
@@ -376,6 +421,13 @@ ___
  <img alt="이미지" src="readme\db.png">
 </p>
 
+
+</br>
+
+___
+
+<details>
+<summary> 1. 네트워크 대역폭 최적화 (클릭) </summary><p>
 
 #### 🛠️ 1. 네트워크 대역폭 최적화
 
@@ -408,6 +460,11 @@ ___
 </br>
 
 ___
+
+</details>
+
+<details>
+<summary> 2. Seamless Travel과 데이터 보존 (클릭) </summary><p>
 
 #### 🛠️ 2. Seamless Travel과 데이터 보존
 
@@ -459,6 +516,12 @@ ___
 </br>
 
 ___
+
+</details>
+
+
+<details>
+<summary> 3. 서버리스(Serverless) 기반 백엔드 구축 (클릭) </summary><p>
 
 #### 🛠️ 3. 서버리스(Serverless) 기반 백엔드 구축
 
@@ -523,7 +586,7 @@ Dedicated Server는 게임 플레이 자체에 집중해야 하므로, 사용자
 
 </br>
 
-
+</details>
 
 #### 프로젝트 관련 글(Blog)
 
@@ -560,6 +623,26 @@ Dedicated Sever와 관련한 작업은 블로그에 과정을 기록해두었습
 
 언리얼 엔진을 본격적으로 학습함과 동시에 처음으로 협업을 통해 하나의 게임을 완성시켜나가는 과정을 경험했습니다. 처음으로 멀티플레이 게임에 대해 학습하며 동기화 이슈에 대해 끊임없이 고민하고 해결해나가며 네트워크 게임의 구조를 깊이 이해하는 시간이었습니다. 이 과정에서 버전 관리의 중요성과 충돌 문제를 해결하는 방법을 배웠고, Pork / Full Request 협업 방식과 git stash에 대해 알게되었습니다.
 
+* 목표: 6인 협업을 통한 실시간 네트워크 멀티플레이 동기화 및 데이터 기반(Data-Driven) 상호작용 시스템 구축.
+
+* 기술적 도전 & 해결 :
+
+    * Lifecycle-Aware Network Spawning (객체 생명주기 제어):
+
+        * 문제: SpawnActor 직후 서버의 데이터 복제(Replication)보다 클라이언트의 BeginPlay가 먼저 실행되어, 초기화되지 않은 데이터(재료 타입 등)로 인해 렌더링 오류가 발생하는 Race Condition 확인.
+
+        * 해결: **SpawnActorDeferred**를 도입하여 [메모리 할당 → Replicated 데이터 초기화 → 스폰 완료(FinishSpawning)] 순으로 생명주기를 재설계. 클라이언트 BeginPlay 시점의 데이터 무결성을 보장하여 동기화 타이밍 이슈 해결.
+
+    * Data-Driven Recipe System (데이터 기반 설계):
+
+        * 문제: 재료의 상태(손질, 굽기 등)와 다양한 조합식(Recipe)을 if/switch 분기문으로 처리할 경우, 콘텐츠 추가 시 코드 복잡도가 기하급수적으로 증가.
+
+        * 해결: 재료를 Type과 State 구조체로 추상화하고, 조합 로직을 **DataTable**로 분리. '접시(Plate)' 객체가 현재 담긴 재료 배열을 테이블과 대조하여 결과물(Mesh)을 동적으로 교체하도록 구현. (OCP 준수)
+
+    * Optimized Collaboration Pipeline (협업 파이프라인):
+
+        * 해결: 6인 개발 환경에서 Binary Asset(.uasset) 충돌 방지를 위해 기능별 폴더 구조화 및 Git Stash / Lock 워크플로우 정립. RPC(Remote Procedure Call) 권한 분리를 명확히 하여 멀티플레이 로직 충돌 최소화.
+
 </br>
 
 
@@ -568,6 +651,13 @@ Dedicated Sever와 관련한 작업은 블로그에 과정을 기록해두었습
 <p align="center">
  <img alt="이미지" src="readme\overcookedIngame.png">
 </p>
+
+</br>
+
+___
+
+<details>
+<summary> 1. 동적 액터의 네트워크 동기화와 타이밍 이슈 해결 (클릭) </summary><p>
 
 #### 🛠️ 1. 동적 액터의 네트워크 동기화와 타이밍 이슈 해결
 
@@ -642,6 +732,11 @@ sequenceDiagram
 
 ___
 
+</details>
+
+<details>
+<summary> 2. 데이터 기반(Data-Driven) 요리 시스템 (클릭) </summary><p>
+
 #### 🛠️ 2. 데이터 기반(Data-Driven) 요리 시스템
 
 **🚨 문제 상황**
@@ -697,6 +792,11 @@ ___
 
 ___
 
+</details>
+
+<details>
+<summary> 3. 협업 (클릭) </summary><p>
+
 #### 🛠️ 3. 협업
 
 **🚨 문제 상황**
@@ -718,13 +818,14 @@ ___
 
 </br>
 
-**🔧구현 상세**
-
-* 팀 노션(Notion)에 협업 가이드라인 문서화.
-
 
  **[💡 회고 및 개선점]** 기술적인 문제 해결뿐만 아니라, 팀원 간의 소통과 합의된 규칙이 원활한 협업의 핵심임을 깨달았습니다. 도구나 방법론 자체보다 팀의 상황에 맞는 최적의 프로세스를 찾아 적용하는 능력을 기를 수 있었습니다.
 
+
+</details>
+
+
+</br>
 </br>
 
 
@@ -753,7 +854,31 @@ ___
 
 </br>
 
-게임 엔진을 구현해보며 프로그램이 어떻게 운영체제에서 실행되는지 머릿 속에 그려볼 수 있었습니다. 언리얼 엔진의 프레임워크를 흉내내며 **UE5의 설계 철학**을 이해하게 되었습니다. "왜 상속 기반 구조로 구성되었는가", "어떻게 Component가 Actor에 부착하여 동작하는가"와 같은 질문에 답하며, UE5로 돌아왔을 때 단순히 "사용"하는 것이 아니라 "이해하고 활용"할 수 있게 되었습니다.
+게임 엔진을 구현해보며 프로그램이 어떻게 운영체제에서 실행되는지 머릿 속에 그려볼 수 있었습니다. 언리얼 엔진의 프레임워크를 구현해보며 **UE5의 설계 철학**을 이해하게 되었습니다. "왜 상속 기반 구조로 구성되었는가", "어떻게 Component가 Actor에 부착하여 동작하는가"와 같은 질문에 답하며, UE5로 돌아왔을 때 단순히 "사용"하는 것이 아니라 "이해하고 활용"할 수 있게 되었습니다.
+
+</br>
+
+* 목표: DirectX 11 API를 활용한 Component-Based Game Engine 아키텍처 설계 및 2D 렌더링 파이프라인 구축.
+
+* 기술적 챌린지 & 해결 (Technical Challenges & Solutions):
+
+    * Event-Driven FSM Architecture (함수형 상태 패턴):
+
+        * 문제: 거대한 Switch-Case 문 기반의 FSM은 상태 추가 시 코드 복잡도를 높이고, 유지보수성을 저하시킴.
+
+        * 해결: **Modern C++ (std::function, Lambda)**을 활용하여 상태를 객체가 아닌 '행동(Function)' 단위로 관리하는 이벤트 기반 FSM 설계. std::map을 통해 상태 진입(Enter), 유지(Stay), 종료(Exit) 콜백을 동적으로 바인딩하여 코드 결합도(Coupling)를 획기적으로 낮춤.
+
+    * Decoupled Timer System (타이머 시스템 분리):
+
+        * 문제: 스킬 쿨타임, 피격 무적 시간 등 시간 제어 로직을 각 객체의 Tick에서 개별 변수로 관리하여 로직 중복과 가독성 저하 발생.
+
+        * 해결: TimerManager 개념을 차용한 **TimeEventComponent**를 구현. std::list와 Iterator를 활용해 등록된 시간 이벤트를 중앙에서 관리하고, 만료 시 콜백을 실행하는 구조로 변경하여 게임플레이 로직에서 불필요한 시간 계산 코드를 제거.
+
+    * Automated Asset Pipeline (리소스 파이프라인 자동화):
+
+        * 문제: 다수의 스프라이트 리소스를 수동으로 좌표 계산하여 로드하는 과정은 비효율적이며 오차가 발생하기 쉬움.
+
+        * 해결: Unity의 .meta 파일 포맷을 분석하여 텍스처 아틀라스 정보를 파싱하는 자동화 로더(Auto-Loader) 구현. DirectX(좌상단)와 Unity(좌하단)의 UV 좌표계 차이를 변환 행렬로 보정하여, 외부 툴의 데이터를 엔진에 즉시 적용 가능한 파이프라인 구축.
 
 
 </br>
@@ -774,6 +899,13 @@ ___
 <p align="center">
  <img alt="이미지" src="readme\hollowknight.png" >
 </p>
+
+</br>
+
+___
+
+<details>
+<summary> 1. 이벤트 기반 FSM (클릭) </summary><p>
 
 #### 🛠️ 1. 이벤트 기반 FSM
 
@@ -809,6 +941,11 @@ C++ `std::function`을 활용하여 상태를 이벤트(함수 포인터) 단위
 
 </br>
 
+</details>
+
+<details>
+<summary> 2. Time Event Component (클릭) </summary><p>
+
 #### 🛠️ 2. Time Event Component
 
 **🚨 문제 상황**
@@ -841,6 +978,12 @@ C++ `std::function`을 활용하여 상태를 이벤트(함수 포인터) 단위
 * [구현 코드](https://github.com/kabu0330/DX_HollowKnight2/blob/fd06b77a8f3283c254f2a705d03b0a267235d72d/DX_HollowKnight/EngineCore/TimeEventComponent.cpp#L38-L84) / [활용 코드](https://github.com/kabu0330/DX_HollowKnight2/blob/fd06b77a8f3283c254f2a705d03b0a267235d72d/DX_HollowKnight/Contents/FalseKnight.cpp#L621-L630)
 
 </br>
+
+</details>
+
+
+<details>
+<summary> 3. Unity 메타파일 자동 파싱 및 로드 시스템 (클릭) </summary><p>
 
 #### 🛠️ 3. Unity 메타파일 자동 파싱 및 로드 시스템
 
@@ -875,9 +1018,12 @@ C++ `std::function`을 활용하여 상태를 이벤트(함수 포인터) 단위
 
 </br>
 
+</details>
+
+
 #### 프로젝트 관련 글(Blog)
 
-* [DirectX 기초 공부](https://kabu0129.tistory.com/category/WindowsAPI/DirectX%2011)
+* [Blog DirectX 카테고리](https://kabu0129.tistory.com/category/WindowsAPI/DirectX%2011)
 
 </br>
 
