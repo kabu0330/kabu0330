@@ -258,8 +258,14 @@ ___
 
 </details>
 
+<details>
+<summary> 3. 락 온(Lock-on) 및 타겟 전환 시스템 (클릭) </summary><p>
 
 #### 🛠️ 3. 락 온(Lock-on) 및 타겟 전환 시스템
+
+<p align="center">
+ <img alt="이미지" src="readme\targeting.webp">
+</p>
 
 소울라이크 게임의 핵심인 대상 고정(Lock-on) 및 타겟 스위칭(Target Switching) 기능을 컴포넌트 기반으로 설계하여 유지보수성과 확장성을 확보했습니다.
 
@@ -294,9 +300,11 @@ ___
 * 타겟 수집 및 탐색
     - [FindTargets()](https://github.com/kabu0330/UE_Soul2/blob/de26d8cc470370cebc74ad70a98dbdab49de0652/Source/Soul/Components/TargetingComponent.cpp#L121-L160)
 * 타겟 선정
-    -[FindClosestTarget()](https://github.com/kabu0330/UE_Soul2/blob/de26d8cc470370cebc74ad70a98dbdab49de0652/Source/Soul/Components/TargetingComponent.cpp#L162-L241)
+    - [FindClosestTarget()](https://github.com/kabu0330/UE_Soul2/blob/de26d8cc470370cebc74ad70a98dbdab49de0652/Source/Soul/Components/TargetingComponent.cpp#L162-L241)
 
+</br>
 
+</details>
 
 <details>
 <summary> 4. 입력 타이밍 기반(Perfect/Mercy) 콤보 시스템 (클릭) </summary><p>
@@ -1059,6 +1067,65 @@ C++ `std::function`을 활용하여 상태를 이벤트(함수 포인터) 단위
 </br>
 
 </details>
+
+<details>
+<summary> 4. 멀티 스레드 리소스 로딩 시스템 (클릭) </summary><p>
+
+#### 🛠️ 4. 멀티 스레드 리소스 로딩 시스템 (Multi-threaded Resource Loading)
+
+**🚨 문제 상황**
+
+게임의 리소스가 커짐에 따라 이를 메인 스레드(Main Thread)에서 동기(Synchronous) 방식으로 로드할 경우, 로딩이 완료되어 타이틀 화면이 보이기까지 상당 시간(3초 이상)이 소요되어 사용자 경험을 저해했습니다.
+
+</br>
+
+**💭 해결 방안**
+
+리소스 로딩 프로세스를 메인 스레드에서 분리하기 위해 자체 스레드 및 스레드 풀(Thread Pool) 시스템을 구축했습니다. 특히 Windows의 고성능 입출력 모델인 **IOCP(I/O Completion Port)**를 활용하여 작업 큐(Job Queue)를 관리함으로써 대용량 리소스를 효율적으로 병렬 처리하고, 로딩 중에도 부드러운 UI 연출(Fade Effect 등)이 가능하도록 설계하여 로딩 속도를 약 88%(3.3초 -> 0.37초) 단축시켰습니다. 타이틀 리소스만 먼저 로드하여 타이틀 화면부터 빠르게 로딩하고 타이틀이 재생되는 동안 다음 레벨 리소스를 로드하는 방식을 사용했습니다.
+
+<p align="center">
+ <img alt="이미지" src="readme\thread.png" width = 80% >
+</p>
+
+* 비교 영상 [Youtube](https://youtu.be/b0D8xgsbZZk?si=Qfa4ZhWvTq9Fp00Y)
+
+
+</br>
+
+**🔧구현 상세**
+
+1. 스레드 래퍼 클래스 (`UEngineThread`):
+
+    - `std::thread`를 캡슐화하여 Start, Join 기능을 제공하고, `SetThreadDescription`을 통해 디버깅 시 각 스레드의 역할을 명확히 구분할 수 있도록 구현했습니다.
+
+2. IOCP 기반 스레드 풀 (`UEngineWorkThreadPool`):
+
+    - IOCP(I/O Completion Port) 핸들을 생성하여 운영체제 수준에서 효율적인 스레드 스케줄링을 수행합니다.
+
+    - `GetQueuedCompletionStatus`를 통해 대기 상태의 스레드를 깨워 작업을 할당하고, `PostQueuedCompletionStatus`를 통해 비동기 작업을 큐에 삽입하는 구조로 설계했습니다.
+
+    - 시스템의 프로세서 수에 맞춰 최적의 스레드 개수를 자동으로 설정합니다.
+
+    - [ThreadPool](https://github.com/kabu0330/DX_HollowKnight2/blob/fd06b77a8f3283c254f2a705d03b0a267235d72d/DX_HollowKnight/EnginePlatform/EngineWorkThreadPool.cpp#L54-L100)
+
+3. 스레드 세이프 리소스 관리 (`EngineResourceBase`):
+
+    - 여러 스레드에서 동시에 리소스 매니저에 접근할 때 발생할 수 있는 **경합 조건(Race Condition)**을 방지하기 위해 `std::mutex`와 `std::lock_guard`를 활용한 `PushResourceThreadSafe` 함수를 구현했습니다.
+
+    - [PushResourceThreadSafe 구현코드 ](https://github.com/kabu0330/DX_HollowKnight2/blob/main/DX_HollowKnight/EngineCore/EngineResourceBase.cpp#L20-L37)
+
+4. 실제 적용 (`TitleGameMode`):
+
+    - 타이틀 화면 진입 시 배경에서 `LoadTitleResource`를 실행하며, 로딩 중에도 타이머 시스템(TimeEventer)을 통해 크레딧 페이드 효과 등을 끊김 없이 재생합니다.
+
+    - `IsIdle()` 함수를 통해 스레드 풀의 모든 작업 완료 여부를 확인한 후 다음 레벨로 전환합니다.
+
+    - [Title 리소스 로딩](https://github.com/kabu0330/DX_HollowKnight2/blob/main/DX_HollowKnight/Contents/TitleGameMode.cpp#L20-L29)
+
+    - [리소스 로드 및 레벨 전환 준비 체크](https://github.com/kabu0330/DX_HollowKnight2/blob/fd06b77a8f3283c254f2a705d03b0a267235d72d/DX_HollowKnight/Contents/TitleGameMode.cpp#L170-L183)
+
+
+</p> </details>
 
 
 #### 프로젝트 관련 글(Blog)
