@@ -48,32 +48,28 @@
 | 👤 **개발 인원** | 1인 | 📅 **개발 기간** | 2025.10 ~ 2025.11 |
 | 🛠️ **기술 스택** | C++, Unreal Engine 5, Rider, Git | | |
 | 📝 **게임 소개** | 스태미나 기반 전투 액션 게임 | | 
-| 🎯 **핵심 목표** | 단순 구현을 넘어 언리얼 엔진을 활용한 '구조적 설계'에 대한 고민과 '확장성' 확보 | | 
+| 🎯 **핵심 목표** | 액션 전투 시스템 개발 | | 
 | 📑 **주요 특징** | 콤보 시스템, 무기 시스템, 데이터 기반 아이템 및 인벤토리 시스템, 모션 워핑 | | 
 
 </br>
-
-이 프로젝트는 게임 개발 **구조**에 대한 고민을 담은 프로젝트입니다. </br>
-`Tick` 사용을 최소화하고, 입력과 애니메이션 이벤트(`AnimNotify`)를 트리거로 로직을 순환시키는 이벤트 기반(Event-Driven) 구조를 목표로 삼았습니다.
-
 
 핵심 기술적 성취 (Key Achievements)
 
 * Zero-Tick Architecture:
 
-    * Tick() 사용을 배제하고 Delegate와 AnimNotify를 활용한 완전한 Event-Driven 구조 구축.
+    * `Tick()` 사용을 배제하고 `Delegate`와 `AnimNotify`를 활용한 완전한 Event-Driven 구조 구축.
 
     * 결과: 유휴 상태(Idle)에서의 CPU 점유율 최소화 및 로직 추적 용이성 확보.
 
-* OCP(개방-폐쇄 원칙) 기반 전투 시스템:
+* 유연한 전투 시스템:
 
-    * 거대한 Character 클래스를 ISoulCombat, ISoulInteract 등 인터페이스로 분리(ISP).
+    * 거대한 `Character` 클래스를 `ISoulCombat`, `ISoulInteract` 등 인터페이스로 분리.
 
     * 결과: 신규 몬스터/무기 추가 시 기존 코드 수정 없이 확장 가능하도록 결합도(Coupling) 제거.
 
 * Data-Driven Skill System:
 
-    * DataAsset과 GameplayTag를 활용해 코드 컴파일 없이 스킬 속성(데미지, 모션, 이펙트) 제어.
+    * `DataAsset`과 `GameplayTag`를 활용해 코드 컴파일 없이 스킬 속성(데미지, 모션, 이펙트) 제어.
 
 
 </br>
