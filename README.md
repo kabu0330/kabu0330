@@ -2,15 +2,22 @@
 
 > **"DirectX 엔진 개발 경험을 통해, 엔진의 동작 원리와 효율적인 구조를 고민하는 클라이언트 프로그래머 류성민입니다."**
 
-* Core Competency: C/C++, C#, Unreal Engine 5, Unity 6, DirectX 11, AWS (GameLift/Lambda)
+* Core Competency: 
+    * C/C++, Unreal Engine 5, DirectX 11
+    * C#, Unity 6
+    * AWS, Google Firebase
 
 * Strength:
 
-    * Tick 의존성을 제거한 이벤트 기반 아키텍처 설계 능력
+    * GameplayTag 및 컴포넌트 기반 액션 게임 구현
+
+    * 플러그인 및 SDK 활용 경험(AWS EC2, Lambda, DynamoDB, S3, Google Firebase, Firestore, Admob 등)
 
     * AWS GameLift 기반의 Dedicated Server 및 Serverless 백엔드 구축 경험
 
-    * IOCP 기반 멀티스레드 풀을 활용하여 로딩 시간 단축(평균 3.3초 -> 0.37초)
+    * Team Project 협업 경험
+
+    * IOCP 기반 멀티스레드 풀 활용하여 로딩 시간 단축(평균 3.3초 -> 0.37초)
 
 
 ## 📄 레포지토리 링크
@@ -53,23 +60,23 @@
 
 </br>
 
-핵심 기술적 성취 (Key Achievements)
+* 기술적 도전 & 해결:
 
-* Zero-Tick Architecture:
+    * Zero-Tick Architecture:
 
-    * `Tick()` 사용을 배제하고 `Delegate`와 `AnimNotify`를 활용한 완전한 Event-Driven 구조 구축.
+        * `Tick()` 사용을 배제하고 `Delegate`와 `AnimNotify`를 활용한 완전한 Event-Driven 구조 구축.
 
-    * 결과: 유휴 상태(Idle)에서의 CPU 점유율 최소화 및 로직 추적 용이성 확보.
+     * 결과: 유휴 상태(Idle)에서의 CPU 점유율 최소화 및 로직 추적 용이성 확보.
 
-* 유연한 전투 시스템:
+    * 유연한 전투 시스템:
 
-    * 거대한 `Character` 클래스를 `ISoulCombat`, `ISoulInteract` 등 인터페이스로 분리.
+        * 거대한 `Character` 클래스를 `ISoulCombat`, `ISoulInteract` 등 인터페이스로 분리.
 
-    * 결과: 신규 몬스터/무기 추가 시 기존 코드 수정 없이 확장 가능하도록 결합도(Coupling) 제거.
+        * 결과: 신규 몬스터/무기 추가 시 기존 코드 수정 없이 확장 가능하도록 결합도(Coupling) 제거.
 
-* Data-Driven Skill System:
+    * Data-Driven Skill System:
 
-    * `DataAsset`과 `GameplayTag`를 활용해 코드 컴파일 없이 스킬 속성(데미지, 모션, 이펙트) 제어.
+        * `DataAsset`과 `GameplayTag`를 활용해 코드 컴파일 없이 스킬 속성(데미지, 모션, 이펙트) 제어.
 
 
 </br>
