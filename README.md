@@ -1,6 +1,6 @@
 # 💻 클라이언트 프로그래머 포트폴리오
 
-> **"DirectX 엔진 개발 경험을 통해, 엔진의 동작 원리와 효율적인 구조를 고민하는 클라이언트 프로그래머 류성민입니다."**
+> **"클라이언트 프로그래머 류성민입니다."**
 
 * Core Competency: 
     * C/C++, Unreal Engine 5, DirectX 11
@@ -29,16 +29,364 @@
 * [티스토리](https://kabu0129.tistory.com/)
 
 ## 📜 목차
-1. [Unreal Engine 5] Action RPG Project "Soul"
-2. [[Dedicated Server] FPS Game Project](#-2-dedicated-server-project-fps-game)
-3. [[Team Project] Unreal Engine ver 'Overooked! 2' 모작](#-3-team-project-unreal-engine-ver-overooked-2-모작)
-4. [[Custom Engine Projects] DirectX 11 2D 'HollowKnight' 모작](#-4-custom-engine-projects-directx-11-2d-hollowknight-모작)
-5. [Unity] Project TinyRush (개발 중) 
+1. [[Dedicated Server] FPS Game Project](#-dedicated-server-project-fps-game)
+2. [[UE 5] Action RPG Project "Soul"](#-unreal-engine-5-action-rpg-project-soul)
+3. [[Team Project] 'Overooked! 2' 모작](#-team-project-overooked-2-모작)
+4. [[DirectX 11] 'HollowKnight' 모작](#-directx-11-hollowknight-모작)
+5. [Unity 6] Project TinyRush (개발 중) 
     * [Notion](https://www.notion.so/Project-Tiny-Rush-Technical-Spec-2c14969443dc807abdebca937cabb76d?source=copy_link)
 
 </br>
 
-## 📄 1. [Unreal Engine 5] Action RPG Project "Soul"
+## 📄 [Dedicated Server Project] FPS Game
+
+<p align="center">
+ <img alt="이미지" src="readme\DedicatedServer.webp">
+</p>
+
+* 🔗 [Youtube 플레이 영상](https://youtu.be/8tyiK_7egvI?si=MP7l8gBIcKs95v6U)
+* 🔗 [youtube 테스트 영상](https://youtu.be/uA46fG5gGeU?si=_E-R7NCcEHDxy8vY)
+* 🔗 [Github](https://github.com/kabu0330/FPS_with_DedicatedServer)
+
+</br>
+
+### 📋 프로젝트 정보
+
+| 항목 | 내용 | 항목 | 내용 |
+|:------|:-----|:-----|:-----|
+| 🖥️ **플랫폼** | PC (Windows) | 🎮 **장르** | FPS |
+| 👤 **개발 인원** | 1인 | 📅 **개발 기간** | 2025.05 ~ 2025.08 |
+| 🛠️ **기술 스택** | C++, Node.js, Unreal Engine 5, AWS, Rider, Git |
+| 📝 **게임 소개** | 최대 10인의 플레이어가 경쟁하는 1인칭 슈팅게임 |
+| 🎯 **핵심 목표** | 서버-클라이언트 아키텍처 및 AWS 클라우드 인프라 실전 경험 | | 
+| 📑 **주요 특징** | AWS SDK C++ 빌드 및 UE 연동, SeamlessTravel, 네트워크 대역폭 최적화  | | 
+
+</br>
+
+
+서버에 대한 개념을 이해하고자 AWS 서비스(EC2, GameLift, Lambda, Cognito, CloudWatch, DynamoDB)를 활용해 데디케이티드 서버를 구축하고 사용자 관리, 세션, 토큰, 서버리스 아키텍처, DB 등 개념을 이해하고 언리얼 엔진과 연동해 언리얼 엔진의 구조 안에서 서버를 구축하고 서버-클라이언트 간 로직을 분리하고 결합하며 게임을 완성해나갔습니다.
+
+* 목표: 상용 게임 수준의 라이브 서비스 아키텍처 구축 (매치메이킹, DB, 로그)
+
+* 기술적 도전 & 해결:
+
+    * Network Bandwidth Optimization: FFastArraySerializer를 구현하여 변경된 데이터(Delta)만 전송, 배열 복제 대비 네트워크 부하 감소.
+
+    * Seamless Travel Data Persistence: 레벨 전환 시 소실되는 데이터를 GameInstanceSubsystem과 PlayerState::CopyProperties 재정의를 통해 보존 파이프라인 구축.
+
+    * Serverless Matchmaking: EC2 상시 구동 비용 절감을 위해 AWS Lambda + API Gateway 기반의 온디맨드 매치메이킹 시스템 구현.
+
+</br>
+
+___
+
+### 구현 내용
+
+<details>
+<summary> 특정 원소 복제 FastTArraySerializer (클릭) </summary><p>
+
+#### 🛠️ 네트워크 대역폭 최적화
+
+**🚨 문제 상황**
+
+서버에 접속한 플레이어들을 관리하기 위해 일반 배열(TArray)을 사용하게 될 경우, 하나의 수정 사항이 발생해도 배열 전체를 네트워크 전송되어 심각한 대역폭 낭비가 발생합니다. </br> 해당 문제를 변경사항이 발생한 원소만 특정(`MarkItemDirty`)하여 네트워크 전송을 한다면 획기적으로 대역폭 낭비를 줄일 수 있습니다.
+
+
+</br>
+
+**💭 해결 방안**
+
+<p align="center">
+ <img alt="이미지" src="readme\FastTArray.png">
+</p>
+
+</br>
+
+언리얼 엔진에서 제공하는 `FFastArraySerializer` 문서를 바탕으로 변경된 요소(Delta)만 선별적으로 전송하는 구조로 최적화하여 네트워크 대역폭을 감소시켰습니다.
+</br>
+
+**🔧구현 상세**
+
+해당 코드는 `OpenLevel` 이후 `LobbyGameMode`에 접속된 유저들의 데이터 정보(Username, 준비완료 유무)를 저장/갱신/삭제하는 코드입니다.
+
+- [FastTArraySerializer 코드](https://github.com/kabu0330/FPS_with_DedicatedServer/blob/a8682a0281375c614d704531e462e7c340a0622b/Source/DedicatedServers/Private/Lobby/LobbyPlayerInfo.cpp#L5-L63)
+- [GameMode FastTArraySerializer 코드](https://github.com/kabu0330/FPS_with_DedicatedServer/blob/main/Source/DedicatedServers/Private/Game/DS_LobbyGameMode.cpp#L104-L142)
+- [GameState FastTArraySerializer 코드](https://github.com/kabu0330/FPS_with_DedicatedServer/blob/a8682a0281375c614d704531e462e7c340a0622b/Source/DedicatedServers/Private/Lobby/LobbyState.cpp#L20-L83)
+
+</br>
+
+___
+
+</details>
+
+<details>
+<summary> 네트워크 지연시간 보정 (클릭) </summary><p>
+
+#### 🛠️ 네트워크 지연시간 보정
+
+**🔧구현 상세**
+
+각 클라이언트 간 네트워크 환경에 따라 시간 관련 오차가 발생하는 것을 최소화하기 위해 클라이언트는
+1. 플레이어가 서버에 접속했을 때
+2. Seamless Travel 이후
+
+시점에 핑퐁(Ping-Pong) 로직을 이용하여 왕복 시간(RTT, Round-Trip Time)을 측정하여 절반 값을 편도 지연 시간으로 계산하여 서버에서 시간 데이터를 수신할 때 편도 지연 시간만큼 보정하여 오차를 최소화했습니다.
+
+- [PlayerController 지연시간 계산 코드](https://github.com/kabu0330/FPS_with_DedicatedServer/blob/e5b276c40fbad062fb593693c3023ef2f6b11ce7/Source/DedicatedServers/Private/Player/DS_PlayerController.cpp#L136-L156)
+
+</br>
+
+___
+
+</details>
+
+<details>
+<summary> 서버 트래블 사전 작업: Subsystem을 활용한 데이터 영속성 관리 (클릭) </summary><p>
+
+#### 🛠️ 서버 트래블 사전 작업: Subsystem을 활용한 데이터 영속성 관리
+
+**🚨 상황**
+
+레벨 이동(Server Travel / Seamless Travel) 시 `World`, `Level`, `GameMode`, `PlayerController` 등은 모두 파괴되고 재구성됩니다. 
+
+이때 소멸되지 않고 유지되어야 할 데이터들을 분리하여 관리하는 것이 중요합니다. (ex. Socket, Token 등)
+
+`GameMode`는 서버와 통신할 객체를 가지고 있어야 하고, Client는 토큰을 가지고 있어야 합니다.
+
+</br>
+
+**💭 과정**
+
+중요 자원을 안전하게 보관하기 위해 Subsystem으로 데이터 이주 작업을 진행했습니다. 서브 시스템을 선택한 이유는 다음과 같습니다.
+1. 관리형 싱글톤 : 언리얼 엔진에서 생명 주기를 자동으로 관리합니다.
+2. 모듈화 : `GameInstance`에 모든 로직을 몰아넣지 않습니다. 기능 단위로 분리합니다.
+3. 접근 편의성 : 블루프린트에서도 별도의 캐싱 없이 쉽게 접근이 가능합니다.
+
+
+1. `GameInstanceSubsystem`
+서버와 관련된 중요 자원은 `GameInstanceSubsystem`에 저장합니다. </br>
+`GameInstance`는 언리얼 엔진에서 프로그램의 `Core`와 함께 프로그램의 생명 주기를 함께하는 객체이므로 해당 객체의 서브시스템에 서버 통신과 관련된 중요한 기능을 맡깁니다.
+* 생명 주기 : 프로세스 시작 ~ 종료
+* Global Session Data: 게임 전체의 세션 관리, 백엔드 서버 통신 객체, 전역 설정 데이터 보존.
+
+2. `LocalPlayerSubsystem`
+클라이언트와 관련된 중요 자원은 `LocalPlayerSubsystem`에 저장합니다. </br>
+`LocalPlayer`는 각 클라이언트에 존재하는 객체로 서버나 다른 클라이언트에 네트워크 복제를 하지 않는 클라이언트 고유 객체입니다. 해당 객체의 서브시스템에 클라이언트의 정체성과 같은 고유 정보를 저장합니다.
+* 생명 주기 : 로컬 플레이어 생성 ~ 종료
+* Player-Specific Data: 클라이언트 개별 인증 토큰, UI 상태 값, 플레이어 개인화 설정 관리.
+
+</br>
+
+**🔧구현 상세**
+
+* 1). [GameInstanceSubsystem](https://github.com/kabu0330/FPS_with_DedicatedServer/blob/e5b276c40fbad062fb593693c3023ef2f6b11ce7/Source/DedicatedServers/Public/Game/DS_GameInstanceSubsystem.h#L18-L44)
+
+* 2). [LocalPlayerSubsystem](https://github.com/kabu0330/FPS_with_DedicatedServer/blob/e5b276c40fbad062fb593693c3023ef2f6b11ce7/Source/DedicatedServers/Public/Player/DS_LocalPlayerSubsystem.h#L15-L46)
+
+</br>
+
+___
+
+</details>
+
+<details>
+<summary> Access Token 갱신 시스템 (클릭) </summary><p>
+
+#### 🛠️ Access Token 갱신
+
+**🚨 상황**
+
+서버에 접속한 클라이언트는 주기적으로 토큰을 갱신하여 토큰의 유효기간이 만료되지 않도록 관리해야 합니다.
+
+</br>
+
+**💭 과정**
+
+클라이언트는 로그인 시점에 토큰 데이터(Refresh Token과 Access Token, IdToken)를 부여받습니다. 
+
+이 중 유효기간이 가장 긴 Refresh Token을 이용해 Access Token이 만료되기 전에 서버에 요청하여 토큰을 갱신합니다.
+
+해당 로직은 Timer를 이용해 Access Token 만료까지 70 ~ 80% 경과한 시점에 요청하여 토큰이 항상 유효한 상태임을 보장합니다.
+
+
+</br>
+
+**🔧구현 상세**
+
+* [토큰 갱신 요청](https://github.com/kabu0330/FPS_with_DedicatedServer/blob/e5b276c40fbad062fb593693c3023ef2f6b11ce7/Source/DedicatedServers/Private/Player/DS_LocalPlayerSubsystem.cpp#L9-L41)
+* [RefreshTokens_Response](https://github.com/kabu0330/FPS_with_DedicatedServer/blob/e5b276c40fbad062fb593693c3023ef2f6b11ce7/Source/DedicatedServers/Private/UI/Portal/PortalManager.cpp#L228-L250)
+
+
+</br>
+
+___
+
+</details>
+
+
+<details>
+<summary> Seamless Travel 이후 PlayerState 데이터 유실 문제 (클릭) </summary><p>
+
+#### 🛠️ Seamless Travel 이후 PlayerState 데이터 유실 문제 
+
+**🚨 문제 상황**
+
+로비에서 PlayLevel로 매끄러운 이동을 위해 Seamless Travel을 도입하는 과정에서, 레벨 전환 시 액터가 재생성되며 중요한 데이터가 소실되는 구조적 문제에 직면했습니다.
+
+1. 서버 영속 데이터: AWS와 통신하기 위한 파라미터와 함수들이 `GameMode`에 존재하여, 레벨 전환 시 `GameMode`가 교체되면서 정보가 유실되었습니다.
+
+2. 클라이언트 영속 데이터: 플레이어의 세션 정보와 인증 토큰도 레벨이 바뀌더라도 유지되어야 했으나, 마땅한 저장소를 찾기 어려웠습니다.
+
+3. 플레이어 게임 데이터: 사용자 이름 등 게임 플레이에 복제되어야 할 필수적인 정보가 담긴 PlayerState 역시 레벨 전환 시 초기화되어 데이터 정합성이 깨지는 문제가 발생했습니다.
+
+</br>
+
+**💭 해결 방안**
+
+언리얼 엔진의 객체 생명주기(Object Lifecycle)를 깊이 이해하고, 레벨 전환과 무관하게 유지되는 **하위 시스템(Subsystem)**과 데이터 보존 메커니즘을 적극 활용했습니다.
+
+**1). 서버 전역 데이터 저장소 : `GameInstanceSubsystem`**
+
+`GameInstance`는 게임 프로세스 전체 생명주기와 함께하는 유일한 객체입니다. 서버 실행 중 영구적으로 유지되어야 할 AWS 통신 관련 데이터와 함수들을 `GameInstanceSubsystem`으로 이관하여 레벨 전환의 영향을 받지 않도록 격리했습니다. 초기화 로직만 `LobbyGameMode`에 남겨 역할 책임을 명확히 했습니다.
+
+**2). 클라이언트 로컬 데이터 저장소 : `LocalPlayerSubsystem`**
+
+클라이언트별로 유지되어야 하는 세션 및 토큰 정보는 로컬 플레이어를 대표하는 `LocalPlayerSubsystem`에 저장했습니다. 특히 인증 토큰은 만료되지 않도록 서브시스템 내에서 타이머를 활용해 주기적으로 자동 갱신하는 로직을 구현했습니다.
+
+**3). 플레이어 데이터 저장소 : `PlayerState::CopyProperties` / `PlayerState::OverrideWith`**
+
+`PlayerState`의 데이터는 네트워크를 통해 다른 클라이언트와 공유되어야 하므로 `PlayerController`가 아닌 `PlayerState`에 저장하는 것이 옳다고 판단했습니다. Seamless Travel 시 언리얼 엔진은 구 레벨의 `PlayerState`를 신규 레벨로 복사하는 과정을 거치는데, 이때 사용자 정의 프로퍼티는 자동으로 복사되지 않습니다. 이를 해결하기 위해 `CopyProperties`(구→임시 복사)와 `OverrideWith`(임시→신규 덮어쓰기) 함수를 재정의하여 수동으로 데이터를 이전하는 파이프라인을 구축했습니다.
+
+ **[💡 회고 및 개선점]** 이 과정은 서버 개발의 어려움을 온몸으로 체감하는 계기였습니다. 로컬 환경의 IP 변경으로 인한 AWS 통신 오류부터, 중단점(Breakpoint)을 사용할 수 없는 라이브 서버 환경까지 수많은 난관이 있었습니다. 오직 로그(Log)에 의존하여 문제를 추적하고 해결하는 과정을 통해 로그 시스템 설계의 중요성을 절감했고, 서버 디버깅에 대한 실질적인 노하우를 쌓을 수 있었던 값진 경험이었습니다.
+
+
+</br>
+
+**🔧구현 상세**
+
+* 1). 서버 데이터 (AWS 통신)
+    - [GameMode::BeginPlay 초기화 코드](https://github.com/kabu0330/FPS_with_DedicatedServer/blob/a8682a0281375c614d704531e462e7c340a0622b/Source/DedicatedServers/Private/Game/DS_LobbyGameMode.cpp#L248-L267)
+    - [GameInstanceSubsysem 영속 데이터 관리](https://github.com/kabu0330/FPS_with_DedicatedServer/blob/a8682a0281375c614d704531e462e7c340a0622b/Source/DedicatedServers/Public/Game/DS_GameInstanceSubsystem.h#L18-L44)
+
+* 2). 클라이언트 데이터 (세션/토큰)
+    - [LocalPlayerSubsystem 로컬 데이터 관리](https://github.com/kabu0330/FPS_with_DedicatedServer/blob/a8682a0281375c614d704531e462e7c340a0622b/Source/DedicatedServers/Private/Player/DS_LocalPlayerSubsystem.cpp#L9-L41)
+
+* 3). 플레이어 데이터 (Seamless Travel 보존)
+    - [DefaultPlayerState 코드](https://github.com/kabu0330/FPS_with_DedicatedServer/blob/a8682a0281375c614d704531e462e7c340a0622b/Source/DedicatedServers/Private/Player/DS_DefaultPlayerState.cpp#L20-L45)
+
+</br>
+
+___
+
+</details>
+
+<details>
+<summary> 서버리스(Serverless) 기반 백엔드 구축 (클릭) </summary><p>
+
+#### 🛠️ 서버리스(Serverless) 기반 백엔드 구축
+
+**📋 도입 배경**
+
+Dedicated Server는 게임 플레이 자체에 집중해야 하므로, 사용자 인증, 매치메이킹 요청, DB 입출력과 같은 게임 외적인 백엔드 로직을 처리할 별도의 시스템이 필요했습니다. 이를 위해 별도의 EC2 서버를 구축하고 관리하는 것은 개발 및 운영 비용 측면에서 비효율적이라고 판단했습니다.
+
+</br>
+
+**💭 해결 방안**
+
+필요할 때만 코드를 실행하여 비용 효율적이고 관리 부담이 적은 서버리스(Serverless) 아키텍처를 도입했습니다. AWS Lambda를 백엔드의 핵심 로직 처리기로 삼고, API Gateway를 통해 언리얼 엔진과 통신하며, GameLift, Cognito, DynamoDB 등과 유기적으로 연동되는 구조를 설계했습니다.
+
+<p align="center">
+ <img alt="이미지" src="readme\CloudServer.png">
+</p>
+
+</br>
+
+**🔧구현 상세**
+
+1. AWS Lambda 함수 (Node.js)
+
+    - 매치메이킹 중계: 클라이언트의 요청을 받아 GameLift 서비스에 적절한 게임 세션 생성을 요청하고, 접속 정보(IP, Port)를 반환하는 중계자 역할을 수행했습니다.
+    - 보안 및 DB 무결성: 클라이언트가 DynamoDB에 직접 접근하는 것을 차단하고, 오직 적절한 **IAM 역할(Role)**을 부여받은 Lambda 함수를 통해서만 유저 정보와 전적 데이터를 안전하게 조작하도록 구현했습니다.
+
+<div style="display: flex; justify-content: space-between;">
+  <img src="readme\Lambda.png" alt="이미지 1 설명" style="width: 40%;" />
+  <img src="readme\APIGateway.png" alt="이미지 2 설명" style="width: 40%;" />
+</div>
+
+<p align="center">
+ <img alt="이미지" src="readme\IAM.png" width = 60% >
+</p>
+
+<p align="center">
+ <img alt="이미지" src="readme\PortalAPI.png" width = 50% >
+</p>
+
+</br>
+
+2. 언리얼 엔진과의 유기적 통합 (HTTP & JSON)
+
+    - 비동기 통신: 언리얼 엔진의 HTTP 모듈을 활용하여 API Gateway 엔드포인트로 RESTful API 요청을 보내고, 비동기(OnProcessRequestComplete)로 응답을 처리했습니다.
+        - [로그인 코드](https://github.com/kabu0330/FPS_with_DedicatedServer/blob/a8682a0281375c614d704531e462e7c340a0622b/Source/DedicatedServers/Private/UI/Portal/PortalManager.cpp#L17-L81) / [전적 검색 코드](https://github.com/kabu0330/FPS_with_DedicatedServer/blob/main/Source/DedicatedServers/Private/UI/GameStats/GameStatsManager.cpp#L52-L104)
+    - 데이터 파싱: Lambda로부터 받은 JSON 응답 데이터를 언리얼 엔진의 리플렉션(Reflection) 시스템을 활용한 JsonUtilities(FJsonObjectConverter)를 통해 사전에 정의된 USTRUCT 구조체로 자동 매핑 및 파싱하여, 수동 파싱 코드 없이 효율적으로 게임 로직에 반영했습니다
+
+<p align="center">
+ <img alt="이미지" src="readme\Reflection.png" width = 90% >
+</p>
+
+<div style="display: flex; justify-content: space-between;">
+  <img src="readme\Reflection2.png" alt="이미지 1 설명" style="width: 35%;" />
+  <img src="readme\Reflection3.png" alt="이미지 2 설명" style="width: 60%;" />
+</div>
+
+</br>
+
+3. 운영 및 모니터링 (CloudWatch)
+
+    - 서버리스 환경의 특성상 실시간 디버깅이 어렵다는 점을 극복하기 위해, CloudWatch Logs를 적극 활용했습니다. Lambda 함수의 실행 로그와 오류 메시지를 분석하여 이슈를 신속하게 파악하고 해결하는 운영 노하우를 쌓았습니다.
+
+</br>
+
+</details>
+
+</br>
+
+___
+
+### 기능구현
+
+<p align="center">
+ <img alt="이미지" src="readme\cognito.png">
+</p>
+
+<p align="center">
+ <img alt="이미지" src="readme\ready.png">
+</p>
+
+<p align="center">
+ <img alt="이미지" src="readme\killdeath.png">
+</p>
+
+<p align="center">
+ <img alt="이미지" src="readme\db.png">
+</p>
+
+
+</br>
+
+#### 프로젝트 관련 글(Blog)
+
+Dedicated Sever와 관련한 작업은 블로그에 과정을 기록해두었습니다.
+
+* [Blog 'Unreal Engine/Dedicated Server' Category](https://kabu0129.tistory.com/category/Unreal%20Engine/Dedicated%20Server)
+
+
+
+
+
+
+</br>
+
+## 📄 [Unreal Engine 5] Action RPG Project "Soul"
 <p align="center">
  <img alt="이미지" src="readme\SoulPlay.webp">
 </p>
@@ -81,49 +429,14 @@
 
 </br>
 
-### 기능 구현
-
-<p align="center">
- <img alt="이미지" src="readme\Inventory.png">
-</p>
-
-<p align="center">
- <img alt="이미지" src="readme\Targeting.png">
-</p>
-
-<p align="center">
- <img alt="이미지" src="readme\montionwarp.png">
-</p>
-
-<p align="center">
- <img alt="이미지" src="readme\HitReaction.png">
-</p>
-
-<p align="center">
- <img alt="이미지" src="readme\Guard.png">
-</p>
-
-<p align="center">
- <img alt="이미지" src="readme\InteractAnim.png", width = 100%>
-</p>
-
-<p align="center">
- <img alt="이미지" src="readme\behaviorTree.png">
-</p>
-
-<p align="center">
- <img alt="이미지" src="readme\PostProcess.png">
-</p>
-
-</br>
-
 ___
 
+### 구현 내용
 
 <details>
-<summary> 1. Tick 의존성 해소와 이벤트 기반 설계 (클릭) </summary><p>
+<summary> Tick 의존성 해소와 이벤트 기반 설계 (클릭) </summary><p>
 
-#### 🛠️ 1. Tick 의존성 해소와 이벤트 기반 설계
+#### 🛠️ Tick 의존성 해소와 이벤트 기반 설계
 
 **🚨 문제 상황**
 
@@ -216,9 +529,9 @@ ___
 
 
 <details>
-<summary> 2. DataAsset / DataTable, 코드 수정 없이 무기 타입 및 스킬 추가 (클릭) </summary><p>
+<summary> 데이터 기반 무기 타입 및 스킬 추가 (클릭) </summary><p>
 
-#### 🛠️ 2. DataAsset / DataTable, 코드 수정 없이 무기 타입 및 스킬 추가
+#### 🛠️ 데이터 기반 무기 타입 및 스킬 추가
 
 **🚨 문제 상황**
 
@@ -261,9 +574,9 @@ ___
 </details>
 
 <details>
-<summary> 3. 락 온(Lock-on) 및 타겟 전환 시스템 (클릭) </summary><p>
+<summary> 락 온(Lock-on) 및 타겟 전환 시스템 (클릭) </summary><p>
 
-#### 🛠️ 3. 락 온(Lock-on) 및 타겟 전환 시스템
+#### 🛠️ 락 온(Lock-on) 및 타겟 전환 시스템
 
 <p align="center">
  <img alt="이미지" src="readme\targeting.webp">
@@ -309,9 +622,9 @@ ___
 </details>
 
 <details>
-<summary> 4. 입력 타이밍 기반(Perfect/Mercy) 콤보 시스템 (클릭) </summary><p>
+<summary> 입력 타이밍 기반(Perfect/Mercy) 콤보 시스템 (클릭) </summary><p>
 
-#### 🛠️ 4. 입력 타이밍 기반(Perfect/Mercy) 콤보 시스템
+#### 🛠️ 입력 타이밍 기반(Perfect/Mercy) 콤보 시스템
 
 **🚨 문제 상황**
 
@@ -343,7 +656,6 @@ ___
 * 통합 공격 로직: 위 두 가지 입력 방식을 하나의 `DoAttack` 함수에서 분기 처리하여, 현재 콤보 카운트와 입력 시점에 따라 적절한 다음 행동을 결정합니다.   
     - [실제 Player 공격 함수(DoAttack) 코드](https://github.com/kabu0330/UE_Soul2/blob/a50d719eae8d32e24b870c4d6342dd97015d2f46/Source/Soul/Character/SoulPlayerCharacter.cpp#L245-L304)
 
-
 </br>
 
 ___
@@ -351,9 +663,9 @@ ___
 </details>
 
 <details>
-<summary> 5. [리팩토링] 인터페이스 도입 (클릭) </summary><p>
+<summary> [리팩토링] 인터페이스 (클릭) </summary><p>
 
-#### 🛠️ 5. [리팩토링] 인터페이스 도입
+#### 🛠️ [리팩토링] 인터페이스
 
 **🚨 문제 상황**
 
@@ -397,8 +709,47 @@ ___
 
 </br>
 
-
 </details>
+
+</br>
+
+___
+
+### 기능 구현
+
+<p align="center">
+ <img alt="이미지" src="readme\Inventory.png">
+</p>
+
+<p align="center">
+ <img alt="이미지" src="readme\Targeting.png">
+</p>
+
+<p align="center">
+ <img alt="이미지" src="readme\montionwarp.png">
+</p>
+
+<p align="center">
+ <img alt="이미지" src="readme\HitReaction.png">
+</p>
+
+<p align="center">
+ <img alt="이미지" src="readme\Guard.png">
+</p>
+
+<p align="center">
+ <img alt="이미지" src="readme\InteractAnim.png", width = 100%>
+</p>
+
+<p align="center">
+ <img alt="이미지" src="readme\behaviorTree.png">
+</p>
+
+<p align="center">
+ <img alt="이미지" src="readme\PostProcess.png">
+</p>
+
+</br>
 
 
 #### 프로젝트 관련 글(Blog)
@@ -412,243 +763,8 @@ ___
 
 
 
-## 📄 2. [Dedicated Server Project] FPS Game
 
-<p align="center">
- <img alt="이미지" src="readme\DedicatedServer.webp">
-</p>
-
-* 🔗 [Youtube 플레이 영상](https://youtu.be/8tyiK_7egvI?si=MP7l8gBIcKs95v6U)
-* 🔗 [youtube 테스트 영상](https://youtu.be/uA46fG5gGeU?si=_E-R7NCcEHDxy8vY)
-* 🔗 [Github](https://github.com/kabu0330/FPS_with_DedicatedServer)
-
-</br>
-
-### 📋 프로젝트 정보
-
-| 항목 | 내용 | 항목 | 내용 |
-|:------|:-----|:-----|:-----|
-| 🖥️ **플랫폼** | PC (Windows) | 🎮 **장르** | FPS |
-| 👤 **개발 인원** | 1인 | 📅 **개발 기간** | 2025.05 ~ 2025.08 |
-| 🛠️ **기술 스택** | C++, Node.js, Unreal Engine 5, AWS, Rider, Git |
-| 📝 **게임 소개** | 최대 10인의 플레이어가 경쟁하는 1인칭 슈팅게임 |
-| 🎯 **핵심 목표** | 서버-클라이언트 아키텍처 및 AWS 클라우드 인프라 실전 경험 | | 
-| 📑 **주요 특징** | AWS SDK C++ 빌드 및 UE 연동, SeamlessTravel, 네트워크 대역폭 최적화  | | 
-
-</br>
-
-
-서버에 대한 개념을 이해하고자 AWS 서비스(EC2, GameLift, Lambda, Cognito, CloudWatch, DynamoDB)를 활용해 데디케이티드 서버를 구축하고 사용자 관리, 세션, 토큰, 서버리스 아키텍처, DB 등 개념을 이해하고 언리얼 엔진과 연동해 언리얼 엔진의 구조 안에서 서버를 구축하고 서버-클라이언트 간 로직을 분리하고 결합하며 게임을 완성해나갔습니다.
-
-* 목표: 상용 게임 수준의 라이브 서비스 아키텍처 구축 (매치메이킹, DB, 로그)
-
-* 기술적 도전 & 해결:
-
-    * Network Bandwidth Optimization: FFastArraySerializer를 구현하여 변경된 데이터(Delta)만 전송, 배열 복제 대비 네트워크 부하 감소.
-
-    * Seamless Travel Data Persistence: 레벨 전환 시 소실되는 데이터를 GameInstanceSubsystem과 PlayerState::CopyProperties 재정의를 통해 보존 파이프라인 구축.
-
-    * Serverless Matchmaking: EC2 상시 구동 비용 절감을 위해 AWS Lambda + API Gateway 기반의 온디맨드 매치메이킹 시스템 구현.
-
-</br>
-
-
-### 기능구현
-
-<p align="center">
- <img alt="이미지" src="readme\cognito.png">
-</p>
-
-<p align="center">
- <img alt="이미지" src="readme\ready.png">
-</p>
-
-<p align="center">
- <img alt="이미지" src="readme\killdeath.png">
-</p>
-
-<p align="center">
- <img alt="이미지" src="readme\db.png">
-</p>
-
-
-</br>
-
-___
-
-<details>
-<summary> 1. 네트워크 대역폭 최적화 (클릭) </summary><p>
-
-#### 🛠️ 1. 네트워크 대역폭 최적화
-
-**🚨 문제 상황**
-
-서버에 접속한 플레이어들을 관리하기 위해 일반 배열(TArray)을 사용하게 될 경우, 하나의 수정 사항이 발생해도 배열 전체를 네트워크 전송되어 심각한 대역폭 낭비가 발생합니다. </br> 해당 문제를 변경사항이 발생한 원소만 특정(`MarkItemDirty`)하여 네트워크 전송을 한다면 획기적으로 대역폭 낭비를 줄일 수 있습니다.
-
-
-</br>
-
-**💭 해결 방안**
-
-<p align="center">
- <img alt="이미지" src="readme\FastTArray.png">
-</p>
-
-</br>
-
-언리얼 엔진에서 제공하는 `FFastArraySerializer` 문서를 바탕으로 변경된 요소(Delta)만 선별적으로 전송하는 구조로 최적화하여 네트워크 대역폭을 감소시켰습니다.
-</br>
-
-**🔧구현 상세**
-
-해당 코드는 `OpenLevel` 이후 `LobbyGameMode`에 접속된 유저들의 데이터 정보(Username, 준비완료 유무)를 저장/갱신/삭제하는 코드입니다.
-
-- [FastTArraySerializer 코드](https://github.com/kabu0330/FPS_with_DedicatedServer/blob/a8682a0281375c614d704531e462e7c340a0622b/Source/DedicatedServers/Private/Lobby/LobbyPlayerInfo.cpp#L5-L63)
-- [GameMode FastTArraySerializer 코드](https://github.com/kabu0330/FPS_with_DedicatedServer/blob/main/Source/DedicatedServers/Private/Game/DS_LobbyGameMode.cpp#L104-L142)
-- [GameState FastTArraySerializer 코드](https://github.com/kabu0330/FPS_with_DedicatedServer/blob/a8682a0281375c614d704531e462e7c340a0622b/Source/DedicatedServers/Private/Lobby/LobbyState.cpp#L20-L83)
-
-</br>
-
-___
-
-</details>
-
-<details>
-<summary> 2. Seamless Travel과 데이터 보존 (클릭) </summary><p>
-
-#### 🛠️ 2. Seamless Travel과 데이터 보존
-
-**🚨 문제 상황**
-
-로비에서 PlayLevel로 매끄러운 이동을 위해 Seamless Travel을 도입하는 과정에서, 레벨 전환 시 액터가 재생성되며 중요한 데이터가 소실되는 구조적 문제에 직면했습니다.
-
-1. 서버 영속 데이터: AWS와 통신하기 위한 파라미터와 함수들이 `GameMode`에 존재하여, 레벨 전환 시 `GameMode`가 교체되면서 정보가 유실되었습니다.
-
-2. 클라이언트 영속 데이터: 플레이어의 세션 정보와 인증 토큰도 레벨이 바뀌더라도 유지되어야 했으나, 마땅한 저장소를 찾기 어려웠습니다.
-
-3. 플레이어 게임 데이터: 사용자 이름 등 게임 플레이에 복제되어야 할 필수적인 정보가 담긴 PlayerState 역시 레벨 전환 시 초기화되어 데이터 정합성이 깨지는 문제가 발생했습니다.
-
-</br>
-
-**💭 해결 방안**
-
-언리얼 엔진의 객체 생명주기(Object Lifecycle)를 깊이 이해하고, 레벨 전환과 무관하게 유지되는 **하위 시스템(Subsystem)**과 데이터 보존 메커니즘을 적극 활용했습니다.
-
-**1). 서버 전역 데이터 저장소 : `GameInstanceSubsystem`**
-
-`GameInstance`는 게임 프로세스 전체 생명주기와 함께하는 유일한 객체입니다. 서버 실행 중 영구적으로 유지되어야 할 AWS 통신 관련 데이터와 함수들을 `GameInstanceSubsystem`으로 이관하여 레벨 전환의 영향을 받지 않도록 격리했습니다. 초기화 로직만 `LobbyGameMode`에 남겨 역할 책임을 명확히 했습니다.
-
-**2). 클라이언트 로컬 데이터 저장소 : `LocalPlayerSubsystem`**
-
-클라이언트별로 유지되어야 하는 세션 및 토큰 정보는 로컬 플레이어를 대표하는 `LocalPlayerSubsystem`에 저장했습니다. 특히 인증 토큰은 만료되지 않도록 서브시스템 내에서 타이머를 활용해 주기적으로 자동 갱신하는 로직을 구현했습니다.
-
-**3). 플레이어 데이터 저장소 : `PlayerState::CopyProperties` / `PlayerState::OverrideWith`**
-
-`PlayerState`의 데이터는 네트워크를 통해 다른 클라이언트와 공유되어야 하므로 `PlayerController`가 아닌 `PlayerState`에 저장하는 것이 옳다고 판단했습니다. Seamless Travel 시 언리얼 엔진은 구 레벨의 `PlayerState`를 신규 레벨로 복사하는 과정을 거치는데, 이때 사용자 정의 프로퍼티는 자동으로 복사되지 않습니다. 이를 해결하기 위해 `CopyProperties`(구→임시 복사)와 `OverrideWith`(임시→신규 덮어쓰기) 함수를 재정의하여 수동으로 데이터를 이전하는 파이프라인을 구축했습니다.
-
- **[💡 회고 및 개선점]** 이 과정은 서버 개발의 어려움을 온몸으로 체감하는 계기였습니다. 로컬 환경의 IP 변경으로 인한 AWS 통신 오류부터, 중단점(Breakpoint)을 사용할 수 없는 라이브 서버 환경까지 수많은 난관이 있었습니다. 오직 로그(Log)에 의존하여 문제를 추적하고 해결하는 과정을 통해 로그 시스템 설계의 중요성을 절감했고, 서버 디버깅에 대한 실질적인 노하우를 쌓을 수 있었던 값진 경험이었습니다.
-
-
-</br>
-
-**🔧구현 상세**
-
-* 1). 서버 데이터 (AWS 통신)
-    - [GameMode::BeginPlay 초기화 코드](https://github.com/kabu0330/FPS_with_DedicatedServer/blob/a8682a0281375c614d704531e462e7c340a0622b/Source/DedicatedServers/Private/Game/DS_LobbyGameMode.cpp#L248-L267)
-    - [GameInstanceSubsysem 영속 데이터 관리](https://github.com/kabu0330/FPS_with_DedicatedServer/blob/a8682a0281375c614d704531e462e7c340a0622b/Source/DedicatedServers/Public/Game/DS_GameInstanceSubsystem.h#L18-L44)
-
-* 2). 클라이언트 데이터 (세션/토큰)
-    - [LocalPlayerSubsystem 로컬 데이터 관리](https://github.com/kabu0330/FPS_with_DedicatedServer/blob/a8682a0281375c614d704531e462e7c340a0622b/Source/DedicatedServers/Private/Player/DS_LocalPlayerSubsystem.cpp#L9-L41)
-
-* 3). 플레이어 데이터 (Seamless Travel 보존)
-    - [DefaultPlayerState 코드](https://github.com/kabu0330/FPS_with_DedicatedServer/blob/a8682a0281375c614d704531e462e7c340a0622b/Source/DedicatedServers/Private/Player/DS_DefaultPlayerState.cpp#L20-L45)
-
-</br>
-
-___
-
-</details>
-
-
-<details>
-<summary> 3. 서버리스(Serverless) 기반 백엔드 구축 (클릭) </summary><p>
-
-#### 🛠️ 3. 서버리스(Serverless) 기반 백엔드 구축
-
-**📋 도입 배경**
-
-Dedicated Server는 게임 플레이 자체에 집중해야 하므로, 사용자 인증, 매치메이킹 요청, DB 입출력과 같은 게임 외적인 백엔드 로직을 처리할 별도의 시스템이 필요했습니다. 이를 위해 별도의 EC2 서버를 구축하고 관리하는 것은 개발 및 운영 비용 측면에서 비효율적이라고 판단했습니다.
-
-</br>
-
-**💭 해결 방안**
-
-필요할 때만 코드를 실행하여 비용 효율적이고 관리 부담이 적은 서버리스(Serverless) 아키텍처를 도입했습니다. AWS Lambda를 백엔드의 핵심 로직 처리기로 삼고, API Gateway를 통해 언리얼 엔진과 통신하며, GameLift, Cognito, DynamoDB 등과 유기적으로 연동되는 구조를 설계했습니다.
-
-<p align="center">
- <img alt="이미지" src="readme\CloudServer.png">
-</p>
-
-</br>
-
-**🔧구현 상세**
-
-1. AWS Lambda 함수 (Node.js)
-
-    - 매치메이킹 중계: 클라이언트의 요청을 받아 GameLift 서비스에 적절한 게임 세션 생성을 요청하고, 접속 정보(IP, Port)를 반환하는 중계자 역할을 수행했습니다.
-    - 보안 및 DB 무결성: 클라이언트가 DynamoDB에 직접 접근하는 것을 차단하고, 오직 적절한 **IAM 역할(Role)**을 부여받은 Lambda 함수를 통해서만 유저 정보와 전적 데이터를 안전하게 조작하도록 구현했습니다.
-
-<div style="display: flex; justify-content: space-between;">
-  <img src="readme\Lambda.png" alt="이미지 1 설명" style="width: 40%;" />
-  <img src="readme\APIGateway.png" alt="이미지 2 설명" style="width: 40%;" />
-</div>
-
-<p align="center">
- <img alt="이미지" src="readme\IAM.png" width = 60% >
-</p>
-
-<p align="center">
- <img alt="이미지" src="readme\PortalAPI.png" width = 50% >
-</p>
-
-</br>
-
-2. 언리얼 엔진과의 유기적 통합 (HTTP & JSON)
-
-    - 비동기 통신: 언리얼 엔진의 HTTP 모듈을 활용하여 API Gateway 엔드포인트로 RESTful API 요청을 보내고, 비동기(OnProcessRequestComplete)로 응답을 처리했습니다.
-        - [로그인 코드](https://github.com/kabu0330/FPS_with_DedicatedServer/blob/a8682a0281375c614d704531e462e7c340a0622b/Source/DedicatedServers/Private/UI/Portal/PortalManager.cpp#L17-L81) / [전적 검색 코드](https://github.com/kabu0330/FPS_with_DedicatedServer/blob/main/Source/DedicatedServers/Private/UI/GameStats/GameStatsManager.cpp#L52-L104)
-    - 데이터 파싱: Lambda로부터 받은 JSON 응답 데이터를 언리얼 엔진의 리플렉션(Reflection) 시스템을 활용한 JsonUtilities(FJsonObjectConverter)를 통해 사전에 정의된 USTRUCT 구조체로 자동 매핑 및 파싱하여, 수동 파싱 코드 없이 효율적으로 게임 로직에 반영했습니다
-
-<p align="center">
- <img alt="이미지" src="readme\Reflection.png" width = 90% >
-</p>
-
-<div style="display: flex; justify-content: space-between;">
-  <img src="readme\Reflection2.png" alt="이미지 1 설명" style="width: 35%;" />
-  <img src="readme\Reflection3.png" alt="이미지 2 설명" style="width: 60%;" />
-</div>
-
-</br>
-
-3. 운영 및 모니터링 (CloudWatch)
-
-    - 서버리스 환경의 특성상 실시간 디버깅이 어렵다는 점을 극복하기 위해, CloudWatch Logs를 적극 활용했습니다. Lambda 함수의 실행 로그와 오류 메시지를 분석하여 이슈를 신속하게 파악하고 해결하는 운영 노하우를 쌓았습니다.
-
-</br>
-
-</details>
-
-#### 프로젝트 관련 글(Blog)
-
-Dedicated Sever와 관련한 작업은 블로그에 과정을 기록해두었습니다.
-
-* [Blog 'Unreal Engine/Dedicated Server' Category](https://kabu0129.tistory.com/category/Unreal%20Engine/Dedicated%20Server)
-
-</br>
-
-
-
-## 📄 3. [Team Project] Unreal Engine ver 'Overooked! 2' 모작
+## 📄 [Team Project] 'Overooked! 2' 모작
 
 <p align="center">
  <img alt="이미지" src="readme\Overcooked!2.gif">
@@ -695,21 +811,12 @@ Dedicated Sever와 관련한 작업은 블로그에 과정을 기록해두었습
 
 </br>
 
-
-### 기능구현
-
-<p align="center">
- <img alt="이미지" src="readme\overcookedIngame.png">
-</p>
-
-</br>
-
-___
+### 구현 내용
 
 <details>
-<summary> 1. 동적 액터의 네트워크 동기화와 타이밍 이슈 해결 (클릭) </summary><p>
+<summary> 동적 액터의 네트워크 동기화와 타이밍 이슈 해결 (클릭) </summary><p>
 
-#### 🛠️ 1. 동적 액터의 네트워크 동기화와 타이밍 이슈 해결
+#### 🛠️ 동적 액터의 네트워크 동기화와 타이밍 이슈 해결
 
 **🚨 문제 상황**
 
@@ -785,9 +892,9 @@ ___
 </details>
 
 <details>
-<summary> 2. 데이터 기반(Data-Driven) 요리 시스템 (클릭) </summary><p>
+<summary> 데이터 기반(Data-Driven) 요리 시스템 (클릭) </summary><p>
 
-#### 🛠️ 2. 데이터 기반(Data-Driven) 요리 시스템
+#### 🛠️ 데이터 기반(Data-Driven) 요리 시스템
 
 **🚨 문제 상황**
 
@@ -845,9 +952,9 @@ ___
 </details>
 
 <details>
-<summary> 3. 협업 (클릭) </summary><p>
+<summary> 협업 (클릭) </summary><p>
 
-#### 🛠️ 3. 협업
+#### 🛠️ 협업
 
 **🚨 문제 상황**
 
@@ -874,13 +981,20 @@ ___
 
 </details>
 
-
-</br>
 </br>
 
+### 기능구현
+
+<p align="center">
+ <img alt="이미지" src="readme\overcookedIngame.png">
+</p>
+
+</br>
+
+___
 
 
-## 📄 4. [Custom Engine Projects] DirectX 11 2D 'HollowKnight' 모작
+## 📄 [DirectX 11] 'HollowKnight' 모작
 
 <p align="center">
  <img alt="이미지" src="readme\HollowKnight.gif">
@@ -933,31 +1047,14 @@ ___
 
 </br>
 
-* 엔진 프레임워크
-<p align="center">
- <img alt="이미지" src="readme\Engine.png" width = 90% >
-</p>
-
-<p align="center">
- <img alt="이미지" src="readme\Rendering.png" width = 90% >
-</p>
-
-</br>
-
-### 기능구현
-
-<p align="center">
- <img alt="이미지" src="readme\hollowknight.png" >
-</p>
-
-</br>
-
 ___
 
-<details>
-<summary> 1. 이벤트 기반 FSM (클릭) </summary><p>
+### 구현 내용
 
-#### 🛠️ 1. 이벤트 기반 FSM
+<details>
+<summary> 이벤트 기반 FSM (클릭) </summary><p>
+ 
+#### 🛠️ 이벤트 기반 FSM
 
 **🚨 문제 상황**
 
@@ -994,9 +1091,9 @@ C++ `std::function`을 활용하여 상태를 이벤트(함수 포인터) 단위
 </details>
 
 <details>
-<summary> 2. Time Event Component (클릭) </summary><p>
+<summary> Time Event Component (클릭) </summary><p>
 
-#### 🛠️ 2. Time Event Component
+#### 🛠️ Time Event Component
 
 **🚨 문제 상황**
 
@@ -1031,11 +1128,166 @@ C++ `std::function`을 활용하여 상태를 이벤트(함수 포인터) 단위
 
 </details>
 
+<details>
+<summary> 다중좌표계 간 위치 동기화 (클릭) </summary><p>
+
+#### 🛠️ 다중좌표계 간 위치 동기화
+
+**🚨 상황**
+
+게임 엔진에서 BMP 픽셀 충돌 맵(윈도우 계층)과 액터 Transform(엔진 계층) 간의 좌표계 불일치 문제를 해결하여 정확한 픽셀 기반 지형 충돌을 구현합니다.
+
+</br>
+
+**💭 해결 방안**
+
+게임 엔진을 Windows에 종속된 Platform 계층과 게임 컨텐츠 제작에 필요한 기능을 지원하는 Core 계층으로 분리한 것이 문제의 시작이었습니다.
+
+```
+[윈도우 계층 - EnginePlatform]  
+- BMP 이미지 (픽셀 충돌용)
+- UEngineWinImage (Transform 없음)
+- 스크린 좌표 시스템
+
+</br>
+
+[엔진 계층 - EngineCore]
+- PNG 텍스처 (렌더링용)
+- Transform (월드 좌표)
+- 데카르트 좌표 시스템
+```
+
+**문제:**
+
+-   BMP 파일은 윈도우 계층에 속하며 Transform 정보를 가질 수 없음
+-   액터는 엔진 계층의 월드 좌표로 움직이지만, 픽셀 충돌은 윈도우 계층의 BMP를 참조
+-   두 계층의 좌표 기준점이 다름
+
+</br>
+
+**방법 1: 엔진 구조 변경**
+
+```
+// UEngineWinImage에 Transform 추가?
+class UEngineWinImage
+{
+    FTransform Transform; // ❌ 계층 규칙 위반
+};
+```
+
+-   계층 분리 원칙 위반 (Platform 계층이 Core 계층 의존)
+-   엔진 전체 구조 수정 필요
+
+</br>
+
+**방법 2: WinImage를 엔진 계층으로 이동**
+
+```
+// UEngineWinImage를 EngineCore로?
+#include <EngineCore/EngineWinImage.h> // ❌ 의존성 역전
+```
+
+</br>
+
+**핵심 아이디어: 픽셀 충돌 검사는 데카르트 좌표계에서 윈도우 좌표계로 변환**
+
+현재 배경 이미지(png) 파일의 좌상단(Left Top) 좌표를 스크린 좌표의 원점(0, 0)으로 변환하고, y축을 반전시켜 액터의 픽셀 충돌 검사는 스크린 좌표계 기준으로 변환합니다.
+
+플레이어가 속하지 않은 맵 리소스는 모두 비활성화시켜 항상 플레이어가 입장한 맵에서만 좌표계를 변환한 충돌 검사를 수행합니다.
+
+```
+월드 좌표 (액터) → BMP 로컬 좌표 → 픽셀 색상 검사
+```
+
+**설계 원칙:**
+
+1.  BMP 파일은 변경하지 않는다 (윈도우 계층 유지)
+2.  액터 좌표를 BMP의 좌표계로 변환한다
+3.  맵이 바뀌면 변환 기준점만 갱신한다
+
+</br>
+
+#### Room 기반 좌표 변환 시스템
+
+```
+// Room.h - 좌표 변환의 중심
+class ARoom : public AActor
+{
+private:
+    UEngineWinImage PixelCollisionImage;  // BMP 충돌 맵
+    FVector LeftTopPos;                    // BMP의 좌표 기준점 (월드 좌표)
+    FVector Size;                          // 방 크기
+};
+```
+
+</br>
+
+**Room이 좌표 변환을 담당하는 이유:**
+
+-   Room은 엔진 계층에 속하므로 Transform 사용 가능
+-   각 Room은 독립적인 BMP 충돌 맵 보유
+-   Room 전환 시 자동으로 좌표계 변환 기준점 갱신
+
+</br>
+
+**변환 과정:**
+
+```
+[월드 좌표]
+Knight: (9000, -6000)
+Room LeftTopPos: (6150, -3550)
+
+[1단계] 월드 → Room 로컬
+CollisionPos = (9000, -6000) - (6150, -3550)
+             = (2850, -2450)
+
+[2단계] BMP 좌표 (Y축 반전)
+BMP GetColor({ 2850, 2450 })  // Y축 부호 반전
+```
+
+</br>
+
+#### Y축 좌표계 통일
+
+```
+// Room.cpp
+bool ARoom::IsOnGround(FVector _Pos)
+{
+    FVector CollisionPoint = _Pos;
+    CollisionPoint.RoundVector();
+
+    // Y축 반전: 엔진(Y Down) → BMP(Y Up)
+    UColor CollisionColor = PixelCollisionImage.GetColor(
+        { CollisionPoint.X, -CollisionPoint.Y }
+    );
+
+    return (CollisionColor == UColor::BLACK);
+}
+```
+</br>
+
+**좌표계 차이:**
+
+| 시스템 | 원점 | Y축 방향 |
+| --- | --- | --- |
+| 엔진 월드 좌표 | 임의 | 아래가 음수 |
+| BMP 좌표 | 좌상단 | 아래가 양수 |
+
+
+</br>
+
+**🔧구현 상세**
+
+* [좌표 변환 및 충돌 위치 구현 코드](https://github.com/kabu0330/DX_HollowKnight2/blob/fd06b77a8f3283c254f2a705d03b0a267235d72d/DX_HollowKnight/Contents/Room.cpp#L166-L173) 
+
+
+</details>
+
 
 <details>
-<summary> 3. Unity 메타파일 자동 파싱 및 로드 시스템 (클릭) </summary><p>
+<summary> Unity 메타파일 자동 파싱 및 로드 시스템 (클릭) </summary><p>
 
-#### 🛠️ 3. Unity 메타파일 자동 파싱 및 로드 시스템
+#### 🛠️ Unity 메타파일 자동 파싱 및 로드 시스템
 
 **🚨 문제 상황**
 
@@ -1071,9 +1323,9 @@ C++ `std::function`을 활용하여 상태를 이벤트(함수 포인터) 단위
 </details>
 
 <details>
-<summary> 4. 멀티 스레드 리소스 로딩 시스템 (클릭) </summary><p>
+<summary> 멀티 스레드 리소스 로딩 시스템 (클릭) </summary><p>
 
-#### 🛠️ 4. 멀티 스레드 리소스 로딩 시스템 (Multi-threaded Resource Loading)
+#### 🛠️ 멀티 스레드 리소스 로딩 시스템 (Multi-threaded Resource Loading)
 
 **🚨 문제 상황**
 
@@ -1128,6 +1380,30 @@ C++ `std::function`을 활용하여 상태를 이벤트(함수 포인터) 단위
 
 
 </p> </details>
+
+</br>
+
+___
+
+### 기능구현
+
+#### 엔진 프레임워크
+
+<p align="center">
+ <img alt="이미지" src="readme\Engine.png" width = 90% >
+</p>
+
+<p align="center">
+ <img alt="이미지" src="readme\Rendering.png" width = 90% >
+</p>
+
+</br>
+
+<p align="center">
+ <img alt="이미지" src="readme\hollowknight.png" >
+</p>
+
+</br>
 
 
 #### 프로젝트 관련 글(Blog)
