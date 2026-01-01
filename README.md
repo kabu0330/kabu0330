@@ -33,8 +33,6 @@
 2. [[Dedicated Server] FPS Game Project](#-dedicated-server-project-fps-game)
 3. [[UE 5] Action RPG Project "Soul"](#-unreal-engine-5-action-rpg-project-soul)
 4. [[DirectX 11] 'HollowKnight' 모작](#-directx-11-hollowknight-모작)
-5. [Unity 6] Project TinyRush (개발 중) 
-    * [Notion](https://www.notion.so/Project-Tiny-Rush-Technical-Spec-2c14969443dc807abdebca937cabb76d?source=copy_link)
 
 </br>
 
