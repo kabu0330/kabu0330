@@ -29,14 +29,238 @@
 * [티스토리](https://kabu0129.tistory.com/)
 
 ## 📜 목차
-1. [[Dedicated Server] FPS Game Project](#-dedicated-server-project-fps-game)
-2. [[Team Project] 'Overooked! 2' 모작](#-team-project-overooked-2-모작)
+1. [[Team Project] 'Overooked! 2' 모작](#-team-project-overooked-2-모작)
+2. [[Dedicated Server] FPS Game Project](#-dedicated-server-project-fps-game)
 3. [[UE 5] Action RPG Project "Soul"](#-unreal-engine-5-action-rpg-project-soul)
 4. [[DirectX 11] 'HollowKnight' 모작](#-directx-11-hollowknight-모작)
 5. [Unity 6] Project TinyRush (개발 중) 
     * [Notion](https://www.notion.so/Project-Tiny-Rush-Technical-Spec-2c14969443dc807abdebca937cabb76d?source=copy_link)
 
 </br>
+
+## 📄 [Team Project] 'Overooked! 2' 모작
+
+<p align="center">
+ <img alt="이미지" src="readme\Overcooked!2.gif">
+</p>
+
+* 🔗 [Youtube](https://youtu.be/zs3aQ8tSZ3E?si=R2VaHZ-xt10g0D2M)
+* 🔗 [Github](https://github.com/kabu0330/UE_Overcooked2)
+
+</br>
+
+📋 프로젝트 정보
+| 항목 | 내용 | 항목 | 내용 |
+|:------|:-----|:-----|:-----|
+| 🖥️ **플랫폼** | PC (Windows) | 🎮 **장르** | 시뮬레이션 |
+| 👤 **개발 인원** | 6인 | 📅 **개발 기간** | 2025.02 ~ 2025.05 |
+| 🛠️ **개발 도구** | C++, Unreal Engine 5, Visual Studio, Git |
+| 📝 **게임 소개** | 최대 4인의 플레이어가 함께 재료를 전달/손질/조합하여 </br> 제한 시간 내에 최대한 많은 요리를 제출하는 협동 게임|
+| 🎯 **핵심 목표** | 협업 방식을 학습하고 멀티 플레이어 게임을 구현하는 방법을 습득 | | 
+| 📑 **주요 특징** | 데이터 기반 요리 컨텐츠 개발, 레벨 디자인, RPC / Replication | | 
+
+</br>
+
+언리얼 엔진을 본격적으로 학습함과 동시에 처음으로 협업을 통해 하나의 게임을 완성시켜나가는 과정을 경험했습니다. 처음으로 멀티플레이 게임에 대해 학습하며 동기화 이슈에 대해 끊임없이 고민하고 해결해나가며 네트워크 게임의 구조를 깊이 이해하는 시간이었습니다. 이 과정에서 버전 관리의 중요성과 충돌 문제를 해결하는 방법을 배웠고, Pork / Full Request 협업 방식과 git stash에 대해 알게되었습니다.
+
+* 목표: 6인 협업을 통한 실시간 네트워크 멀티플레이 동기화 및 데이터 기반(Data-Driven) 상호작용 시스템 구축.
+
+* 기술적 도전 & 해결 :
+
+    * Lifecycle-Aware Network Spawning (객체 생명주기 제어):
+
+        * 문제: SpawnActor 직후 서버의 데이터 복제(Replication)보다 클라이언트의 BeginPlay가 먼저 실행되어, 초기화되지 않은 데이터(재료 타입 등)로 인해 렌더링 오류가 발생하는 Race Condition 확인.
+
+        * 해결: **SpawnActorDeferred**를 도입하여 [메모리 할당 → Replicated 데이터 초기화 → 스폰 완료(FinishSpawning)] 순으로 생명주기를 재설계. 클라이언트 BeginPlay 시점의 데이터 무결성을 보장하여 동기화 타이밍 이슈 해결.
+
+    * Data-Driven Recipe System (데이터 기반 설계):
+
+        * 문제: 재료의 상태(손질, 굽기 등)와 다양한 조합식(Recipe)을 if/switch 분기문으로 처리할 경우, 콘텐츠 추가 시 코드 복잡도가 기하급수적으로 증가.
+
+        * 해결: 재료를 Type과 State 구조체로 추상화하고, 조합 로직을 **DataTable**로 분리. '접시(Plate)' 객체가 현재 담긴 재료 배열을 테이블과 대조하여 결과물(Mesh)을 동적으로 교체하도록 구현. (OCP 준수)
+
+    * Optimized Collaboration Pipeline (협업 파이프라인):
+
+        * 해결: 6인 개발 환경에서 Binary Asset(.uasset) 충돌 방지를 위해 기능별 폴더 구조화 및 Git Stash / Lock 워크플로우 정립. RPC(Remote Procedure Call) 권한 분리를 명확히 하여 멀티플레이 로직 충돌 최소화.
+
+</br>
+
+### 구현 내용
+
+<details>
+<summary> 동적 액터의 네트워크 동기화와 타이밍 이슈 해결 (클릭) </summary><p>
+
+#### 🛠️ 동적 액터의 네트워크 동기화와 타이밍 이슈 해결
+
+**🚨 문제 상황**
+
+플레이어 상호작용으로 런타임에 생성되는 재료(`Ingredient`) 액터가 클라이언트 화면에서 보이지 않거나, 데이터(메시, 타입 등)가 비정상적으로 표시되는 문제가 발생했습니다. 원인은 `SpawnActor` 호출 시, 서버에서는 데이터 설정 전에 `BeginPlay`가 실행되고, 클라이언트에서는 데이터가 복제되기 전에 `BeginPlay`가 실행되는 등 초기화와 복제 타이밍의 불일치 때문이었습니다.
+
+</br>
+
+**💭 해결 방안**
+
+액터 생성과 초기화를 분리하는 지연 스폰(Deferred Spawn) 방식을 도입했습니다. `SpawnActorDeferred`를 사용하여 액터를 메모리에 먼저 할당한 뒤, 필요한 Replicated 데이터(예: 재료 타입)를 설정하고, 마지막으로 `FinishSpawning`을 호출하여 `BeginPlay`가 실행되도록 했습니다. 이로써 `BeginPlay` 시점에는 모든 데이터가 안전하게 복제된 상태임을 보장했습니다.
+
+**❌ 기존 방식 (SpawnActor)**
+```mermaid
+sequenceDiagram
+    participant Server
+    participant Network
+    participant Client
+    
+    Note over Server: SpawnActor 호출
+    Server->>Server: 액터 생성
+    Server->>Server: BeginPlay 실행 ⚠️
+    Server->>Server: 데이터 설정 (IngredientType 등)
+    Server->>Network: 액터 복제 시작
+    
+    Network->>Client: 액터 생성 알림
+    Client->>Client: 액터 생성
+    Client->>Client: BeginPlay 실행 ⚠️
+    Note over Client: 데이터 아직 복제 안됨!
+    Network-->>Client: 데이터 복제 (지연됨)
+    
+    Note over Client: 메시/타입 정보 없음화면에 안보이거나비정상 표시
+```
+
+**✅ 개선 방식 (SpawnActorDeferred)**
+```mermaid
+sequenceDiagram
+    participant Server
+    participant Network
+    participant Client
+    
+    Note over Server: SpawnActorDeferred 호출
+    Server->>Server: 액터 메모리 할당
+    Server->>Server: 데이터 설정 (IngredientType 등)
+    Server->>Server: FinishSpawning 호출
+    Server->>Server: BeginPlay 실행 ✅
+    Note over Server: 모든 데이터 준비 완료
+    Server->>Network: 액터 복제 시작
+    
+    Network->>Client: 액터 + 데이터 복제
+    Client->>Client: 액터 생성
+    Note over Client: 복제된 데이터 수신 완료
+    Client->>Client: BeginPlay 실행 ✅
+    
+    Note over Client: 메시/타입 정보 정상화면에 올바르게 표시
+```
+
+</br>
+
+**🔧구현 상세**
+
+- 서버: SpawnActorDeferred → Replicated 변수 설정 → FinishSpawning 호출 순서로 구현.
+    - [Server 재료 스폰 코드](https://github.com/kabu0330/UE_Overcooked2/blob/fa2b9ce77865d74c9d8ebb40c070b3c568b2ac21/Overcooked2/Source/Overcooked2/Global/Component/SpawnManageComponent.cpp#L18-L38)
+
+- 클라이언트: BeginPlay에서 이미 복제된 데이터를 안전하게 사용하여 메시와 아이콘을 설정.
+    - [Ingredient 초기화 코드](https://github.com/kabu0330/UE_Overcooked2/blob/fa2b9ce77865d74c9d8ebb40c070b3c568b2ac21/Overcooked2/Source/Overcooked2/LevelContent/Cook/Ingredient.cpp#L32-L107)
+
+ **[💡 회고 및 개선점]** 이 경험을 통해 멀티플레이어 환경에서 객체의 생명주기(Lifecycle)와 네트워크 복제 순서를 이해하는 것이 얼마나 중요한지 깨달았습니다. 단순히 변수를 Replicated로 설정하는 것을 넘어, "언제" 복제되고 "언제" 사용되는지를 고려하는 설계 시각을 갖게 되었습니다.
+
+</br>
+
+___
+
+</details>
+
+<details>
+<summary> 데이터 기반(Data-Driven) 요리 시스템 (클릭) </summary><p>
+
+#### 🛠️ 데이터 기반(Data-Driven) 요리 시스템
+
+**🚨 문제 상황**
+
+요리 레시피는 다양하고, 재료의 조합 규칙이 존재하나, 조합 순서에 제약이 없고, 조합에 따라 메시가 변화하는 요리 컨텐츠를 구현해야 했습니다. 조건이 복잡하기 때문에 분기문으로 처리하는 것은 최악의 방법입니다. 반드시 데이터 기반 방식으로 컨텐츠를 구현해야 하는데, 어떻게 구조를 잡아야 할지 일주일 가까이 수도 코드를 작성하며 구조를 잡아나갔습니다.
+
+
+</br>
+
+**💭 해결 방안**
+
+**1). 재료는 직접 데이터를 가지지 않는다.**
+
+재료는 타입(Type)과 상태(State). 두가지 데이터로 정의했습니다. 
+
+* 물고기 - 손질
+* 새우 - 손질
+* 김 - 완제품
+* 밥 - 끓이기
+
+재료는 타입과 상태로 손쉽게 정의할 수 있었습니다. 문제는 원작 게임은 조리 과정을 여러 번 거치는 재료가 존재한다는 점입니다. 해당 문제는 데이터 테이블의 구조체가 타입과 상태를 배열로 정의한다는 규칙을 추가하여 해결했습니다.
+
+<p align="center">
+ <img alt="이미지" src="readme\Ingredient.png" width = 90% >
+</p>
+
+</br>
+
+**2). 접시 == 요리**
+
+원작 게임의 재밌는 규칙 중 하나가, "재료의 조합은 접시 위에서만 가능하다"는 것입니다. 이 점에 착안해 요리라는 개념의 모든 기능을 접시(`Plate`) 클래스 하나로 정리했습니다. 이로써 요리 컨텐츠는 재료와 접시, 조리도구 세 개의 클래스로 컨텐츠를 완성할 수 있습니다.
+
+접시는 재료의 타입과 상태를 배열로 저장하고 해당 데이터를 서버에 넘겨 데이터 테이블에서 조회 후 메시만 바꾸는 객체입니다.
+
+<p align="center">
+ <img alt="이미지" src="readme\Recipe.png" width = 90% >
+</p>
+
+</br>
+
+**🔧구현 상세**
+
+* [재료 데이터 테이블 구현 코드](https://github.com/kabu0330/UE_Overcooked2/blob/fa2b9ce77865d74c9d8ebb40c070b3c568b2ac21/Overcooked2/Source/Overcooked2/Global/Data/IngredientDataTable.h#L11-L53)
+
+* [요리 데이터 테이블 구현 코드](https://github.com/kabu0330/UE_Overcooked2/blob/fa2b9ce77865d74c9d8ebb40c070b3c568b2ac21/Overcooked2/Source/Overcooked2/Global/Data/RecipeDataTable.h#L11-L36)
+
+* [요리 조합 검사 코드](https://github.com/kabu0330/UE_Overcooked2/blob/fa2b9ce77865d74c9d8ebb40c070b3c568b2ac21/Overcooked2/Source/Overcooked2/Global/OC2GameInstance.cpp#L354-L416)
+
+
+ **[💡 회고 및 개선점]** 데이터 기반 설계를 통해 새로운 요리를 추가할 때 코드 수정 없이 데이터 테이블 행(Row)만 추가하면 되는 유연한 시스템을 구축할 수 있었습니다. 이를 통해 기획자가 직접 밸런싱과 콘텐츠 추가를 할 수 있는 환경을 마련하여 팀 전체의 개발 효율성을 높였습니다.
+
+</br>
+
+___
+
+</details>
+
+<details>
+<summary> 협업 (클릭) </summary><p>
+
+#### 🛠️ 협업
+
+**🚨 문제 상황**
+
+6명의 팀원이 동시에 작업하면서 바이너리 파일(.uasset) 충돌이 빈번하게 발생했습니다. 특히 레벨이나 공용 블루프린트를 수정할 때 충돌이 나면 병합(Merge)이 불가능해 한 명의 작업 내용이 유실되는 등 개발에 큰 차질이 빚어졌습니다. 초기 도입했던 Git Flow 방식은 리뷰 대기 시간으로 인해 작업 속도를 저하시키는 문제도 있었습니다.
+
+</br>
+
+**💭 해결 방안**
+
+팀의 규모와 프로젝트 특성에 맞춰 협업 워크플로우를 재정립했습니다.
+
+1. 작업 영역 분리: 팀원별로 담당 클래스와 폴더를 명확히 나누어 충돌 가능성을 최소화했습니다.
+
+2. Fork/Pull Request : 팀원 중 한명이 병합 전 충돌을 체크하고 소통을 통해 살릴 데이터를 선별합니다.
+    
+3. Git Stash 활용: 병합 전 git stash를 활용하여 작업 중인 데이터를 보호하고, 충돌 발생 시 작업 내용을 잃지 않고 안전하게 처리합니다.
+
+
+</details>
+
+</br>
+
+### 기능구현
+
+<p align="center">
+ <img alt="이미지" src="readme\overcookedIngame.png">
+</p>
+
+</br>
+
+___
+
 
 ## 📄 [Dedicated Server Project] FPS Game
 
@@ -381,234 +605,6 @@ Dedicated Sever와 관련한 작업은 블로그에 과정을 기록해두었습
 
 </br>
 
-## 📄 [Team Project] 'Overooked! 2' 모작
-
-<p align="center">
- <img alt="이미지" src="readme\Overcooked!2.gif">
-</p>
-
-* 🔗 [Youtube](https://youtu.be/zs3aQ8tSZ3E?si=R2VaHZ-xt10g0D2M)
-* 🔗 [Github](https://github.com/kabu0330/UE_Overcooked2)
-
-</br>
-
-📋 프로젝트 정보
-| 항목 | 내용 | 항목 | 내용 |
-|:------|:-----|:-----|:-----|
-| 🖥️ **플랫폼** | PC (Windows) | 🎮 **장르** | 시뮬레이션 |
-| 👤 **개발 인원** | 6인 | 📅 **개발 기간** | 2025.02 ~ 2025.05 |
-| 🛠️ **개발 도구** | C++, Unreal Engine 5, Visual Studio, Git |
-| 📝 **게임 소개** | 최대 4인의 플레이어가 함께 재료를 전달/손질/조합하여 </br> 제한 시간 내에 최대한 많은 요리를 제출하는 협동 게임|
-| 🎯 **핵심 목표** | 협업 방식을 학습하고 멀티 플레이어 게임을 구현하는 방법을 습득 | | 
-| 📑 **주요 특징** | 데이터 기반 요리 컨텐츠 개발, 레벨 디자인, RPC / Replication | | 
-
-</br>
-
-언리얼 엔진을 본격적으로 학습함과 동시에 처음으로 협업을 통해 하나의 게임을 완성시켜나가는 과정을 경험했습니다. 처음으로 멀티플레이 게임에 대해 학습하며 동기화 이슈에 대해 끊임없이 고민하고 해결해나가며 네트워크 게임의 구조를 깊이 이해하는 시간이었습니다. 이 과정에서 버전 관리의 중요성과 충돌 문제를 해결하는 방법을 배웠고, Pork / Full Request 협업 방식과 git stash에 대해 알게되었습니다.
-
-* 목표: 6인 협업을 통한 실시간 네트워크 멀티플레이 동기화 및 데이터 기반(Data-Driven) 상호작용 시스템 구축.
-
-* 기술적 도전 & 해결 :
-
-    * Lifecycle-Aware Network Spawning (객체 생명주기 제어):
-
-        * 문제: SpawnActor 직후 서버의 데이터 복제(Replication)보다 클라이언트의 BeginPlay가 먼저 실행되어, 초기화되지 않은 데이터(재료 타입 등)로 인해 렌더링 오류가 발생하는 Race Condition 확인.
-
-        * 해결: **SpawnActorDeferred**를 도입하여 [메모리 할당 → Replicated 데이터 초기화 → 스폰 완료(FinishSpawning)] 순으로 생명주기를 재설계. 클라이언트 BeginPlay 시점의 데이터 무결성을 보장하여 동기화 타이밍 이슈 해결.
-
-    * Data-Driven Recipe System (데이터 기반 설계):
-
-        * 문제: 재료의 상태(손질, 굽기 등)와 다양한 조합식(Recipe)을 if/switch 분기문으로 처리할 경우, 콘텐츠 추가 시 코드 복잡도가 기하급수적으로 증가.
-
-        * 해결: 재료를 Type과 State 구조체로 추상화하고, 조합 로직을 **DataTable**로 분리. '접시(Plate)' 객체가 현재 담긴 재료 배열을 테이블과 대조하여 결과물(Mesh)을 동적으로 교체하도록 구현. (OCP 준수)
-
-    * Optimized Collaboration Pipeline (협업 파이프라인):
-
-        * 해결: 6인 개발 환경에서 Binary Asset(.uasset) 충돌 방지를 위해 기능별 폴더 구조화 및 Git Stash / Lock 워크플로우 정립. RPC(Remote Procedure Call) 권한 분리를 명확히 하여 멀티플레이 로직 충돌 최소화.
-
-</br>
-
-### 구현 내용
-
-<details>
-<summary> 동적 액터의 네트워크 동기화와 타이밍 이슈 해결 (클릭) </summary><p>
-
-#### 🛠️ 동적 액터의 네트워크 동기화와 타이밍 이슈 해결
-
-**🚨 문제 상황**
-
-플레이어 상호작용으로 런타임에 생성되는 재료(`Ingredient`) 액터가 클라이언트 화면에서 보이지 않거나, 데이터(메시, 타입 등)가 비정상적으로 표시되는 문제가 발생했습니다. 원인은 `SpawnActor` 호출 시, 서버에서는 데이터 설정 전에 `BeginPlay`가 실행되고, 클라이언트에서는 데이터가 복제되기 전에 `BeginPlay`가 실행되는 등 초기화와 복제 타이밍의 불일치 때문이었습니다.
-
-</br>
-
-**💭 해결 방안**
-
-액터 생성과 초기화를 분리하는 지연 스폰(Deferred Spawn) 방식을 도입했습니다. `SpawnActorDeferred`를 사용하여 액터를 메모리에 먼저 할당한 뒤, 필요한 Replicated 데이터(예: 재료 타입)를 설정하고, 마지막으로 `FinishSpawning`을 호출하여 `BeginPlay`가 실행되도록 했습니다. 이로써 `BeginPlay` 시점에는 모든 데이터가 안전하게 복제된 상태임을 보장했습니다.
-
-**❌ 기존 방식 (SpawnActor)**
-```mermaid
-sequenceDiagram
-    participant Server
-    participant Network
-    participant Client
-    
-    Note over Server: SpawnActor 호출
-    Server->>Server: 액터 생성
-    Server->>Server: BeginPlay 실행 ⚠️
-    Server->>Server: 데이터 설정 (IngredientType 등)
-    Server->>Network: 액터 복제 시작
-    
-    Network->>Client: 액터 생성 알림
-    Client->>Client: 액터 생성
-    Client->>Client: BeginPlay 실행 ⚠️
-    Note over Client: 데이터 아직 복제 안됨!
-    Network-->>Client: 데이터 복제 (지연됨)
-    
-    Note over Client: 메시/타입 정보 없음화면에 안보이거나비정상 표시
-```
-
-**✅ 개선 방식 (SpawnActorDeferred)**
-```mermaid
-sequenceDiagram
-    participant Server
-    participant Network
-    participant Client
-    
-    Note over Server: SpawnActorDeferred 호출
-    Server->>Server: 액터 메모리 할당
-    Server->>Server: 데이터 설정 (IngredientType 등)
-    Server->>Server: FinishSpawning 호출
-    Server->>Server: BeginPlay 실행 ✅
-    Note over Server: 모든 데이터 준비 완료
-    Server->>Network: 액터 복제 시작
-    
-    Network->>Client: 액터 + 데이터 복제
-    Client->>Client: 액터 생성
-    Note over Client: 복제된 데이터 수신 완료
-    Client->>Client: BeginPlay 실행 ✅
-    
-    Note over Client: 메시/타입 정보 정상화면에 올바르게 표시
-```
-
-</br>
-
-**🔧구현 상세**
-
-- 서버: SpawnActorDeferred → Replicated 변수 설정 → FinishSpawning 호출 순서로 구현.
-    - [Server 재료 스폰 코드](https://github.com/kabu0330/UE_Overcooked2/blob/fa2b9ce77865d74c9d8ebb40c070b3c568b2ac21/Overcooked2/Source/Overcooked2/Global/Component/SpawnManageComponent.cpp#L18-L38)
-
-- 클라이언트: BeginPlay에서 이미 복제된 데이터를 안전하게 사용하여 메시와 아이콘을 설정.
-    - [Ingredient 초기화 코드](https://github.com/kabu0330/UE_Overcooked2/blob/fa2b9ce77865d74c9d8ebb40c070b3c568b2ac21/Overcooked2/Source/Overcooked2/LevelContent/Cook/Ingredient.cpp#L32-L107)
-
- **[💡 회고 및 개선점]** 이 경험을 통해 멀티플레이어 환경에서 객체의 생명주기(Lifecycle)와 네트워크 복제 순서를 이해하는 것이 얼마나 중요한지 깨달았습니다. 단순히 변수를 Replicated로 설정하는 것을 넘어, "언제" 복제되고 "언제" 사용되는지를 고려하는 설계 시각을 갖게 되었습니다.
-
-</br>
-
-___
-
-</details>
-
-<details>
-<summary> 데이터 기반(Data-Driven) 요리 시스템 (클릭) </summary><p>
-
-#### 🛠️ 데이터 기반(Data-Driven) 요리 시스템
-
-**🚨 문제 상황**
-
-요리 레시피는 다양하고, 재료의 조합 규칙이 존재하나, 조합 순서에 제약이 없고, 조합에 따라 메시가 변화하는 요리 컨텐츠를 구현해야 했습니다. 조건이 복잡하기 때문에 분기문으로 처리하는 것은 최악의 방법입니다. 반드시 데이터 기반 방식으로 컨텐츠를 구현해야 하는데, 어떻게 구조를 잡아야 할지 일주일 가까이 수도 코드를 작성하며 구조를 잡아나갔습니다.
-
-
-</br>
-
-**💭 해결 방안**
-
-**1). 재료는 직접 데이터를 가지지 않는다.**
-
-재료는 타입(Type)과 상태(State). 두가지 데이터로 정의했습니다. 
-
-* 물고기 - 손질
-* 새우 - 손질
-* 김 - 완제품
-* 밥 - 끓이기
-
-재료는 타입과 상태로 손쉽게 정의할 수 있었습니다. 문제는 원작 게임은 조리 과정을 여러 번 거치는 재료가 존재한다는 점입니다. 해당 문제는 데이터 테이블의 구조체가 타입과 상태를 배열로 정의한다는 규칙을 추가하여 해결했습니다.
-
-<p align="center">
- <img alt="이미지" src="readme\Ingredient.png" width = 90% >
-</p>
-
-</br>
-
-**2). 접시 == 요리**
-
-원작 게임의 재밌는 규칙 중 하나가, "재료의 조합은 접시 위에서만 가능하다"는 것입니다. 이 점에 착안해 요리라는 개념의 모든 기능을 접시(`Plate`) 클래스 하나로 정리했습니다. 이로써 요리 컨텐츠는 재료와 접시, 조리도구 세 개의 클래스로 컨텐츠를 완성할 수 있습니다.
-
-접시는 재료의 타입과 상태를 배열로 저장하고 해당 데이터를 서버에 넘겨 데이터 테이블에서 조회 후 메시만 바꾸는 객체입니다.
-
-<p align="center">
- <img alt="이미지" src="readme\Recipe.png" width = 90% >
-</p>
-
-</br>
-
-**🔧구현 상세**
-
-* [재료 데이터 테이블 구현 코드](https://github.com/kabu0330/UE_Overcooked2/blob/fa2b9ce77865d74c9d8ebb40c070b3c568b2ac21/Overcooked2/Source/Overcooked2/Global/Data/IngredientDataTable.h#L11-L53)
-
-* [요리 데이터 테이블 구현 코드](https://github.com/kabu0330/UE_Overcooked2/blob/fa2b9ce77865d74c9d8ebb40c070b3c568b2ac21/Overcooked2/Source/Overcooked2/Global/Data/RecipeDataTable.h#L11-L36)
-
-* [요리 조합 검사 코드](https://github.com/kabu0330/UE_Overcooked2/blob/fa2b9ce77865d74c9d8ebb40c070b3c568b2ac21/Overcooked2/Source/Overcooked2/Global/OC2GameInstance.cpp#L354-L416)
-
-
- **[💡 회고 및 개선점]** 데이터 기반 설계를 통해 새로운 요리를 추가할 때 코드 수정 없이 데이터 테이블 행(Row)만 추가하면 되는 유연한 시스템을 구축할 수 있었습니다. 이를 통해 기획자가 직접 밸런싱과 콘텐츠 추가를 할 수 있는 환경을 마련하여 팀 전체의 개발 효율성을 높였습니다.
-
-</br>
-
-___
-
-</details>
-
-<details>
-<summary> 협업 (클릭) </summary><p>
-
-#### 🛠️ 협업
-
-**🚨 문제 상황**
-
-6명의 팀원이 동시에 작업하면서 바이너리 파일(.uasset) 충돌이 빈번하게 발생했습니다. 특히 레벨이나 공용 블루프린트를 수정할 때 충돌이 나면 병합(Merge)이 불가능해 한 명의 작업 내용이 유실되는 등 개발에 큰 차질이 빚어졌습니다. 초기 도입했던 Git Flow 방식은 리뷰 대기 시간으로 인해 작업 속도를 저하시키는 문제도 있었습니다.
-
-</br>
-
-**💭 해결 방안**
-
-팀의 규모와 프로젝트 특성에 맞춰 협업 워크플로우를 재정립했습니다.
-
-1. 작업 영역 분리: 팀원별로 담당 클래스와 폴더를 명확히 나누어 충돌 가능성을 최소화했습니다.
-
-2. 에셋 잠금(Locking) 문화: 공용 에셋 수정 시 메신저를 통해 "작업 중"임을 공유하고 다른 팀원의 수정을 방지하는 문화를 정착시켰습니다.
-
-3. Git Stash 활용: 충돌 발생 시 작업 내용을 잃지 않고 안전하게 최신 버전과 병합하기 위해 git stash 활용법을 팀 내에 전파하고 적극 사용했습니다.
-
-
-</br>
-
-
- **[💡 회고 및 개선점]** 기술적인 문제 해결뿐만 아니라, 팀원 간의 소통과 합의된 규칙이 원활한 협업의 핵심임을 깨달았습니다. 도구나 방법론 자체보다 팀의 상황에 맞는 최적의 프로세스를 찾아 적용하는 능력을 기를 수 있었습니다.
-
-
-</details>
-
-</br>
-
-### 기능구현
-
-<p align="center">
- <img alt="이미지" src="readme\overcookedIngame.png">
-</p>
-
-</br>
-
-___
 
 
 ## 📄 [Unreal Engine 5] Action RPG Project "Soul"
@@ -1278,19 +1274,23 @@ bool ARoom::IsOnGround(FVector _Pos)
 
 
 <details>
-<summary> Unity 메타파일 자동 파싱 및 로드 시스템 (클릭) </summary><p>
+<summary> 스프라이트 아틀라스(Atlas) 로드 시스템 (클릭) </summary><p>
 
-#### 🛠️ Unity 메타파일 자동 파싱 및 로드 시스템
+#### 🛠️ 스프라이트 아틀라스(Atlas) 로드 시스템
 
 **🚨 문제 상황**
 
-자체 엔진을 통해 게임 개발을 할 때 가장 큰 어려움은 리소스 문제였습니다. 원하는 리소스를 구하기도 어려울 뿐만 아니라 이를 분류하고 관리하는 과정까지 어려움이 있었습니다. 모작할 게임을 제가 선택하는 것이 아닌 리소스가 허락된 게임에게 선택받아야되는 느낌입니다. 
+자체 엔진을 통해 게임 개발을 할 때 가장 큰 어려움은 리소스 문제였습니다. 해당 리소스는 아틀라스로 구성되어 있는데, 이를 포토샵으로 일일이 분리하는 방법 대신 아틀라스를 그대로 활용할 방법을 찾아보았습니다.
 
 </br>
 
 **💭 해결 방안**
 
-이러한 문제를 해소하고자 Unity meta 파일에 들어있는 스프라이트 데이터를 파싱하여 리소스를 등록시키는 파이프라인을 구축했습니다.
+유니티로 아틀라스 리소스의 메타 파일을 생성하고, 해당 메타 파일을 로드하여 파싱하는 방법을 사용했습니다.
+
+리소스 폴더에 있는 파일 중 확장자 명을 기준으로 필터링을 하여 리소스.png와 리소스.meta 파일을 매핑하고, 메타 데이터를 "rect ~ outline" 텍스트 범위까지만 추출하여 내부에 있는 데이터에서 시작 위치(x, y), 중점과 크기를 추출하여 데이터를 저장했습니다.
+
+이 방식을 사용하여 메모리 사용량을 40% 감소시켰을 뿐만 아니라 드로우 콜도 테스트 기준 200 → 30 수준까지 감소시켰습니다.
 
 </br>
 
