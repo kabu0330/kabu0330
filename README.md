@@ -63,8 +63,6 @@
 
 * 목표: 6인 협업을 통한 실시간 네트워크 멀티플레이 동기화 및 데이터 기반(Data-Driven) 상호작용 시스템 구축.
 
-* 기술적 도전 & 해결 :
-
     * Lifecycle-Aware Network Spawning (객체 생명주기 제어):
 
         * 문제: SpawnActor 직후 서버의 데이터 복제(Replication)보다 클라이언트의 BeginPlay가 먼저 실행되어, 초기화되지 않은 데이터(재료 타입 등)로 인해 렌더링 오류가 발생하는 Race Condition 확인.
@@ -288,15 +286,15 @@ ___
 
 서버에 대한 개념을 이해하고자 AWS 서비스(EC2, GameLift, Lambda, Cognito, CloudWatch, DynamoDB)를 활용해 데디케이티드 서버를 구축하고 사용자 관리, 세션, 토큰, 서버리스 아키텍처, DB 등 개념을 이해하고 언리얼 엔진과 연동해 언리얼 엔진의 구조 안에서 서버를 구축하고 서버-클라이언트 간 로직을 분리하고 결합하며 게임을 완성해나갔습니다.
 
-* 목표: 상용 게임 수준의 라이브 서비스 아키텍처 구축 (매치메이킹, DB, 로그)
+* 목표: 서버 아키텍처 구축 (매치메이킹, DB, 로그)
 
-* 기술적 도전 & 해결:
+    * SDK : 언리얼 엔진 용 AWS GameLift Server SDK 연동
+  
+    * HTTP Request/Response, JsonUtility : 비동기 http 통신 및 수신 처리, 언리얼 리플렉션 시스템을 활용하여 Json 데이터 파싱 및 게임 내 데이터 적용
+
+    * Serverless : AWS Lambda + API Gateway를 통해 서버리스 환경 구축
 
     * Network Bandwidth Optimization: FFastArraySerializer를 구현하여 변경된 데이터(Delta)만 전송, 배열 복제 대비 네트워크 부하 감소.
-
-    * Seamless Travel Data Persistence: 레벨 전환 시 소실되는 데이터를 GameInstanceSubsystem과 PlayerState::CopyProperties 재정의를 통해 보존 파이프라인 구축.
-
-    * Serverless Matchmaking: EC2 상시 구동 비용 절감을 위해 AWS Lambda + API Gateway 기반의 온디맨드 매치메이킹 시스템 구현.
 
 </br>
 
@@ -627,24 +625,18 @@ Dedicated Sever와 관련한 작업은 블로그에 과정을 기록해두었습
 
 </br>
 
-* 기술적 도전 & 해결:
+* 목표 : 액션 게임 제작
 
     * Zero-Tick Architecture:
-
         * `Tick()` 사용을 배제하고 `Delegate`와 `AnimNotify`를 활용한 완전한 Event-Driven 구조 구축.
 
-     * 결과: 유휴 상태(Idle)에서의 CPU 점유율 최소화 및 로직 추적 용이성 확보.
-
     * 유연한 전투 시스템:
-
-        * 거대한 `Character` 클래스를 `ISoulCombat`, `ISoulInteract` 등 인터페이스로 분리.
-
-        * 결과: 신규 몬스터/무기 추가 시 기존 코드 수정 없이 확장 가능하도록 결합도(Coupling) 제거.
-
-    * Data-Driven Skill System:
-
-        * `DataAsset`과 `GameplayTag`를 활용해 코드 컴파일 없이 스킬 속성(데미지, 모션, 이펙트) 제어.
-
+        * `DataAsset`과 `GameplayTag`를 활용해 코드 컴파일 없이 무기 및 스킬 확장 가능.
+  
+    * 인벤토리 시스템:
+        * `DataTable`에 아이템 정보를 입력
+        * `InventoryComponent`는 아이템 ID와 수량 관리
+        * `DragDropOperation`을 통해 UI 간 상호작용 처리
 
 </br>
 
@@ -1011,25 +1003,23 @@ ___
 
 * 목표: DirectX 11 API를 활용한 Component-Based Game Engine 아키텍처 설계 및 2D 렌더링 파이프라인 구축.
 
-* 기술적 챌린지 & 해결 (Technical Challenges & Solutions):
-
-    * Event-Driven FSM Architecture (함수형 상태 패턴):
+    * FSM (함수형 상태 패턴):
 
         * 문제: 거대한 Switch-Case 문 기반의 FSM은 상태 추가 시 코드 복잡도를 높이고, 유지보수성을 저하시킴.
 
         * 해결: **Modern C++ (std::function, Lambda)**을 활용하여 상태를 객체가 아닌 '행동(Function)' 단위로 관리하는 이벤트 기반 FSM 설계. std::map을 통해 상태 진입(Enter), 유지(Stay), 종료(Exit) 콜백을 동적으로 바인딩하여 코드 결합도(Coupling)를 획기적으로 낮춤.
 
-    * Decoupled Timer System (타이머 시스템 분리):
+    * Timer System:
 
         * 문제: 스킬 쿨타임, 피격 무적 시간 등 시간 제어 로직을 각 객체의 Tick에서 개별 변수로 관리하여 로직 중복과 가독성 저하 발생.
 
         * 해결: TimerManager 개념을 차용한 **TimeEventComponent**를 구현. std::list와 Iterator를 활용해 등록된 시간 이벤트를 중앙에서 관리하고, 만료 시 콜백을 실행하는 구조로 변경하여 게임플레이 로직에서 불필요한 시간 계산 코드를 제거.
 
-    * Automated Asset Pipeline (리소스 파이프라인 자동화):
+    * 리소스 파이프라인 자동화:
 
-        * 문제: 다수의 스프라이트 리소스를 수동으로 좌표 계산하여 로드하는 과정은 비효율적이며 오차가 발생하기 쉬움.
+        * 문제: 아틀라스 또는 스프라이트 리소스를 포토샵을 통해 이미지 낱장으로 분리하는 작업 부담
 
-        * 해결: Unity의 .meta 파일 포맷을 분석하여 텍스처 아틀라스 정보를 파싱하는 자동화 로더(Auto-Loader) 구현. DirectX(좌상단)와 Unity(좌하단)의 UV 좌표계 차이를 변환 행렬로 보정하여, 외부 툴의 데이터를 엔진에 즉시 적용 가능한 파이프라인 구축.
+        * 해결: Unity의 기능 활용 .meta 파일 포맷을 분석하여 텍스처 아틀라스 정보를 파싱하는 자동화 로더(Auto-Loader) 구현. DirectX(좌상단)와 Unity(좌하단)의 UV 좌표계 차이를 변환 행렬로 보정하여, 외부 툴의 데이터를 엔진에 즉시 적용 가능한 파이프라인 구축.
 
 
 </br>
