@@ -1359,8 +1359,6 @@ ___
 
 * [인벤토리 시스템과 UI](https://kabu0129.tistory.com/378)
 * [루트모션 기반 대시 구현](https://kabu0129.tistory.com/376)
-* [PlayerController가 입력을 처리하는게 적절한가?](https://kabu0129.tistory.com/387)
-* [OCP(개방 폐쇄 원칙) 기반 설계: 상속에서 인터페이스로 전환](https://kabu0129.tistory.com/388)
 
 </br>
 
