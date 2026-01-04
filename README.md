@@ -11,13 +11,11 @@
 
     * GameplayTag 및 컴포넌트 기반 액션 게임 구현
 
-    * 플러그인 및 SDK 활용 경험(AWS EC2, Lambda, DynamoDB, S3, Google Firebase, Firestore, Admob 등)
+    * 플러그인 및 SDK(AWS EC2, Lambda, DynamoDB, S3, Google Firebase, Admob 등) 활용 경험
 
     * AWS GameLift 기반의 Dedicated Server 및 Serverless 백엔드 구축 경험
 
     * Team Project 협업 경험
-
-    * IOCP 기반 멀티스레드 풀 활용하여 로딩 시간 단축(평균 3.3초 -> 0.37초)
 
 
 ## 📄 레포지토리 링크
@@ -54,30 +52,27 @@
 | 👤 **개발 인원** | 6인 | 📅 **개발 기간** | 2025.02 ~ 2025.05 |
 | 🛠️ **개발 도구** | C++, Unreal Engine 5, Visual Studio, Git |
 | 📝 **게임 소개** | 최대 4인의 플레이어가 함께 재료를 전달/손질/조합하여 </br> 제한 시간 내에 최대한 많은 요리를 제출하는 협동 게임|
-| 🎯 **핵심 목표** | 협업 방식을 학습하고 멀티 플레이어 게임을 구현하는 방법을 습득 | | 
 | 📑 **주요 특징** | 데이터 기반 요리 컨텐츠 개발, 레벨 디자인, RPC / Replication | | 
 
 </br>
 
-언리얼 엔진을 본격적으로 학습함과 동시에 처음으로 협업을 통해 하나의 게임을 완성시켜나가는 과정을 경험했습니다. 처음으로 멀티플레이 게임에 대해 학습하며 동기화 이슈에 대해 끊임없이 고민하고 해결해나가며 네트워크 게임의 구조를 깊이 이해하는 시간이었습니다. 이 과정에서 버전 관리의 중요성과 충돌 문제를 해결하는 방법을 배웠고, Pork / Full Request 협업 방식과 git stash에 대해 알게되었습니다.
+* 목표: 실시간 네트워크 멀티플레이 동기화 및 데이터 기반(Data-Driven) 상호작용 시스템 구축
 
-* 목표: 6인 협업을 통한 실시간 네트워크 멀티플레이 동기화 및 데이터 기반(Data-Driven) 상호작용 시스템 구축.
+    * 네트워크 동기화 전략:
 
-    * Lifecycle-Aware Network Spawning (객체 생명주기 제어):
+        * 문제: SpawnActor 직후 서버의 데이터 복제(Replication)보다 클라이언트의 BeginPlay가 먼저 실행되어, 초기화되지 않은 데이터(재료 타입 등)로 인한 동기화 문제
 
-        * 문제: SpawnActor 직후 서버의 데이터 복제(Replication)보다 클라이언트의 BeginPlay가 먼저 실행되어, 초기화되지 않은 데이터(재료 타입 등)로 인해 렌더링 오류가 발생하는 Race Condition 확인.
+        * 해결: **SpawnActorDeferred**를 도입하여 [메모리 할당 → Replicated 데이터 초기화 → 스폰 완료(FinishSpawning)] 순으로 생명주기를 재설계. 클라이언트 BeginPlay 시점의 데이터 무결성을 보장하여 동기화 타이밍 이슈 해결
 
-        * 해결: **SpawnActorDeferred**를 도입하여 [메모리 할당 → Replicated 데이터 초기화 → 스폰 완료(FinishSpawning)] 순으로 생명주기를 재설계. 클라이언트 BeginPlay 시점의 데이터 무결성을 보장하여 동기화 타이밍 이슈 해결.
+    * 데이터 기반 설계:
 
-    * Data-Driven Recipe System (데이터 기반 설계):
+        * 문제: 재료의 상태(손질, 굽기 등)와 다양한 조합식(Recipe)을 if/switch 분기문으로 처리할 경우, 콘텐츠 추가 시 코드 복잡도가 기하급수적으로 증가
 
-        * 문제: 재료의 상태(손질, 굽기 등)와 다양한 조합식(Recipe)을 if/switch 분기문으로 처리할 경우, 콘텐츠 추가 시 코드 복잡도가 기하급수적으로 증가.
+        * 해결: 재료를 Type과 State 구조체로 추상화하고, 조합 로직을 **DataTable**로 분리. '접시(Plate)' 객체가 현재 담긴 재료 배열을 테이블과 대조하여 결과물(Mesh)을 동적으로 교체하도록 구현
 
-        * 해결: 재료를 Type과 State 구조체로 추상화하고, 조합 로직을 **DataTable**로 분리. '접시(Plate)' 객체가 현재 담긴 재료 배열을 테이블과 대조하여 결과물(Mesh)을 동적으로 교체하도록 구현. (OCP 준수)
+    * 협업 파이프라인:
 
-    * Optimized Collaboration Pipeline (협업 파이프라인):
-
-        * 해결: 6인 개발 환경에서 Binary Asset(.uasset) 충돌 방지를 위해 기능별 폴더 구조화 및 Git Stash / Lock 워크플로우 정립. RPC(Remote Procedure Call) 권한 분리를 명확히 하여 멀티플레이 로직 충돌 최소화.
+        * 해결: 6인 개발 환경에서 Binary Asset(.uasset) 충돌 방지를 위해 기능별 폴더 구조화 및 Git Stash / Lock 워크플로우 정립
 
 </br>
 
@@ -254,8 +249,6 @@ ___
 </p>
 
 </br>
-
-___
 
 
 ## 📄 [Dedicated Server Project] FPS Game
@@ -601,8 +594,6 @@ Dedicated Sever와 관련한 작업은 블로그에 과정을 기록해두었습
 
 </br>
 
-
-
 ## 📄 [Unreal Engine 5] Action RPG Project "Soul"
 <p align="center">
  <img alt="이미지" src="readme\SoulPlay.webp">
@@ -620,7 +611,6 @@ Dedicated Sever와 관련한 작업은 블로그에 과정을 기록해두었습
 | 👤 **개발 인원** | 1인 | 📅 **개발 기간** | 2025.10 ~ 2025.11 |
 | 🛠️ **기술 스택** | C++, Unreal Engine 5, Rider, Git | | |
 | 📝 **게임 소개** | 스태미나 기반 전투 액션 게임 | | 
-| 🎯 **핵심 목표** | 액션 전투 시스템 개발 | | 
 | 📑 **주요 특징** | 콤보 시스템, 무기 시스템, 데이터 기반 아이템 및 인벤토리 시스템, 모션 워핑 | | 
 
 </br>
@@ -922,6 +912,408 @@ ___
 
 </details>
 
+<details>
+<summary> [회고] PlayerController가 입력을 처리하는게 적절한가? (클릭) </summary><p>
+
+#### 🛠️ PlayerController가 입력을 처리하는게 적절한가? 
+
+#### 🤔 초기 설계 의도
+
+**"Controller의 역할은 입력을 처리하는 것이 아닌가?"**
+
+`PlayerController`의 본연 기능이 입력 처리라고 생각했기에, 모든 입력을 Controller에서 받도록 설계했습니다:
+
+```cpp
+// SoulPlayerControllerBase.cpp
+void ASoulPlayerControllerBase::SetupInputComponent()
+{
+    // 모든 입력을 Controller에 바인딩
+    EnhancedInputComp->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ThisClass::Move);
+    EnhancedInputComp->BindAction(AttackAction, ETriggerEvent::Started, this, &ThisClass::Attack);
+    EnhancedInputComp->BindAction(RollingAction, ETriggerEvent::Started, this, &ThisClass::Rolling);
+    // ... 30개 이상의 입력
+}
+```
+
+**책임 소재가 명확해 보였습니다:**
+
+-   Controller: 입력 받기
+-   Character: 행동 실행
+
+#### 🚨 문제 인식
+
+**Controller는 단순 중계자일 뿐**
+
+그러나 실제 코드를 보면 **Controller는 아무것도 하지 않습니다:**
+
+```cpp
+// SoulPlayerControllerBase.cpp - 반복되는 패턴
+void ASoulPlayerControllerBase::Attack()
+{
+    if (ASoulPlayerCharacter* SoulCharacter = Cast<ASoulPlayerCharacter>(GetCharacter()))
+    {
+        SoulCharacter->Attack();  // 그냥 전달만
+    }
+}
+
+void ASoulPlayerControllerBase::Rolling()
+{
+    if (ASoulPlayerCharacter* SoulCharacter = Cast<ASoulPlayerCharacter>(GetCharacter()))
+    {
+        SoulCharacter->Rolling();  // 그냥 전달만
+    }
+}
+
+void ASoulPlayerControllerBase::HeavyAttack()
+{
+    if (ASoulPlayerCharacter* SoulCharacter = Cast<ASoulPlayerCharacter>(GetCharacter()))
+    {
+        SoulCharacter->HeavyAttack();  // 그냥 전달만
+    }
+}
+
+// ... 30개 함수가 모두 동일한 패턴 ❌
+```
+
+**실제 입력 흐름:**
+
+```cpp
+입력 → Controller::Attack() 
+       ↓ (캐스팅 + 전달)
+     Character::Attack()
+       ↓ (다시 전달)
+     CombatComponent::Attack()
+       ↓ (실제 로직)
+     DoAttack()
+```
+**3단계를 거쳐야 실제 로직 도달**
+
+</br>
+
+**문제점:**
+
+1.  **Controller는 입력 토스하기 바쁨**
+    -   이동 → CharacterMovementComponent
+    -   공격 → CombatComponent
+    -   인벤토리 → InventoryUI
+    -   UI 모드 전환 → WidgetManager
+    -   
+2.  **Controller가 모든 클래스를 알아야 함**
+    - Controller가 알아야 하는 것들 `ASoulPlayerCharacter* Character; UCombatComponent* CombatComp; UAttributeComponent* AttributeComp; UStateComponent* StateComp; UInventoryComponent* InventoryComp; UWidgetManagerComponent* WidgetManager;` // ... 계속 증가
+   
+3.  **결합도 증가**
+    -   CombatComponent 수정 → Controller도 수정 필요
+    -   새 기능 추가 → Controller에 함수 추가
+    -   "책임 소재 명확"하지만 실제론 **God Class** ❌
+
+</br>
+
+
+#### 💭 고민
+
+**고민 1: "Controller의 결합도를 낮추려면?"**
+
+Character로 위임했지만, **Character도 같은 고민**:
+
+```cpp
+// SoulPlayerCharacter.cpp
+void ASoulPlayerCharacter::Attack()
+{
+    if (CombatComponent)
+    {
+        CombatComponent->Attack();  // 또 전달
+    }
+}
+```
+
+**결국 "입력 → Controller → Character → Component" 3단계 불필요한 중계**
+
+</br>
+
+**고민 2: "무기별로 다른 입력을 어떻게 처리할까?"**
+
+Q키를 눌렀을 때:
+
+-   한손검: 즉발 특수 공격
+-   대검: 차징 공격
+-   폴암: 원거리 투척
+
+**시도했던 방법들:**
+
+**A안: Character에서 Switch 문**
+
+```cpp
+void ASoulPlayerCharacter::SpecialAttack()
+{
+    ECombatType CombatType = CombatComponent->GetWeapon()->GetCombatType();
+
+    switch (CombatType)
+    {
+    case ECombatType::Sword:
+        CombatComponent->SpecialAttack();
+        break;
+    case ECombatType::GreatSword:
+        CombatComponent->ChargeAttack();
+        break;
+    case ECombatType::Polearm:
+        CombatComponent->ThrowWeapon();
+        break;
+    }
+}
+```
+
+❌ Character가 모든 무기 타입을 알아야 함  
+❌ 무기 추가 시마다 Switch 문 수정
+
+</br>
+
+**B안: Delegate로 태그만 전달?**
+
+```cpp
+// Controller
+void ASoulPlayerControllerBase::SpecialAttack()
+{
+    OnInputReceived.Broadcast(SoulGameplayTag::Input_SpecialAttack);
+}
+
+// Character
+void ASoulPlayerCharacter::OnInputReceived(FGameplayTag InputTag)
+{
+    switch (InputTag)
+    {
+    case Input_SpecialAttack:
+        // 무기 타입에 따라 분기
+        break;
+    }
+}
+```
+
+❌ 결국 Character의 Switch 문은 동일  
+❌ 추상화했지만 근본적 해결 아님
+
+</br>
+
+**C안: 무기가 IMC를 가지고 장착 시 전달?**
+
+```cpp
+void ASoulWeapon::EquipItem()
+{
+    Character->AddMappingContext(WeaponSpecificIMC);  
+    // Q키 → 차징 공격으로 자동 매핑
+}
+```
+
+✅ 무기마다 다른 입력 가능  
+❌ 대신 구현 복잡도 높음, Enhanced Input 이해 필요  
+❓ "이게 과연 올바른 방법일까?" 확신이 없음
+
+</br>
+
+#### 💡 아이디어: "입력의 소비자(주체)에게 책임을"
+
+**왜 `ACharacter::SetupPlayerInputComponent()`가 존재하는가?**
+
+언리얼 공식 문서와 커뮤니티를 찾아보며 알게 된 사실:
+
+> **"PlayerController는 '플레이어의 의지'를 대변하고,  
+> Pawn은 '그 의지를 수행하는 육체'다."**
+
+**빙의(Possess)의 의미:**
+
+-   Controller가 Pawn에 빙의한다 = 의지(Controller)와 육체(Pawn) 분리
+-   입력을 **'받는' 곳**과 **'소비하는' 곳**을 분리하는 설계 철학
+
+**핵심 인사이트:**
+
+```cpp
+❌ Controller: "공격 입력 → 공격 실행"
+✅ Controller: "공격 입력 수신" / Pawn: "공격 실행"
+```
+
+</br>
+
+#### 🔧 접근 방법
+
+**1\. Enhanced Input + IMC**
+
+**무기가 IMC를 소유하는 방식:**
+
+```cpp
+// SoulWeapon.h
+UCLASS()
+class ASoulWeapon
+{
+    UPROPERTY(EditDefaultsOnly)
+    UInputMappingContext* WeaponInputContext;  // 무기별 IMC
+};
+
+// SoulWeapon.cpp - 장착 시
+void ASoulWeapon::EquipItem()
+{
+    if (APlayerController* PC = Character->GetController<APlayerController>())
+    {
+        if (UEnhancedInputLocalPlayerSubsystem* Subsystem = 
+            ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
+        {
+            // 무기 전용 입력 추가
+            Subsystem->AddMappingContext(WeaponInputContext, 1);
+        }
+    }
+}
+
+// IMC_Sword.asset
+// Q키 → IA_ChargeAttack
+
+// IMC_Axe.asset  
+// Q키 → IA_QuickAttack
+```
+
+**흐름:**
+
+```cpp
+1. 검 장착 → IMC_Sword 추가
+   Q키 = IA_ChargeAttack 매핑
+
+2. 도끼 장착 → IMC_Sword 제거 + IMC_Axe 추가
+   Q키 = IA_QuickAttack 매핑
+
+3. Controller는 "Q가 눌렸다"만 알 뿐, 
+   차징인지 즉발인지는 무기의 IMC가 결정
+```
+
+**장점:**
+
+-   ✅ Controller는 무기 타입을 몰라도 됨
+-   ✅ 무기 추가 시 코드 수정 0줄
+-   ✅ IMC Asset만 만들면 끝
+-   ✅ 결합도 완전 분리
+-   
+</br>
+
+**2\. GameplayTag + Delegate**
+
+**입력을 '의도'로 추상화:**
+
+```cpp
+// PlayerController
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInputIntent, FGameplayTag, IntentTag);
+
+void ASoulPlayerController::SpecialAttack()
+{
+    // 무기/캐릭터를 모름, 태그만 방송
+    OnInputIntent.Broadcast(GameplayTag::Input_SpecialAttack);
+}
+
+// CombatComponent
+void UCombatComponent::BeginPlay()
+{
+    // 태그 구독
+    PlayerController->OnInputIntent.AddDynamic(this, &ThisClass::OnInputReceived);
+}
+
+void UCombatComponent::OnInputReceived(FGameplayTag IntentTag)
+{
+    if (IntentTag == GameplayTag::Input_SpecialAttack)
+    {
+        // 현재 무기에 맞는 행동 실행
+        Weapon->ExecuteSpecialAttack();
+    }
+}
+```
+
+**장점:**
+
+-   ✅ Controller는 의도만 전달
+-   ✅ 여러 시스템이 동시에 구독 가능
+
+</br>
+
+**3\. Character에서 직접 입력 처리 (가장 단순)**
+
+```cpp
+// SoulPlayerCharacter.cpp
+void ASoulPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+    UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+
+    // Controller 거치지 않고 직접 바인딩
+    EnhancedInput->BindAction(AttackAction, ETriggerEvent::Started, this, &ThisClass::Attack);
+    EnhancedInput->BindAction(RollingAction, ETriggerEvent::Started, this, &ThisClass::Rolling);
+}
+```
+
+</br>
+
+**Controller는 시스템 입력만:**
+
+```cpp
+// SoulPlayerController.cpp
+void ASoulPlayerController::SetupInputComponent()
+{
+    // UI/시스템만
+    EnhancedInput->BindAction(PauseAction, ETriggerEvent::Started, this, &ThisClass::Pause);
+    EnhancedInput->BindAction(InventoryAction, ETriggerEvent::Started, this, &ThisClass::OpenInventory);
+}
+```
+
+**장점:**
+
+-   ✅ 불필요한 중계 함수 제거
+-   ✅ 디버깅 용이 (Character만 확인)
+-   ✅ AI도 Character 함수 직접 호출
+
+</br>
+
+### ✅ 결론: PlayerController의 진짜 역할
+
+**현재 구조의 문제:**
+
+```
+❌ PlayerController = "입력 처리자" (God Class)
+   → 모든 시스템을 알아야 함
+   → 결합도 폭발
+   → 중계 함수 30개
+```
+
+**올바른 구조:**
+
+```
+✅ PlayerController = "입력 관리자" (Input Manager)
+   → IMC 추가/제거 관리
+   → 의도(Tag)로 변환하여 방송
+   → UI/시스템 기능만 직접 처리
+```
+
+**책임 분리:**
+
+-   **Controller**: 누가 조종하는가 (Possess/Unpossess), 입력 컨텍스트 관리
+-   **Character**: 무엇을 할 수 있는가 (Move/Attack/Roll), 입력 직접 처리
+-   **Component**: 어떻게 하는가 (로직 구현)
+
+"**입력을 '처리'하는 것과 '관리'하는 것은 다르다**"
+
+Controller가 모든 입력을 처리하는 것은:
+
+-   ❌ 교과서적이지만 확장성 낮음
+-   ❌ 중계 함수만 늘어남
+-   ❌ 결합도 문제
+
+Enhanced Input의 IMC나 GameplayTag를 활용하면:
+
+-   ✅ Controller는 "입력 컨텍스트 관리자"
+-   ✅ Character/Component는 "입력 소비자"
+-   ✅ 무기/스킬 추가 시 코드 수정 불필요
+
+**다음 프로젝트에서는:**
+
+1.  Character에서 직접 입력 처리 (기본)
+2.  무기별 IMC로 동적 매핑 (확장)
+3.  Controller는 UI/시스템만 담당  
+    `ACharacter::SetupPlayerInputComponent()`가 존재하는 이유는 "**행동의 주체가 직접 입력을 받는 게 자연스럽다**"
+</br>
+
+</details>
+
 </br>
 
 ___
@@ -972,7 +1364,6 @@ ___
 
 </br>
 
-
 ## 📄 [DirectX 11] 'HollowKnight' 모작
 
 <p align="center">
@@ -992,35 +1383,29 @@ ___
 | 👤 **개발 인원** | 1인 | 📅 **개발 기간** | 2024.11 ~ 2025.02 |
 | 🛠️ **개발 도구** | C++, Visual Studio, Git, ImGUI |
 | 📝 **게임 소개** | 액션 기반 전투 게임 |
-| 🎯 **핵심 목표** | DirectX 11를 활용한 게임 개발 | | 
 | 📑 **주요 특징** | Actor-Component 패턴(Actor/Scene, FSM, Renderer, Collision 등) | | 
 
 </br>
 
-게임 엔진을 구현해보며 프로그램이 어떻게 운영체제에서 실행되는지 머릿 속에 그려볼 수 있었습니다. 언리얼 엔진의 프레임워크를 구현해보며 **UE5의 설계 철학**을 이해하게 되었습니다. "왜 상속 기반 구조로 구성되었는가", "어떻게 Component가 Actor에 부착하여 동작하는가"와 같은 질문에 답하며, UE5로 돌아왔을 때 단순히 "사용"하는 것이 아니라 "이해하고 활용"할 수 있게 되었습니다.
-
-</br>
-
-* 목표: DirectX 11 API를 활용한 Component-Based Game Engine 아키텍처 설계 및 2D 렌더링 파이프라인 구축.
+* 목표: DirectX 11 API를 활용한 Component-Based Game Engine 아키텍처 설계 및 2D 렌더링 파이프라인 구축
 
     * FSM (함수형 상태 패턴):
 
-        * 문제: 거대한 Switch-Case 문 기반의 FSM은 상태 추가 시 코드 복잡도를 높이고, 유지보수성을 저하시킴.
+        * 문제: 거대한 Switch-Case 문 기반의 FSM은 상태 추가 시 코드 복잡도 증가, 유지보수성 저하
 
-        * 해결: **Modern C++ (std::function, Lambda)**을 활용하여 상태를 객체가 아닌 '행동(Function)' 단위로 관리하는 이벤트 기반 FSM 설계. std::map을 통해 상태 진입(Enter), 유지(Stay), 종료(Exit) 콜백을 동적으로 바인딩하여 코드 결합도(Coupling)를 획기적으로 낮춤.
+        * 해결: **Modern C++ (std::function, Lambda)**을 활용하여 상태를 객체가 아닌 '행동(Function)' 단위로 관리하는 이벤트 기반 FSM 설계. std::map을 통해 상태 진입(Enter), 유지(Stay), 종료(Exit) 콜백을 동적으로 바인딩하여 코드 결합도(Coupling)를 획기적으로 낮춤
 
     * Timer System:
 
-        * 문제: 스킬 쿨타임, 피격 무적 시간 등 시간 제어 로직을 각 객체의 Tick에서 개별 변수로 관리하여 로직 중복과 가독성 저하 발생.
+        * 문제: 스킬 쿨타임, 피격 무적 시간 등 시간 제어 로직을 각 객체의 Tick에서 개별 변수로 관리하여 로직 중복과 가독성 저하 발생
 
-        * 해결: TimerManager 개념을 차용한 **TimeEventComponent**를 구현. std::list와 Iterator를 활용해 등록된 시간 이벤트를 중앙에서 관리하고, 만료 시 콜백을 실행하는 구조로 변경하여 게임플레이 로직에서 불필요한 시간 계산 코드를 제거.
+        * 해결: TimerManager 개념을 차용한 **TimeEventComponent**를 구현. std::list와 Iterator를 활용해 등록된 시간 이벤트를 중앙에서 관리하고, 만료 시 콜백을 실행하는 구조로 변경하여 게임플레이 로직에서 불필요한 시간 계산 코드를 제거
 
     * 리소스 파이프라인 자동화:
 
         * 문제: 아틀라스 또는 스프라이트 리소스를 포토샵을 통해 이미지 낱장으로 분리하는 작업 부담
 
-        * 해결: Unity의 기능 활용 .meta 파일 포맷을 분석하여 텍스처 아틀라스 정보를 파싱하는 자동화 로더(Auto-Loader) 구현. DirectX(좌상단)와 Unity(좌하단)의 UV 좌표계 차이를 변환 행렬로 보정하여, 외부 툴의 데이터를 엔진에 즉시 적용 가능한 파이프라인 구축.
-
+        * 해결: Unity의 기능 활용 .meta 파일 포맷을 분석하여 텍스처 아틀라스 정보를 파싱하는 자동화 로더(Auto-Loader) 구현. DirectX(좌상단)와 Unity(좌하단)의 UV 좌표계 차이를 변환 행렬로 보정하여, 외부 툴의 데이터를 엔진에 즉시 적용 가능한 파이프라인 구축
 
 </br>
 
@@ -1358,7 +1743,6 @@ bool ARoom::IsOnGround(FVector _Pos)
     - [Title 리소스 로딩](https://github.com/kabu0330/DX_HollowKnight2/blob/main/DX_HollowKnight/Contents/TitleGameMode.cpp#L20-L29)
 
     - [리소스 로드 및 레벨 전환 준비 체크](https://github.com/kabu0330/DX_HollowKnight2/blob/fd06b77a8f3283c254f2a705d03b0a267235d72d/DX_HollowKnight/Contents/TitleGameMode.cpp#L170-L183)
-
 
 </p> </details>
 
